@@ -1,0 +1,11 @@
+SRCS     = EvtComplex.cpp EvtConst.cpp EvtKine.cpp EvtResonance2.cpp EvtVector3C.cpp EvtVector3R.cpp EvtVector4C.cpp EvtVector4R.cpp EvtTensor4C.cpp symdalitzmodel.cpp dalitzmodel.cpp kspipimodel.cpp dalitzphasespace.cpp b0tod0pipimodel.cpp
+OBJS     = $(SRCS:.cpp=.o)
+CXXFLAGS = -Wall -pedantic -fPIC -std=c++11 -I. -lm -lstdc++ 
+LIB      = libdalitz.so
+
+
+all: $(OBJS)
+	$(AR) r $(LIB) $(OBJS) 
+
+.cpp.o:
+	$(CXX) $(CXXFLAGS) -c $< -o $@

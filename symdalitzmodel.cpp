@@ -2,7 +2,7 @@
 
 //const int BINS[8] = {8,7,6,5,4,3,2,1};
 //const int BINS[8] = {8,1,2,3,4,5,6,7};
-const int BINS[8] = {1,2,3,4,5,6,7,8};
+//const int BINS[8] = {1,2,3,4,5,6,7,8};
 
 SymDalitzModel::SymDalitzModel(const double& mmo,const double& mcha,const double& mchb,const double& delmin,const double& delmax):
 DalitzModel(mmo,mcha,mchb,mchb),del_min(delmin),del_max(delmax),nbins(8)
@@ -12,10 +12,9 @@ DalitzModel(mmo,mcha,mchb,mchb),del_min(delmin),del_max(delmax),nbins(8)
 int SymDalitzModel::GetBin(const double& mp, const double& mm){
   if(!IsInPlot(mp,mm)) return 0;
   const double delt = mp>mm ? delta(mp,mm) : delta(mm,mp);
-  for(int i=1; i<=8; i++){
-    if(M_PI*(i-1.5)/4 < delt && delt < M_PI*(i-0.5)/4){
-      if(mp>mm) return  BINS[i-1];
-      else      return -BINS[i-1];
+  for(int i=1; i<=nbins; i++){
+    if(2.*M_PI*(i-1.5)/nbins < delt && delt < 2.*M_PI*(i-0.5)/nbins){
+      return mp>mm ? i : -i;
     }
   }
   cout << "GetBin: delta = " << delt << ", mp: " << mp << ", mm: " << mm << endl;

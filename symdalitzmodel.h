@@ -10,6 +10,9 @@ public:
   double delta(const double& mp, const double& mm);
   void PPbarDelta(const double& mp, const double& mm, double& P, double& Pbar, double& delta);
   int GetBin(const double& mp, const double& mm);
+
+  void SetNBins(const int nb) {nbins = nb; return;}
+  int GetNBins(void) const {return nbins;}
 private:
   double del_min, del_max;
   int nbins;
