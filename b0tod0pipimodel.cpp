@@ -23,7 +23,7 @@ SymDalitzModel(mB,mD,mpi,-M_PI/8.,15.*M_PI/8.)
 }
 
 EvtComplex B0toD0pipiModel::Amp(const EvtVector4R& p4_p,const EvtVector4R& moms1,const EvtVector4R& moms2,const EvtVector4R& moms3){
-  return amp_BelleKuzmin(p4_p,moms1,moms2,moms2);
+  return amp_BelleKuzmin(p4_p,moms1,moms2,moms3);
 }
 
 EvtComplex B0toD0pipiModel::amp_BelleKuzmin(const EvtVector4R& p4_p,const EvtVector4R& moms1,const EvtVector4R& moms2,const EvtVector4R& moms3){
@@ -38,5 +38,12 @@ EvtComplex B0toD0pipiModel::amp_BelleKuzmin(const EvtVector4R& p4_p,const EvtVec
   SetMomenta(6,p4_p,moms2,moms3);//f0(980)
   SetMomenta(7,p4_p,moms2,moms3);//f0(1470)
   for(int i=0; i<ResNum(); i++){ amp += const_cast<EvtResonance2*>(Res(i))->resAmpl();}
+  if(std::isnan(real(amp)) || std::isnan(imag(amp))){
+    cout << "amp_BelleKuzmin: (" << real(amp) << "," << imag(amp) << ")" << endl;
+    cout << " p4_p  " << p4_p << endl;
+    cout << " moms1 " << moms1 << endl;
+    cout << " moms2 " << moms2 << endl;
+    cout << " moms3 " << moms3 << endl;
+  }
   return amp;
 }
