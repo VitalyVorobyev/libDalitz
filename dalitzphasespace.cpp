@@ -9,11 +9,13 @@ m_mMo(mM),m_mChA(mA),m_mChB(mB),m_mChC(mC)
   m_mChC_sq = m_mChC*m_mChC;
   m_mAB_min = (m_mChA+m_mChB)*(m_mChA+m_mChB);
   m_mAC_min = (m_mChA+m_mChC)*(m_mChA+m_mChC);
+  m_mBC_min = (m_mChB+m_mChC)*(m_mChB+m_mChC);
   m_mAB_max = (m_mMo-m_mChC)*(m_mMo-m_mChC);
   m_mAC_max = (m_mMo-m_mChB)*(m_mMo-m_mChB);
+  m_mBC_max = (m_mMo-m_mChA)*(m_mMo-m_mChA);
 }
 
-inline double DalitzPhaseSpace::mBC(const double& mAB,const double& mAC){
+double DalitzPhaseSpace::mBC(const double& mAB,const double& mAC){
   return m_mMo_sq+m_mChB_sq+m_mChC_sq-mAB-mAC;
 }
 

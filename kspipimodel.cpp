@@ -7,6 +7,9 @@ KspipiModel(1.86484,0.497614,0.13957018)
 KspipiModel::KspipiModel(const double &md, const double &mks, const double& mpi):
 SymDalitzModel(md,mks,mpi,-M_PI/8.,15.*M_PI/8.)
 {
+  SetABaxis("m_{+}^{2}, GeV^{2}/c^{4}");
+  SetACaxis("m_{-}^{2}, GeV^{2}/c^{4}");
+  SetBCaxis("m_{#pi#pi}^{2}, GeV^{2}/c^{4}");
   // ** A. Poluektov et al. Phys. Rev. D 81, 112002 – Published 16 June 2010 **
   EvtVector4R p4_p,moms1,moms2,moms3;
   AddRes(new EvtResonance2(p4_p,moms1,moms2, 1.638, 133.2, 0.0484, 0.8937, 1));//K*(892)

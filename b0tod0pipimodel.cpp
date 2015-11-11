@@ -8,6 +8,9 @@ B0toD0pipiModel(5.27958,1.86484,0.13957018)
 B0toD0pipiModel::B0toD0pipiModel(const double& mB, const double& mD, const double& mpi):
 SymDalitzModel(mB,mD,mpi,-M_PI/8.,15.*M_PI/8.)
 {
+  SetABaxis("m_{D^{0}#pi^{+}}^{2}, GeV^{2}/c^{4}");
+  SetACaxis("m_{D^{0}#pi^{-}}^{2}, GeV^{2}/c^{4}");
+  SetBCaxis("m_{#pi#pi}^{2}, GeV^{2}/c^{4}");
 // ** A. Kuzmin et al. (Belle Collaboration) Phys. Rev. D 76, 012006 – Published 30 July 2007 **
   const double radtodeg = EvtConst::radToDegrees;
   EvtVector4R p4_p,moms1,moms2,moms3;

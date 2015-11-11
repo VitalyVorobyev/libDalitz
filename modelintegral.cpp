@@ -26,18 +26,26 @@ double ModelIntegral::Calculate(const string& fname,vector<double>& C,vector<dou
   m_majorant = 0;
   ofstream ofile(fname.c_str());
   ofile << "GridSize " << m_gsize << endl;
-  ofile << "min " << M_min << endl;
-  ofile << "max " << M_max << endl;
-  for(int i=0; i<0.5*m_gsize; i++){
+  ofile << m_model->mM() << " -> " << m_model->mA();
+  ofile << " " << m_model->mB();
+  ofile << " " << m_model->mC() << endl;
+  ofile << "mAB: " << m_model->mAB_min() << " " << m_model->mAB_max() << endl;
+  ofile << "mAC: " << m_model->mAC_min() << " " << m_model->mAC_max() << endl;
+  ofile << "mBC: " << m_model->mBC_min() << " " << m_model->mBC_max() << endl;
+  ofile << m_model->ABaxis() << endl;
+  ofile << m_model->ACaxis() << endl;
+  ofile << m_model->BCaxis() << endl;
+  for(int i=0; i<m_gsize; i++){
     mp += dm;
     m_model->mAB_range(mp,mmMin,mmMax);
-    mmMin = mmMin > mp ? mmMin : mp;
+    if(mp>mmMax) break;
+//    mmMin = mmMin > mp ? mmMin : mp;
     double mm = mmMin;
     for(int j=0; mm<mmMax; j++){
       mm += dm;
       if(!m_model->IsInPlot(mp,mm)) continue;
       int bin = abs(m_model->GetBin(mp,mm));
-      ofile << mp << " " << mm << " " << bin << endl;
+      ofile << mp << " " << mm << " " << m_model->mBC(mp,mm) << " " << bin << endl;
       double delta, P, Pbar;
       m_model->PPbarDelta(mp,mm,P,Pbar,delta);
       if(std::isnan(delta)) continue;
