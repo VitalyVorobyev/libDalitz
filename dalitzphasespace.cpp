@@ -15,8 +15,13 @@ m_mMo(mM),m_mChA(mA),m_mChB(mB),m_mChC(mC)
   m_mBC_max = (m_mMo-m_mChA)*(m_mMo-m_mChA);
 }
 
+DalitzPhaseSpace::DalitzPhaseSpace(const DalitzPhaseSpace& phsp):
+  DalitzPhaseSpace(phsp.mM(),phsp.mA(),phsp.mB(),phsp.mC())
+{
+}
+
 double DalitzPhaseSpace::mBC(const double& mAB,const double& mAC){
-  return m_mMo_sq+m_mChB_sq+m_mChC_sq-mAB-mAC;
+  return m_mMo_sq+m_mChA_sq+m_mChB_sq+m_mChC_sq-mAB-mAC;
 }
 
 // a particle energy in a resonance rest frame

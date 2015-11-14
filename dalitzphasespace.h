@@ -9,6 +9,7 @@ using namespace std;
 class DalitzPhaseSpace{
 public:
   DalitzPhaseSpace(const double&, const double&, const double&, const double&);
+  DalitzPhaseSpace(const DalitzPhaseSpace& phsp);
   bool IsInPlot(const double& mAB,const double& mAC);
   double mBC(const double& mAC,const double& mAB);
 

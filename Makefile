@@ -1,7 +1,7 @@
 all: libdalitz.so
 
-libdalitz.so: EvtComplex.o EvtConst.o EvtKine.o EvtResonance2.o EvtVector3C.o EvtVector3R.o EvtVector4C.o EvtVector4R.o EvtTensor4C.o symdalitzmodel.o dalitzmodel.o kspipimodel.o dalitzphasespace.o b0tod0pipimodel.o modelintegral.o libdalitz.o
-	g++ -Wall -shared -fPIC -std=c++11 -o libdalitz.so EvtComplex.o EvtConst.o EvtKine.o EvtResonance2.o EvtVector3C.o EvtVector3R.o EvtVector4C.o EvtVector4R.o EvtTensor4C.o symdalitzmodel.o dalitzmodel.o kspipimodel.o dalitzphasespace.o b0tod0pipimodel.o modelintegral.o libdalitz.o -I. -lm -lstdc++ 
+libdalitz.so: EvtComplex.o EvtConst.o EvtKine.o EvtResonance2.o EvtVector3C.o EvtVector3R.o EvtVector4C.o EvtVector4R.o EvtTensor4C.o symdalitzmodel.o dalitzmodel.o kspipimodel.o dalitzphasespace.o b0tod0pipimodel.o modelintegral.o libdalitz.o randomdalitzpoint.o dalitzmcintegral.o dalitzgenerator.o
+	g++ -Wall -shared -fPIC -std=c++11 -o libdalitz.so EvtComplex.o EvtConst.o EvtKine.o EvtResonance2.o EvtVector3C.o EvtVector3R.o EvtVector4C.o EvtVector4R.o EvtTensor4C.o symdalitzmodel.o dalitzmodel.o kspipimodel.o dalitzphasespace.o b0tod0pipimodel.o modelintegral.o libdalitz.o randomdalitzpoint.o dalitzmcintegral.o dalitzgenerator.o -I. -lm -lstdc++ 
 
 EvtComplex.o: EvtComplex.cpp
 	g++ -fPIC -c EvtComplex.cpp
@@ -50,6 +50,15 @@ modelintegral.o: modelintegral.cpp
 
 libdalitz.o: libdalitz.cpp
 	g++ -fPIC -c libdalitz.cpp
+
+randomdalitzpoint.o: randomdalitzpoint.cpp
+	g++ -fPIC -std=c++11 -c randomdalitzpoint.cpp
+
+dalitzmcintegral.o: dalitzmcintegral.cpp
+	g++ -fPIC -std=c++11 -c dalitzmcintegral.cpp
+
+dalitzgenerator.o: dalitzgenerator.cpp
+	g++ -fPIC -std=c++11 -c dalitzgenerator.cpp
 
 clean:
 	rm -rf *.o libdalitz.so
