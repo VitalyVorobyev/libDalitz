@@ -1,4 +1,5 @@
 #include "randomdalitzpoint.h"
+using namespace std;
 
 RandomDalitzPoint::RandomDalitzPoint(const DalitzPhaseSpace &phsp):
  DalitzPhaseSpace(phsp)

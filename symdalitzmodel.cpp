@@ -1,5 +1,5 @@
 #include "symdalitzmodel.h"
-
+using namespace std;
 //const int BINS[8] = {8,7,6,5,4,3,2,1};
 //const int BINS[8] = {8,1,2,3,4,5,6,7};
 //const int BINS[8] = {1,2,3,4,5,6,7,8};

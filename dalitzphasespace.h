@@ -4,7 +4,6 @@
 #include <math.h>
 #include <iomanip>
 #include "EvtVector4R.h"
-using namespace std;
 
 class DalitzPhaseSpace{
 public:

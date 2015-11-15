@@ -1,4 +1,5 @@
 #include "dalitzphasespace.h"
+using namespace std;
 
 DalitzPhaseSpace::DalitzPhaseSpace(const double& mM, const double& mA, const double& mB, const double& mC):
 m_mMo(mM),m_mChA(mA),m_mChB(mB),m_mChC(mC)

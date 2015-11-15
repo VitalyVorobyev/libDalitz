@@ -11,15 +11,15 @@ double DalitzMCIntegral::GetIntegral(const long& nc){
   double res = 0;
   double ressq = 0;
   double mAB,mAC;
-  cout << "DalitzMCIntegral: integrating..." << endl;
+  std::cout << "DalitzMCIntegral: integrating..." << std::endl;
   for(int i=0; i<m_ncounts; i++){
-    if(!(i%100000)) cout << i << " counts" << endl;
+    if(!(i%100000)) std::cout << i << " counts" << std::endl;
     GetPoint(mAB,mAC);
     res += dm->P(mAB,mAC);
     ressq += res*res;
   }
   m_int = res/m_ncounts;
   m_int_err = ressq/m_ncounts;
-  cout << "Done! Int = " << m_int << " +- " << m_int_err << endl;
+  std::cout << "Done! Int = " << m_int << " +- " << m_int_err << std::endl;
   return m_int;
 }

@@ -1,4 +1,5 @@
 #include "b0tod0pipimodel.h"
+using namespace std;
 
 B0toD0pipiModel::B0toD0pipiModel(void):
 B0toD0pipiModel(5.27958,1.86484,0.13957018)

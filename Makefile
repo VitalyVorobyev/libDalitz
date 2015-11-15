@@ -37,7 +37,7 @@ symdalitzmodel.o: symdalitzmodel.cpp
 	g++ -fPIC -c symdalitzmodel.cpp
 
 dalitzphasespace.o: dalitzphasespace.cpp
-	g++ -fPIC -c dalitzphasespace.cpp
+	g++ -fPIC -std=c++11 -c dalitzphasespace.cpp
 
 kspipimodel.o: kspipimodel.cpp
 	g++ -fPIC -std=c++11 -c kspipimodel.cpp

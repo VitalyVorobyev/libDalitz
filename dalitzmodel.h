@@ -25,18 +25,18 @@ public:
   void SetTheta(const int resn, const double& a) {if(resn<m_res_v.size()) m_res_v[resn]->SetTheta(a); return;}
   void SetMomenta(const int resn, const EvtVector4R& p4_p, const EvtVector4R& p4_d1,const EvtVector4R& p4_d2){if(resn<m_res_v.size()) m_res_v[resn]->SetMomenta(p4_p,p4_d1,p4_d2); return;}
 
-  void SetABaxis(const string& str) {mABaxis = str; return;}
-  void SetACaxis(const string& str) {mACaxis = str; return;}
-  void SetBCaxis(const string& str) {mBCaxis = str; return;}
+  void SetABaxis(const std::string& str) {mABaxis = str; return;}
+  void SetACaxis(const std::string& str) {mACaxis = str; return;}
+  void SetBCaxis(const std::string& str) {mBCaxis = str; return;}
 
-  string ABaxis(void) const { return mABaxis;}
-  string ACaxis(void) const { return mACaxis;}
-  string BCaxis(void) const { return mBCaxis;}
+  std::string ABaxis(void) const { return mABaxis;}
+  std::string ACaxis(void) const { return mACaxis;}
+  std::string BCaxis(void) const { return mBCaxis;}
 private:
   std::vector<EvtResonance2*> m_res_v;
-  string mABaxis;
-  string mACaxis;
-  string mBCaxis;
+  std::string mABaxis;
+  std::string mACaxis;
+  std::string mBCaxis;
 };
 
 #endif // DALITZMODEL_H
