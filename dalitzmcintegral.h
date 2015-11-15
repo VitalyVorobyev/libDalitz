@@ -14,6 +14,8 @@ public:
 private:
   DalitzModel* dm;
   long m_ncounts;
+  double m_int;
+  double m_int_err;
 };
 
 #endif // DALITZMCINTEGRAL_H
