@@ -6,7 +6,7 @@ ModelIntegral::ModelIntegral(SymDalitzModel *model){
   m_gsize = 500;
 }
 
-double ModelIntegral::Calculate(const string& fname,vector<double>& C,vector<double>& S,vector<double>& K,vector<double>& Kb){
+double ModelIntegral::Calculate(const string& label,vector<double>& C,vector<double>& S,vector<double>& K,vector<double>& Kb){
   C.clear();
   S.clear();
   K.clear();
@@ -24,6 +24,7 @@ double ModelIntegral::Calculate(const string& fname,vector<double>& C,vector<dou
   const double dm = (M_max - M_min)/m_gsize;
   double mp = M_min;
   m_majorant = 0;
+  const string fname = label + string("_binning.txt");
   ofstream ofile(fname.c_str());
   ofile << "GridSize " << m_gsize << endl;
   ofile << m_model->mM() << " -> " << m_model->mA();
@@ -57,6 +58,7 @@ double ModelIntegral::Calculate(const string& fname,vector<double>& C,vector<dou
       Kb[bin] += Pbar;
     }
   }
+  ofile.close();
   double norm = 0;
   for(int i=0; i<8; i++){
     C[i] /= sqrt(K[i]*Kb[i]);
@@ -64,12 +66,16 @@ double ModelIntegral::Calculate(const string& fname,vector<double>& C,vector<dou
     norm += K[i] + Kb[i];
   }
 
+  const string fname1 = label + string("_eq_phase_params.txt");
+  ofstream ofile1(fname1.c_str());
   cout << "Norm     = " << norm << endl;
   cout << "Majorant = " << m_majorant << endl;
   for(int i=0; i<m_nbins; i++){
     K[i]  /= norm;
     Kb[i] /= norm;
     cout << i+1 << ": C = " << C[i] << ", S = " << S[i] << ", K = " << K[i] << ", Kb = " << Kb[i] << ", Q = " << C[i]*C[i]+S[i]*S[i] << endl;
+    ofile1 << i+1 << ": C = " << C[i] << ", S = " << S[i] << ", K = " << K[i] << ", Kb = " << Kb[i] << ", Q = " << C[i]*C[i]+S[i]*S[i] << endl;
   }
+  ofile.close();
   return m_majorant;
 }

@@ -10,7 +10,7 @@ public:
 
   void SetGridSize(const int gsize) {m_gsize = gsize; return;}
   void SetNBins(const int nbins) {m_model->SetNBins(nbins); m_nbins = nbins; return;}
-  double Calculate(const string& fname,vector<double>& C,vector<double>& S,vector<double>& K,vector<double>& Kb);
+  double Calculate(const string& label, vector<double>& C, vector<double>& S, vector<double>& K, vector<double>& Kb);
 
 private:
   void SetMajorant(void);
