@@ -1,65 +1,27 @@
-all: libdalitz.so
+Sources=EvtComplex.cpp EvtConst.cpp EvtKine.cpp EvtResonance2.cpp EvtVector3C.cpp EvtVector3R.cpp EvtVector4C.cpp EvtVector4R.cpp EvtTensor4C.cpp symdalitzmodel.cpp dalitzmodel.cpp kspipimodel.cpp dalitzphasespace.cpp b0tod0pipimodel.cpp modelintegral.cpp libdalitz.cpp randomdalitzpoint.cpp dalitzmcintegral.cpp dalitzgenerator.cpp
+Executable=libdalitz.so
+CFlags=-c -Wall -fPIC -g -Iinc -std=c++11 -I. `root-config --cflags`
+LDFlags= -shared -fPIC -std=c++11 -I. -Wl,--no-as-needed `root-config --glibs` -lm -lstdc++ -lRooFit -lRooFitCore -ldalitz
+ObjectDir=obj/
+SourceDir=src/
+BinDir=bin/
 
-libdalitz.so: EvtComplex.o EvtConst.o EvtKine.o EvtResonance2.o EvtVector3C.o EvtVector3R.o EvtVector4C.o EvtVector4R.o EvtTensor4C.o symdalitzmodel.o dalitzmodel.o kspipimodel.o dalitzphasespace.o b0tod0pipimodel.o modelintegral.o libdalitz.o randomdalitzpoint.o dalitzmcintegral.o dalitzgenerator.o
-	g++ -Wall -shared -fPIC -std=c++11 -o libdalitz.so EvtComplex.o EvtConst.o EvtKine.o EvtResonance2.o EvtVector3C.o EvtVector3R.o EvtVector4C.o EvtVector4R.o EvtTensor4C.o symdalitzmodel.o dalitzmodel.o kspipimodel.o dalitzphasespace.o b0tod0pipimodel.o modelintegral.o libdalitz.o randomdalitzpoint.o dalitzmcintegral.o dalitzgenerator.o -I. -lm -L/usr/local/lib -lstdc++ 
+CC=g++
+RM=rm
 
-EvtComplex.o: EvtComplex.cpp
-	g++ -fPIC -c EvtComplex.cpp
+#!!!!!DO NOT EDIT ANYTHING UNDER THIS LINE!!!!!
+Objects=$(Sources:.cpp=.o)
+CSources=$(addprefix $(SourceDir),$(Sources))
+CObjects=$(addprefix $(ObjectDir),$(Objects))
+CExecutable=$(addprefix $(BinDir),$(Executable))
 
-EvtConst.o: EvtConst.cpp
-	g++ -fPIC -c EvtConst.cpp
+all: $(CSources) $(CExecutable)
 
-EvtKine.o: EvtKine.cpp
-	g++ -fPIC -c EvtKine.cpp
+$(CExecutable): $(CObjects)
+	$(CC) $(LDFlags) $(CObjects) -o $@
 
-EvtResonance2.o: EvtResonance2.cpp
-	g++ -fPIC -c EvtResonance2.cpp
-
-EvtVector3C.o: EvtVector3C.cpp
-	g++ -fPIC -c EvtVector3C.cpp
-
-EvtVector3R.o: EvtVector3R.cpp
-	g++ -fPIC -c EvtVector3R.cpp
-
-EvtVector4C.o: EvtVector4C.cpp
-	g++ -fPIC -c EvtVector4C.cpp
-
-EvtVector4R.o: EvtVector4R.cpp
-	g++ -fPIC -c EvtVector4R.cpp
-
-EvtTensor4C.o: EvtTensor4C.cpp
-	g++ -fPIC -c EvtTensor4C.cpp
-
-dalitzmodel.o: dalitzmodel.cpp
-	g++ -fPIC -c dalitzmodel.cpp
-
-symdalitzmodel.o: symdalitzmodel.cpp
-	g++ -fPIC -c symdalitzmodel.cpp
-
-dalitzphasespace.o: dalitzphasespace.cpp
-	g++ -fPIC -std=c++11 -c dalitzphasespace.cpp
-
-kspipimodel.o: kspipimodel.cpp
-	g++ -fPIC -std=c++11 -c kspipimodel.cpp
-
-b0tod0pipimodel.o: b0tod0pipimodel.cpp
-	g++ -fPIC -std=c++11 -c b0tod0pipimodel.cpp
-
-modelintegral.o: modelintegral.cpp
-	g++ -fPIC -c modelintegral.cpp
-
-libdalitz.o: libdalitz.cpp
-	g++ -fPIC -c libdalitz.cpp
-
-randomdalitzpoint.o: randomdalitzpoint.cpp
-	g++ -fPIC -std=c++11 -c randomdalitzpoint.cpp
-
-dalitzmcintegral.o: dalitzmcintegral.cpp
-	g++ -fPIC -std=c++11 -c dalitzmcintegral.cpp
-
-dalitzgenerator.o: dalitzgenerator.cpp
-	g++ -fPIC -std=c++11 -c dalitzgenerator.cpp
+$(ObjectDir)%.o: $(SourceDir)%.cpp
+	$(CC) $(CFlags) $< -o $@
 
 clean:
-	rm -rf *.o libdalitz.so
-
+	$(RM) $(CObjects)
