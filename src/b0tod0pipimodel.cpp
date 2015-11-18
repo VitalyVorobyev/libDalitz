@@ -1,7 +1,10 @@
 #include "b0tod0pipimodel.h"
+#include "consts.h"
+
+using namespace std;
 
 B0toD0pipiModel::B0toD0pipiModel(void):
-B0toD0pipiModel(5.27958,1.86484,0.13957018)
+B0toD0pipiModel(m_B0_Mass,m_D0_Mass,m_PI_Mass)
 {
 }
 
@@ -11,6 +14,14 @@ SymDalitzModel(mB,mD,mpi,-M_PI/8.,15.*M_PI/8.)
   SetABaxis("m_{D^{0}#pi^{+}}^{2}, GeV^{2}/c^{4}");
   SetACaxis("m_{D^{0}#pi^{-}}^{2}, GeV^{2}/c^{4}");
   SetBCaxis("m_{#pi#pi}^{2}, GeV^{2}/c^{4}");
+  InitBelleModel();
+}
+
+//void B0toD0pipiModel::InitLHCbModel(void){
+
+//}
+
+void B0toD0pipiModel::InitBelleModel(void){
 // ** A. Kuzmin et al. (Belle Collaboration) Phys. Rev. D 76, 012006 – Published 30 July 2007 **
   const double radtodeg = EvtConst::radToDegrees;
   EvtVector4R p4_p,moms1,moms2,moms3;

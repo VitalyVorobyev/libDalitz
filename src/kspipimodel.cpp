@@ -1,7 +1,8 @@
 #include "kspipimodel.h"
+#include "consts.h"
 
 KspipiModel::KspipiModel(void):
-KspipiModel(1.86484,0.497614,0.13957018)
+KspipiModel(m_D0_Mass,m_Ks0_Mass,m_PI_Mass)
 {
 }
 KspipiModel::KspipiModel(const double &md, const double &mks, const double& mpi):

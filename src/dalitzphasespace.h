@@ -1,10 +1,7 @@
 #ifndef DalitzPhaseSpace_H
 #define DalitzPhaseSpace_H
 
-#include <math.h>
-#include <iomanip>
 #include "EvtVector4R.h"
-using namespace std;
 
 class DalitzPhaseSpace{
 public:
