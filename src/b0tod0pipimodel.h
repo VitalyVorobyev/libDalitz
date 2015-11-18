@@ -13,7 +13,7 @@ public:
 
 private:
   EvtComplex amp_BelleKuzmin(const EvtVector4R& p4_p,const EvtVector4R& moms1,const EvtVector4R& moms2,const EvtVector4R& moms3);
-
+  void InitBelleModel(void);
 };
 
 #endif // B0TOD0PIPIMODEL_H

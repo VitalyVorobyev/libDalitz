@@ -1,7 +1,7 @@
 #include "dalitzmcintegral.h"
 
 DalitzMCIntegral::DalitzMCIntegral(const DalitzModel &_dm):
-  RandomDalitzPoint(_dm),m_ncounts(1e6),m_int_err(0),m_int(0)
+  RandomDalitzPoint(_dm),m_ncounts(1e6),m_int(0),m_int_err(0)
 {
   dm = const_cast<DalitzModel*>(&_dm);
 }

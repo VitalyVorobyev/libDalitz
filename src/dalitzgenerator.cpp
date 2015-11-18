@@ -3,7 +3,7 @@
 using namespace std;
 
 DalitzGenerator::DalitzGenerator(const DalitzModel &_dm):
-  RandomDalitzPoint(_dm),m_maj(-1),m_maj_counts(1e4),m_ntries(1e8)
+  RandomDalitzPoint(_dm),m_ntries(1e8),m_maj_counts(1e4),m_maj(-1)
 {
   dm = const_cast<DalitzModel*>(&_dm);
 }

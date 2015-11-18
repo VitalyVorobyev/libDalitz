@@ -1,4 +1,6 @@
 #include "dalitzphasespace.h"
+#include <math.h>
+
 using namespace std;
 
 DalitzPhaseSpace::DalitzPhaseSpace(const double& mM, const double& mA, const double& mB, const double& mC):
@@ -35,10 +37,10 @@ inline double DalitzPhaseSpace::eB_AC(const double& mAC) const {return 0.5*(m_mM
 
 int DalitzPhaseSpace::mAB_range(const double& mAC, double& mABmin, double& mABmax) const{
   if(mAC > m_mAC_max || mAC < m_mAC_min) return -1;
-  const double eA  = eA_AC(mAC);
-  const double eB  = eB_AC(mAC);
-  const double pA  = sqrt(eA*eA-m_mChA_sq);
-  const double pB  = sqrt(eB*eB-m_mChB_sq);
+  const double eA   = eA_AC(mAC);
+  const double eB   = eB_AC(mAC);
+  const double pA   = sqrt(eA*eA-m_mChA_sq);
+  const double pB   = sqrt(eB*eB-m_mChB_sq);
   const double esum = eA+eB;
   const double pdif = pA-pB;
   const double psum = pA+pB;
@@ -49,7 +51,7 @@ int DalitzPhaseSpace::mAB_range(const double& mAC, double& mABmin, double& mABma
 
 bool DalitzPhaseSpace::IsInPlot(const double& mAB,const double& mAC){
   double mABmin,mABmax;
-  if(mAB_range(mAC,mABmin,mABmax)) return false;
+  if(mAB_range(mAC,mABmin,mABmax))   return false;
   if(mAB >= mABmin && mAB <= mABmax) return true;
   else return false;
 }
@@ -59,45 +61,35 @@ void DalitzPhaseSpace::GetLVs(const double& mAB,const double& mAC, EvtVector4R& 
   // pA is directed to axis z
   // Decay plane is xz plane
   // pxB is chosen to be positive
-  const double mM_sq = m_mMo*m_mMo;
-  const double mA_sq = m_mChA*m_mChA;
-  const double mB_sq = m_mChB*m_mChB;
-  const double mC_sq = m_mChC*m_mChC;
 
-  double eA, pxA = 0 ,pyA = 0, pzA;
-  double eB, pxB, pyB = 0, pzB;
-  double eC, pxC, pyC = 0, pzC;
-  double eM = m_mMo, pxM = 0,pyM = 0,pzM = 0;
-  double mAB_test, mAC_test;
+  pA = EvtVector4R((mAB+mAC-m_mChB_sq-m_mChC_sq)/(2.*m_mMo),0,0,0);
+  pB = EvtVector4R((m_mMo_sq+m_mChB_sq-mAC)/(2.*m_mMo),0,0,0);
+  pC = EvtVector4R((m_mMo_sq+m_mChC_sq-mAB)/(2.*m_mMo),0,0,0);
+  pM = EvtVector4R(m_mMo,0,0,0);
 
-  eA  = (mAB+mAC-mB_sq-mC_sq)/(2.*m_mMo);
-  eB  = (mM_sq+mB_sq-mAC)/(2.*m_mMo);
-  eC  = (mM_sq+mC_sq-mAB)/(2.*m_mMo);
+  pA.pz(sqrt(fabs(pA.e()*pA.e() - m_mChA_sq)));
+  pB.pz((m_mChB_sq+m_mChA_sq+2*pA.e()*pB.e()-mAB)/(2*pA.pz()));
+  pC.pz((m_mChC_sq+m_mChA_sq+2*pA.e()*pC.e()-mAC)/(2*pA.pz()));
 
-  pzA = sqrt(eA*eA - mA_sq);
-  pzB = (mB_sq+mA_sq+2*eA*eB-mAB)/(2*pzA);
-  pzC = (mC_sq+mA_sq+2*eA*eC-mAC)/(2*pzA);
+  pB.px(sqrt(fabs(pB.e()*pB.e()-pB.pz()*pB.pz()-m_mChB_sq)));
+  pC.px(-pB.px());
 
-  const double pxBsq = eB*eB - pzB*pzB - mB_sq;
-  pxB = pxBsq > 0 ? sqrt(pxBsq) : 0;
-  pxC = -pxB;
-
-  mAC_test = (eA+eC)*(eA+eC)-(pxA+pxC)*(pxA+pxC)-(pyA+pyC)*(pyA+pyC)-(pzA+pzC)*(pzA+pzC);
-  mAB_test = (eA+eB)*(eA+eB)-(pxA+pxB)*(pxA+pxB)-(pyA+pyB)*(pyA+pyB)-(pzA+pzB)*(pzA+pzB);
-
-  if(fabs(mAC-mAC_test)>0.0001 || fabs(mAB-mAB_test)>0.0001 || std::isnan(pxB)){
-    const double mB_test = sqrt(eB*eB-pxB*pxB-pyB*pyB-pzB*pzB);
-    const double mC_test = sqrt(eC*eC-pxC*pxC-pyC*pyC-pzC*pzC);
-    const double mA_test = sqrt(eA*eA-pxA*pxA-pyA*pyA-pzA*pzA);
-    cout << "Wrong (mAC,mAB): (" << mAC << "," << mAB << ") -> (" << mAC_test << "," << mAB_test << "):" << endl;
-    cout << "Masses squared: " << mM_sq << ", " << mA_sq << ", " << mB_sq << ", " << mC_sq << endl;
-    cout << " B: (" << eB << "," << pxB << "," << pyB << "," << pzB << ") -> " << mB_test << endl;
-    cout << " C: (" << eC << "," << pxC << "," << pyC << "," << pzC << ") -> " << mC_test << endl;
-    cout << " A: (" << eA << "," << pxA << "," << pyA << "," << pzA << ") -> " << mA_test << endl;
-  }
-  pM = EvtVector4R(eM,pxM,pyM,pzM);
-  pA = EvtVector4R(eA,pxA,pyA,pzA);
-  pB = EvtVector4R(eB,pxB,pyB,pzB);
-  pC = EvtVector4R(eC,pxC,pyC,pzC);
+//  const double mAC_test = (eA+eC)*(eA+eC)-(pxA+pxC)*(pxA+pxC)-(pyA+pyC)*(pyA+pyC)-(pzA+pzC)*(pzA+pzC);
+//  const double mAB_test = (eA+eB)*(eA+eB)-(pxA+pxB)*(pxA+pxB)-(pyA+pyB)*(pyA+pyB)-(pzA+pzB)*(pzA+pzB);
+//
+//  if(fabs(mAC-mAC_test)>0.0001 || fabs(mAB-mAB_test)>0.0001 || std::isnan(pxB)){
+//    const double mB_test = sqrt(eB*eB-pxB*pxB-pyB*pyB-pzB*pzB);
+//    const double mC_test = sqrt(eC*eC-pxC*pxC-pyC*pyC-pzC*pzC);
+//    const double mA_test = sqrt(eA*eA-pxA*pxA-pyA*pyA-pzA*pzA);
+//    cout << "Wrong (mAC,mAB): (" << mAC << "," << mAB << ") -> (" << mAC_test << "," << mAB_test << "):" << endl;
+//    cout << "Masses squared: " << mM_sq << ", " << mA_sq << ", " << mB_sq << ", " << mC_sq << endl;
+//    cout << " B: (" << eB << "," << pxB << "," << pyB << "," << pzB << ") -> " << mB_test << endl;
+//    cout << " C: (" << eC << "," << pxC << "," << pyC << "," << pzC << ") -> " << mC_test << endl;
+//    cout << " A: (" << eA << "," << pxA << "," << pyA << "," << pzA << ") -> " << mA_test << endl;
+//  }
+//  pM = EvtVector4R(eM,pxM,pyM,pzM);
+//  pA = EvtVector4R(eA,pxA,pyA,pzA);
+//  pB = EvtVector4R(eB,pxB,pyB,pzB);
+//  pC = EvtVector4R(eC,pxC,pyC,pzC);
   return;
 }
