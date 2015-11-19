@@ -26,6 +26,10 @@ public:
 
   int mAB_range(const double&,double&,double&) const;
   void GetLVs(const double& mAB,const double& mAC, EvtVector4R& pd, EvtVector4R& pks,EvtVector4R& ppip,EvtVector4R& ppim);
+
+  // Static methods
+  static double mBC(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq, const double& mChC_sq, const double& mABsq,const double& mACsq); /// Calculates third Dalitz variable using other two ones
+  static double pResSq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq);
 private:
   double m_mMo;
   double m_mChA;

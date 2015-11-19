@@ -27,6 +27,14 @@ double DalitzPhaseSpace::mBC(const double& mAB,const double& mAC){
   return m_mMo_sq+m_mChA_sq+m_mChB_sq+m_mChC_sq-mAB-mAC;
 }
 
+double DalitzPhaseSpace::mBC(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq, const double& mChC_sq, const double& mABsq,const double& mACsq){
+  return mMo_sq+mChA_sq+mChB_sq+mChC_sq-mABsq-mACsq;
+}
+
+double DalitzPhaseSpace::pResSq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq){
+  return (0.25*pow(mMo_sq-mChA_sq-mChB_sq,2)-mChA_sq*mChB_sq)/mMo_sq;
+}
+
 // a particle energy in a resonance rest frame
 //double DalitzPhaseSpace::eA_AB(const double& mAB) const{return 0.5*(mAB-m_mChB_sq+m_mChA_sq)/sqrt(mAB);}
 //double DalitzPhaseSpace::eB_AB(const double& mAB) const{return 0.5*(mAB-m_mChA_sq+m_mChB_sq)/sqrt(mAB);}
