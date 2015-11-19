@@ -1,6 +1,15 @@
 #ifndef ABSVARWIDTH_H
 #define ABSVARWIDTH_H
 
+class VarWType{
+public:
+  static const int Const = 0;
+  static const int BW = 1;
+  static const int GS = 2;
+  static const int Flatte = 3;
+  static const int Bugg = 4;
+};
+
 class AbsVarWidth{
 public:
   AbsVarWidth(const double& G0, const double& m, const double& p0);

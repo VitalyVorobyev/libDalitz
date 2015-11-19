@@ -12,25 +12,6 @@
 /// \brief Class describes complex amplitude of a three-body decay through an intermediate resonance (M -> RC, R -> AB)
 /// Class describes complex amplitude of a three-body decay through an intermediate resonance (M -> RC, R -> AB)
 
-class ResPropType{
-public:
-  static const int NR;
-  static const int RBW;
-  static const int GS;
-  static const int RhoOmega;
-  static const int Bugg;
-  static const int VDst;
-};
-
-class VarWType{
-public:
-  static const int Const;
-  static const int BW;
-  static const int GS;
-  static const int Flatte;
-  static const int Bugg;
-};
-
 class DalitzResonance : public DalitzPlotObject{
 public:
   DalitzResonance(const std::string& name,const int PropType,const int WidthType,const double& mmo, const double& mca, const double& mcb, const double& mcc, const double& mres, const double& wres, const int spin, const EvtComplex& camp);               /// Constuctor for RBW and GS resonances

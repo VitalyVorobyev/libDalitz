@@ -1,19 +1,40 @@
 #include "relbreitwigner.h"
+#include "bwwidth.h"
+#include "constwidth.h"
+#include "flattewidth.h"
 
-RelBreitWigner::RelBreitWigner(const double &G0, const double &m, const double &p0, const int mom, const bool constwidth):
-  AbsPropagator(m,p0,constwidth ? (AbsVarWidth*) new ConstWidth(G0) : new BWWidth(G0,m,p0,mom)),
-  m_const_width(constwidth)
+//const int VarWType::Const  = 0;
+//const int VarWType::BW     = 1;
+//const int VarWType::GS     = 2;
+//const int VarWType::Flatte = 3;
+//const int VarWType::Bugg   = 4;
+
+RelBreitWigner::RelBreitWigner(const double &G0, const double &m, const double &p0, const int mom, const int wtype):
+  AbsPropagator(m,p0), m_wtype(wtype)
 {
+  switch(m_wtype){
+  case VarWType::Const:
+    m_width = new ConstWidth(G0);
+    break;
+  case VarWType::BW:
+    m_width = new BWWidth(G0,m,p0,mom);
+    break;
+  case VarWType::Flatte:
+    m_width = new FlatteWidth(m);
+    break;
+  default:
+    std::cout << "RelBreitWigner: wrong VarWType " << m_wtype << std::endl;
+    break;
+  }
 }
 
 EvtComplex RelBreitWigner::operator()(const double& s, const double& p) const{
   const EvtComplex ione(0,1);
-  const BWWidth& G = *((BWWidth*)width());
   const double& mass = m();
-  return 1./(mass*mass-s-ione*mass*G(s,p));
+  return 1./(mass*mass-s-ione*mass*(*m_width)(s,p));
 }
 
 RelBreitWigner::~RelBreitWigner(){
-  if(m_const_width) delete (ConstWidth*)width();
-  else              delete (BWWidth*)width();
+  delete m_width;
+  return;
 }

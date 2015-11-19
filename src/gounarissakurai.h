@@ -5,7 +5,14 @@
 #include "gswidth.h"
 #include "constwidth.h"
 
-// Eq.(11,12) in Phys. Rev. D92, 032002 (2015)
+/// \brief Class implementing Gounaris-Sakurai lineshape
+/// Gounaris-Sakurai lineshape is introduced by
+/// G. J. Gounaris and J. J. Sakurai in ''Finite Width Corrections to
+/// the Vector-Meson-Dominance Prediction for rho -> e+e-``,
+/// Phys. Rev. Lett. 21, 244 (1968).
+///
+/// GS lineshape is applied in LHCb experiment
+/// (Eq.(11,12) in Phys. Rev. D92, 032002 (2015))
 
 class GounarisSakurai : public AbsPropagator{
 public:
@@ -21,6 +28,7 @@ private:
   double g(void);
   double m_g;
   const bool m_const_width;
+  AbsVarWidth* m_width;
 };
 
 #endif // GOUNARISSAKURAI_H

@@ -3,25 +3,25 @@
 #include "consts.h"
 
 GounarisSakurai::GounarisSakurai(const double &G0, const double &m, const double &p0, const bool constwidth):
-  AbsPropagator(m,p0,constwidth ? (AbsVarWidth*) new ConstWidth(G0) : new GSWidth(G0,m,p0)),
-  m_const_width(constwidth)
+  AbsPropagator(m,p0), m_const_width(constwidth),
+  m_width(constwidth ? (AbsVarWidth*) new ConstWidth(G0) : new GSWidth(G0,m,p0))
 {
   g();
 }
 
 EvtComplex GounarisSakurai::operator()(const double& s, const double& p) const{
   const EvtComplex ione(0,1);
-  const GSWidth& G  = *((GSWidth*)width());
-  const double& mr  = width()->m();
+//  const GSWidth& G  = *((GSWidth*)width());
+  const double& mr  = m();
   const double mrsq = mr*mr;
-  const double& G0  = width()->G0();
+  const double& G0  = m_width->G0();
 
-  return mrsq*(1.*G0*m_g/mr)/(mrsq-s+f(s,p)-ione*mr*G(s,p));
+  return mrsq*(1.*G0*m_g/mr)/(mrsq-s+f(s,p)-ione*mr*(*m_width)(s,p));
 }
 
 GounarisSakurai::~GounarisSakurai(){
-  if(m_const_width) delete (ConstWidth*)width();
-  else              delete (GSWidth*)width();
+  m_const_width ? delete (ConstWidth*)m_width : delete (GSWidth*)m_width;
+  return;
 }
 
 double GounarisSakurai::g(void){
@@ -35,7 +35,7 @@ double GounarisSakurai::g(void){
 }
 
 int GounarisSakurai::hhder(double& h,double& hder, const double& p) const {
-  const double& mr   = width()->m();
+  const double& mr   = m();
   const double coeff = 2./M_PI;
   const double& mpi  = m_PI_Mass;
 
@@ -66,7 +66,7 @@ double GounarisSakurai::f(const double& s, const double& p) const {
   hhder(hr,hrder,p);
   const double hs = h(s,p);
 
-  const double& G0  = width()->G0();
+  const double& G0  = m_width->G0();
   const double mrsq = m()*m();
   const double p0sq = p0()*p0();
 
