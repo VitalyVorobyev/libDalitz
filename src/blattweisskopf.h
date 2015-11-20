@@ -7,8 +7,8 @@
  * Copyright (C) 2002 Caltech
  *******************************************************************************/
 
-// Blatt-Weisskopf penetration form factor for a resonance R->AB.
-// Taken from CLEO preprint 00-23 (hep-ex/0011065)
+/// Blatt-Weisskopf penetration form factor for a resonance R->AB.
+/// Taken from CLEO preprint 00-23 (hep-ex/0011065)
 
 #ifndef BLATTWEISSKOPF_H
 #define BLATTWEISSKOPF_H

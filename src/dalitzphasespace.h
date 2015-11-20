@@ -29,7 +29,7 @@ public:
 
   // Static methods
   static double mBC(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq, const double& mChC_sq, const double& mABsq,const double& mACsq); /// Calculates third Dalitz variable using other two ones
-  static double pResSq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq);
+  static double pResSq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq);/// Calculates momentum of the mother particle in the rest frame of a daughter particle
 private:
   double m_mMo;
   double m_mChA;

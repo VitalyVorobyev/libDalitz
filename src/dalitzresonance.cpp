@@ -17,7 +17,7 @@ DalitzResonance::DalitzResonance(const std::string& name,const int PropType, con
 // Constuctor for RBW and GS resonances
 {
   const ResDecayAngularDistribution& angamp = *m_ang_amp;
-  const double pResRef = DalitzPhaseSpace::pResSq(angamp.mResSq(),angamp.mChCSq(),angamp.mChBSq());
+  const double pResRef = DalitzPhaseSpace::pResSq(angamp.mResSq(),angamp.mChASq(),angamp.mChBSq());
   switch(PropType){
   case ResPropType::RBW:
     if(WidthType == VarWType::Flatte){
@@ -38,7 +38,7 @@ DalitzResonance::DalitzResonance(const std::string& name,const int PropType, con
     return;
     break;
   }
-  const double pMoRef = DalitzPhaseSpace::pResSq(angamp.mMotSq(),angamp.mResSq(),angamp.mChBSq());
+  const double pMoRef = DalitzPhaseSpace::pResSq(angamp.mMotSq(),angamp.mResSq(),angamp.mChCSq());
   m_mff = new BlattWeisskopf(0,1.6,pMoRef);
   m_rff = new BlattWeisskopf(spin,1.6,pResRef);
 }
@@ -58,9 +58,9 @@ DalitzResonance::DalitzResonance(const std::string& name,const int PropType,cons
 {
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const double& alpha, const EvtComplex& camp):
+DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const double& alpha, const EvtComplex& camp):
   DalitzPlotObject(name,camp),
-  m_ang_amp(new ResDecayAngularDistribution(0,0,0,0,0,0)),
+  m_ang_amp(new ResDecayAngularDistribution(0,mmo,mca,mcb,mcc,0)),
   m_ptype(PropType)
 {
   if(PropType != ResPropType::NR && PropType != ResPropType::Flatte){
@@ -76,14 +76,14 @@ DalitzResonance::DalitzResonance(const std::string& name,const int PropType,cons
   m_rff = new BlattWeisskopf(0,1.6,pResRef);
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const double& alpha,const double& amp,const double& phi):
-  DalitzResonance(name,PropType,alpha,amp*EvtComplex(cos(phi),sin(phi)))
+DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const double& alpha,const double& amp,const double& phi):
+  DalitzResonance(name,PropType,mmo,mca,mcb,mcc,alpha,amp*EvtComplex(cos(phi),sin(phi)))
 {
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const EvtComplex& camp):
+DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const EvtComplex& camp):
   DalitzPlotObject(name,camp),
-  m_ang_amp(new ResDecayAngularDistribution(0,0,0,0,0,0)),
+  m_ang_amp(new ResDecayAngularDistribution(0,mmo,mca,mcb,mcc,0.5)),
   m_prop(new BuggPropagator()),
   m_ptype(PropType),m_wtype(VarWType::Const)
 {
@@ -93,35 +93,36 @@ DalitzResonance::DalitzResonance(const std::string& name,const int PropType,cons
   }
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const double& amp,const double& phi)
-  : DalitzResonance(name,PropType,amp*EvtComplex(cos(phi),sin(phi)))
+DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const double& amp,const double& phi)
+  : DalitzResonance(name,PropType,mmo,mca,mcb,mcc,amp*EvtComplex(cos(phi),sin(phi)))
 {
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const double& beta1,const double& beta2, const EvtComplex& camp):
+DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const double& beta1,const double& beta2, const EvtComplex& camp):
   DalitzPlotObject(name,camp),
-  m_ang_amp(new ResDecayAngularDistribution(0,0,0,0,0,0)),
-  m_ptype(PropType), m_prop(new VirtualDstarPropagator(beta1,beta2))
+  m_ang_amp(new ResDecayAngularDistribution(1,mmo,mca,mcb,mcc,2.01)),
+  m_prop(new VirtualDstarPropagator(beta1,beta2)),m_ptype(PropType)
 {
-  if(PropType != ResPropType::NR && PropType != ResPropType::Flatte){
-    std::cout << "DalitzResonance: wrong propagator type specified in NR of Flatte constructor for " << name << std::endl;
+  if(PropType != ResPropType::VDst){
+    std::cout << "DalitzResonance: wrong propagator type specified in VDst constructor for " << name << std::endl;
     return;
   }
   const ResDecayAngularDistribution& angamp = *m_ang_amp;
-  const double pResRef = DalitzPhaseSpace::pResSq(angamp.mResSq(),angamp.mChCSq(),angamp.mChBSq());
-  const double pMoRef  = DalitzPhaseSpace::pResSq(angamp.mMotSq(),angamp.mResSq(),angamp.mChBSq());
+  const double pResRef = DalitzPhaseSpace::pResSq(angamp.mResSq(),angamp.mChASq(),angamp.mChBSq());
+  const double pMoRef  = DalitzPhaseSpace::pResSq(angamp.mMotSq(),angamp.mResSq(),angamp.mChCSq());
   m_mff = new BlattWeisskopf(0,1.6,pMoRef);
   m_rff = new BlattWeisskopf(0,1.6,pResRef);
 }
 
-//DalitzResonance::DalitzResonance(const std::string& name,const int PropType, const double& amp, const double& phi); /// Constuctor for NR and Bugg
-//DalitzResonance::DalitzResonance(const std::string& name,const int PropType, const int WidthType, const double& mres, const EvtComplex& camp);               /// Constuctor for Flatte
-//DalitzResonance::DalitzResonance(const std::string& name,const int PropType, const int WidthType, const double& mres, const double& amp, const double& phi); /// Constuctor for Flatte
+DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const double& beta1,const double& beta2, const double& amp,const double& phi):
+  DalitzResonance(name,PropType,mmo,mca,mcb,mcc,beta1,beta2,amp*EvtComplex(cos(phi),sin(phi)))
+{
+}
 
 EvtComplex DalitzResonance::evaluate(const double& mACsq,const double& mBCsq){
   const ResDecayAngularDistribution& angamp = *m_ang_amp;
   const double mABsq  = DalitzPhaseSpace::mBC(angamp.mMotSq(),angamp.mChASq(),angamp.mChBSq(),angamp.mChCSq(),mACsq,mBCsq);
   const double pMoAB  = DalitzPhaseSpace::pResSq(angamp.mMotSq(),mABsq,angamp.mChCSq());
-  const double pResAB = DalitzPhaseSpace::pResSq(mABsq,angamp.mChCSq(),angamp.mChBSq());
+  const double pResAB = DalitzPhaseSpace::pResSq(mABsq,angamp.mChASq(),angamp.mChBSq());
   return CAmp()*(*m_mff)(pMoAB)*(*m_rff)(pResAB)*angamp(mACsq,mBCsq)*(*m_prop)(mABsq,pResAB);
 }

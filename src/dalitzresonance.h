@@ -18,13 +18,12 @@ public:
   DalitzResonance(const std::string& name,const int PropType,const int WidthType,const double& mmo, const double& mca, const double& mcb, const double& mcc, const double& mres, const double& wres, const int spin, const double& amp, const double& phi); /// Constuctor for RBW and GS resonances
   DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc, const double& mres, const double& wres, const int spin, const EvtComplex& camp);               /// Constuctor for RBW and GS resonances
   DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc, const double& mres, const double& wres, const int spin, const double& amp, const double& phi); /// Constuctor for RBW and GS resonances
-  DalitzResonance(const std::string& name,const int PropType,const double& alpha,const EvtComplex& camp); /// Constuctor for NR
-  DalitzResonance(const std::string& name,const int PropType,const double& alpha,const double& amp,const double& phi); /// Constuctor for NR
-  DalitzResonance(const std::string& name,const int PropType,const EvtComplex& camp); /// Constuctor for Bugg f0(500)
-  DalitzResonance(const std::string& name,const int PropType,const double& amp,const double& phi); /// Constuctor for Bugg f0(500)
-//  DalitzResonance(const std::string& name,const int PropType,const double& amp, const double& phi); /// Constuctor for NR and Bugg
-//  DalitzResonance(const std::string& name,const int PropType,const int WidthType, const double& mres, const EvtComplex& camp);               /// Constuctor for Flatte
-//  DalitzResonance(const std::string& name,const int PropType,const int WidthType, const double& mres, const double& amp, const double& phi); /// Constuctor for Flatte
+  DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const double& alpha,const EvtComplex& camp); /// Constuctor for NR
+  DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const double& alpha,const double& amp,const double& phi); /// Constuctor for NR
+  DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const EvtComplex& camp); /// Constuctor for Bugg f0(500)
+  DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const double& amp,const double& phi); /// Constuctor for Bugg f0(500)
+  DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const double& beta1,const double& beta2, const EvtComplex& amp); /// Constructor for virtual D*(2010)
+  DalitzResonance(const std::string& name,const int PropType,const double& mmo, const double& mca, const double& mcb, const double& mcc,const double& beta1,const double& beta2, const double& amp,const double& phi); /// Constructor for virtual D*(2010)
 
   EvtComplex evaluate(const double& mACsq,const double& mBCsq);
 
