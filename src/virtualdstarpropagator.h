@@ -6,7 +6,7 @@
 class VirtualDstarPropagator : public AbsPropagator{
 public:
   VirtualDstarPropagator(const double& beta1, const double& beta2);
-  ~VirtualDstarPropagator(void);
+//  ~VirtualDstarPropagator(void);
 
   EvtComplex operator()(const double& s,const double& p = 0) const;
 private:

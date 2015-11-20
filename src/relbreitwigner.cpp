@@ -15,9 +15,11 @@ RelBreitWigner::RelBreitWigner(const double &G0, const double &m, const double &
   switch(m_wtype){
   case VarWType::Const:
     m_width = new ConstWidth(G0);
+//    std::cout << "ConstWisdth is defined " << m_wtype << " " << wtype << std::endl;
     break;
   case VarWType::BW:
     m_width = new BWWidth(G0,m,p0,mom);
+//    std::cout << "BWWidth is defined " << m_wtype << std::endl;
     break;
   case VarWType::Flatte:
     m_width = new FlatteWidth(m);

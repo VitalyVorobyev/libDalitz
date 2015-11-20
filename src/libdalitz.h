@@ -4,5 +4,8 @@
 #include "modelintegral.h"
 #include "kspipimodel.h"
 #include "b0tod0pipimodel.h"
+#include "dalitzgenerator.h"
+#include "abspropagator.h"
+#include "consts.h"
 
 #endif // LIBDALITZ_H

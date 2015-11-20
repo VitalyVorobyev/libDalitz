@@ -14,10 +14,24 @@ double DalitzModel::Arg(const double& mAB,const double& mAC){
 }
 
 EvtComplex DalitzModel::Amp(const double& mAB, const double& mAC){
-  EvtVector4R pM;
-  EvtVector4R pA;
-  EvtVector4R pB;
-  EvtVector4R pC;
-  GetLVs(mAB,mAC,pM,pA,pB,pC);
-  return Amp(pM,pA,pB,pC);
+  EvtComplex res(0.,0.);
+  for(int i=0; i<(int)m_res_v.size(); i++){
+    switch(m_res_v[i]->Path()){
+    case ResPath::AB:
+      res += m_res_v[i]->evaluate(mAC,mBCsq(mAC,mAB));
+//      res += m_res_v[i]->evaluate(mBC(mAC,mAB),mAC);
+      break;
+    case ResPath::AC:
+      res += m_res_v[i]->evaluate(mAB,mBCsq(mAC,mAB));
+//      res += m_res_v[i]->evaluate(mBC(mAC,mAB),mAB);
+      break;
+    case ResPath::BC:
+//      res += m_res_v[i]->evaluate(mAB,mAC);
+      res += m_res_v[i]->evaluate(mAC,mAB);
+      break;
+    default:
+      break;
+    }
+  }
+  return res;// + EvtComplex(-2.537,0.923);
 }

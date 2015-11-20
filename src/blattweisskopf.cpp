@@ -1,5 +1,6 @@
 #include "blattweisskopf.h"
 #include <math.h>
+#include <iostream>
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
@@ -8,21 +9,26 @@
  *
  * Copyright (C) 2002 Caltech
  *******************************************************************************/
-BlattWeisskopf::BlattWeisskopf(const int LL,const double& _r,const double& _p0):
-  FormFactor(_r,_p0),_LL(LL)
+
+double BlattWeisskopf::m_r_meson     = 5.0;
+double BlattWeisskopf::m_r_resonance = 1.5;
+
+BlattWeisskopf::BlattWeisskopf(const int LL,const double& p0sq, const int type):
+  FormFactor(type == FFType::FFMeson ? m_r_meson : m_r_resonance,p0sq),m_spin(LL),
+  m_type(type)
 {
-  _F0 = compute(_p0);
+  m_F0 = compute(p0sq);
 }
 
 BlattWeisskopf::BlattWeisskopf(const BlattWeisskopf& other):
-   FormFactor(other.r(),other.p0()),_LL(other._LL),_F0(other._F0)
+   FormFactor(other.r(),other.p0sq()),m_spin(other.m_spin),m_F0(other.m_F0)
 {}
 
 BlattWeisskopf::~BlattWeisskopf()
 {}
 
-double BlattWeisskopf::operator()(const double& p) const {
-  return compute(p)/_F0;
+double BlattWeisskopf::operator()(const double& psq) const {
+  return compute(psq)/m_F0;
 }
 
 // Blatt-Weisskopf form factors
@@ -33,30 +39,41 @@ double BlattWeisskopf::operator()(const double& p) const {
 //       the mass of the meson is used
 // pAB - momentum of either daughter in the candidate rest frame
 //       the mass of the candidate is used
-// R - meson radial parameter
+// R   - meson radial parameter
 //
 // In the CLEO paper R=5 GeV-1 for D0, R=1.5 for intermediate resonances
 
-double BlattWeisskopf::compute(const double& p) const {
-  double value(1.0);
-  const double z = p*r();
-  const double zSq = z*z;
+double BlattWeisskopf::compute(const double& psq) const {
+  if(!m_spin) return 1.;
+  double denom(1.0);
+//  const double z = p*r();
+  const double zSq = psq*r()*r();
 
-  if(_LL == 0){
-    value = 1.0;
-  } else if(_LL == 1){
-    value = sqrt(1.0/(1.0 + zSq));
-  } else if(_LL == 2){
-    value = sqrt(1.0/(zSq*(zSq + 3.0) + 9.0));
-  } else if(_LL == 3){
-    const double denom = zSq*(zSq*(zSq + 6.0) + 45.0) + 225.0;
-    value = sqrt(1.0/denom);
-  } else if(_LL == 4){
-    const double denom = zSq*(zSq*(zSq*(zSq + 10.0) + 135.0) + 1575.0) + 11025.0;
-    value = sqrt(1.0/denom);
-  } else if(_LL == 5){
-    const double denom = zSq*(zSq*(zSq*(zSq*(zSq + 15.0) + 315.0) + 6300.0) + 99225.0) + 893025.0;
-    value = sqrt(1.0/denom);
+  switch(m_spin){
+  case 0:
+    denom = 1.0;
+    break;
+  case 1:
+    denom = 1.0 + zSq;
+    break;
+  case 2:
+    denom = zSq*(zSq + 3.0) + 9.0;
+    break;
+  case 3:
+    denom = zSq*(zSq*(zSq + 6.0) + 45.0) + 225.0;
+    break;
+  case 4:
+    denom = zSq*(zSq*(zSq*(zSq + 10.0) + 135.0) + 1575.0) + 11025.0;
+    break;
+  case 5:
+    denom = zSq*(zSq*(zSq*(zSq*(zSq + 15.0) + 315.0) + 6300.0) + 99225.0) + 893025.0;
+    break;
+  default:
+    std::cout << "BlattWeisskopf::compute: wrong spin " << m_spin << std::endl;
+    break;
   }
-  return value;
+
+//  std::cout << "BlattWeisskopf::compute: " << r() << " " << sqrt(psq) << " " << 1./sqrt(denom)/m_F0 << std::endl;
+
+  return sqrt(1.0/denom);
 }

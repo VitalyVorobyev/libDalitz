@@ -19,7 +19,7 @@ double ResDecayAngularDistribution::operator()(const double& mACsq,const double&
     pdf = mACsq-mBCsq+m_pc_var1/m_mre_sq;
     break;
   case 2:
-    const double mABsq = DalitzPhaseSpace::mBC(m_mmo_sq,m_mca_sq,m_mcb_sq,m_mcc_sq,mACsq,mBCsq);
+    const double mABsq = DalitzPhaseSpace::mBCsq(m_mmo_sq,m_mca_sq,m_mcb_sq,m_mcc_sq,mACsq,mBCsq);
     pdf = pow(mACsq-mBCsq+m_pc_var1/m_mre_sq,2)-
           (1.0/3.0)*(mABsq-m_pc_var2+m_pc_var3/m_mre_sq)*
                     (mABsq-m_pc_var4+m_pc_var5/m_mre_sq);

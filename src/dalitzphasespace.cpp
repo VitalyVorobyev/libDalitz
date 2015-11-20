@@ -23,11 +23,11 @@ DalitzPhaseSpace::DalitzPhaseSpace(const DalitzPhaseSpace& phsp):
 {
 }
 
-double DalitzPhaseSpace::mBC(const double& mAB,const double& mAC){
+double DalitzPhaseSpace::mBCsq(const double& mAB,const double& mAC){
   return m_mMo_sq+m_mChA_sq+m_mChB_sq+m_mChC_sq-mAB-mAC;
 }
 
-double DalitzPhaseSpace::mBC(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq, const double& mChC_sq, const double& mABsq,const double& mACsq){
+double DalitzPhaseSpace::mBCsq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq, const double& mChC_sq, const double& mABsq,const double& mACsq){
   return mMo_sq+mChA_sq+mChB_sq+mChC_sq-mABsq-mACsq;
 }
 

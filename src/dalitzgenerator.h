@@ -5,6 +5,9 @@
 #include "dalitzmodel.h"
 #include "randomdalitzpoint.h"
 
+/// \brief Class for generation of Dalitz plot distribution.
+/// Can generate events for any amplitude defined with DalitzModel class
+
 class DalitzGenerator : public RandomDalitzPoint{
 public:
   DalitzGenerator(const DalitzModel& _dm);

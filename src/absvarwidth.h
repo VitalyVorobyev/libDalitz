@@ -3,11 +3,11 @@
 
 class VarWType{
 public:
-  static const int Const = 0;
-  static const int BW = 1;
-  static const int GS = 2;
+  static const int Const  = 0;
+  static const int BW     = 1;
+  static const int GS     = 2;
   static const int Flatte = 3;
-  static const int Bugg = 4;
+  static const int Bugg   = 4;
 };
 
 class AbsVarWidth{

@@ -46,7 +46,7 @@ double ModelIntegral::Calculate(const string& label,vector<double>& C,vector<dou
       mm += dm;
       if(!m_model->IsInPlot(mp,mm)) continue;
       int bin = abs(m_model->GetBin(mp,mm));
-      ofile << mp << " " << mm << " " << m_model->mBC(mp,mm) << " " << bin << endl;
+      ofile << mp << " " << mm << " " << m_model->mBCsq(mp,mm) << " " << bin << endl;
       double delta, P, Pbar;
       m_model->PPbarDelta(mp,mm,P,Pbar,delta);
       if(std::isnan(delta)) continue;

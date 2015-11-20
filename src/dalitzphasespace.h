@@ -8,7 +8,7 @@ public:
   DalitzPhaseSpace(const double&, const double&, const double&, const double&);
   DalitzPhaseSpace(const DalitzPhaseSpace& phsp);
   bool IsInPlot(const double& mAB,const double& mAC);
-  double mBC(const double& mAC,const double& mAB);
+  double mBCsq(const double& mAC,const double& mAB);
 
   double mA() const {return m_mChA;}
   double mB() const {return m_mChB;}
@@ -28,8 +28,8 @@ public:
   void GetLVs(const double& mAB,const double& mAC, EvtVector4R& pd, EvtVector4R& pks,EvtVector4R& ppip,EvtVector4R& ppim);
 
   // Static methods
-  static double mBC(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq, const double& mChC_sq, const double& mABsq,const double& mACsq); /// Calculates third Dalitz variable using other two ones
-  static double pResSq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq);/// Calculates momentum of the mother particle in the rest frame of a daughter particle
+  static double mBCsq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq, const double& mChC_sq, const double& mABsq,const double& mACsq); /// Calculates third Dalitz variable using other two ones
+  static double pResSq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq);/// Calculates momentum of either daugter in the mother particle rest frame
 private:
   double m_mMo;
   double m_mChA;
