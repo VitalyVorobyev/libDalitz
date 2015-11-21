@@ -13,22 +13,22 @@
 double BlattWeisskopf::m_r_meson     = 5.0;
 double BlattWeisskopf::m_r_resonance = 1.5;
 
-BlattWeisskopf::BlattWeisskopf(const int LL,const double& p0sq, const int type):
-  FormFactor(type == FFType::FFMeson ? m_r_meson : m_r_resonance,p0sq),m_spin(LL),
+BlattWeisskopf::BlattWeisskopf(const int LL,const double& p0, const int type):
+  FormFactor(type == FFType::FFMeson ? m_r_meson : m_r_resonance,p0),m_spin(LL),
   m_type(type)
 {
-  m_F0 = compute(p0sq);
+  m_F0 = compute(p0);
 }
 
 BlattWeisskopf::BlattWeisskopf(const BlattWeisskopf& other):
-   FormFactor(other.r(),other.p0sq()),m_spin(other.m_spin),m_F0(other.m_F0)
+   FormFactor(other.r(),other.p0()),m_spin(other.m_spin),m_F0(other.m_F0)
 {}
 
 BlattWeisskopf::~BlattWeisskopf()
 {}
 
-double BlattWeisskopf::operator()(const double& psq) const {
-  return compute(psq)/m_F0;
+double BlattWeisskopf::operator()(const double& p) const {
+  return compute(p)/m_F0;
 }
 
 // Blatt-Weisskopf form factors
@@ -43,11 +43,11 @@ double BlattWeisskopf::operator()(const double& psq) const {
 //
 // In the CLEO paper R=5 GeV-1 for D0, R=1.5 for intermediate resonances
 
-double BlattWeisskopf::compute(const double& psq) const {
+double BlattWeisskopf::compute(const double& p) const {
   if(!m_spin) return 1.;
   double denom(1.0);
-//  const double z = p*r();
-  const double zSq = psq*r()*r();
+  const double z = p*r();
+  const double zSq = z*z;
 
   switch(m_spin){
   case 0:

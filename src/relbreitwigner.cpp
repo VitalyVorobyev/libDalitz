@@ -33,6 +33,7 @@ RelBreitWigner::RelBreitWigner(const double &G0, const double &m, const double &
 EvtComplex RelBreitWigner::operator()(const double& s, const double& p) const{
   const EvtComplex ione(0,1);
   const double& mass = m();
+//  std::cout << "RBW: m: " << mass << " s: " << s << " width: " << (*m_width)(s,p) << std::endl;
   return 1./(mass*mass-s-ione*mass*(*m_width)(s,p));
 }
 

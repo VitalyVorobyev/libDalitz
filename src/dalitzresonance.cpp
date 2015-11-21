@@ -104,9 +104,10 @@ DalitzResonance::DalitzResonance(const std::string& name,const int PropType,cons
 EvtComplex DalitzResonance::evaluate(const double& mACsq,const double& mBCsq){
   const ResDecayAngularDistribution& angamp = *m_ang_amp;
   const double mABsq    = DalitzPhaseSpace::mBCsq(angamp.mMotSq(),angamp.mChASq(),angamp.mChBSq(),angamp.mChCSq(),mACsq,mBCsq);
-  const double psqMoAB  = DalitzPhaseSpace::pResSq(angamp.mMotSq(),mABsq,angamp.mChCSq());
-  const double psqResAB = DalitzPhaseSpace::pResSq(mABsq,angamp.mChASq(),angamp.mChBSq());
-  return CAmp()*(*m_mff)(psqMoAB)*(*m_rff)(psqResAB)*angamp(mACsq,mBCsq)*(*m_prop)(mABsq,sqrt(psqResAB));
+  const double pMoAB  = sqrt(fabs(DalitzPhaseSpace::pResSq(angamp.mMotSq(),mABsq,angamp.mChCSq())));
+  const double pResAB = sqrt(fabs(DalitzPhaseSpace::pResSq(mABsq,angamp.mChASq(),angamp.mChBSq())));
+//  std::cout << CAmp() << " " << (*m_mff)(pMoAB) << " " << (*m_rff)(pResAB) << " " << angamp(mACsq,mBCsq) << " " << (*m_prop)(mABsq,pResAB) << std::endl;
+  return CAmp()*(*m_mff)(pMoAB)*(*m_rff)(pResAB)*angamp(mACsq,mBCsq)*(*m_prop)(mABsq,pResAB);
 }
 
 double DalitzResonance::SetFFAngAmp(const DalitzPhaseSpace *phsp, const double& mres){
@@ -125,11 +126,11 @@ double DalitzResonance::SetFFAngAmp(const DalitzPhaseSpace *phsp, const double& 
     return 0;
   }
 
-  const double psqResRef = fabs(DalitzPhaseSpace::pResSq(m_ang_amp->mResSq(),m_ang_amp->mChASq(),m_ang_amp->mChBSq()));
-  const double psqMoRef  = fabs(DalitzPhaseSpace::pResSq(m_ang_amp->mMotSq(),m_ang_amp->mResSq(),m_ang_amp->mChCSq()));
+  const double pResRef = sqrt(fabs(DalitzPhaseSpace::pResSq(m_ang_amp->mResSq(),m_ang_amp->mChASq(),m_ang_amp->mChBSq())));
+  const double pMoRef  = sqrt(fabs(DalitzPhaseSpace::pResSq(m_ang_amp->mMotSq(),m_ang_amp->mResSq(),m_ang_amp->mChCSq())));
 //  std::cout << "SetFFAngAmp: " << sqrt(psqResRef) << " " << sqrt(psqMoRef) << " " << m_spin << std::endl;
 //  std::cout << "  " << m_ang_amp->mMotSq() << " " << m_ang_amp->mResSq() << " " << m_ang_amp->mChASq() << " " << m_ang_amp->mChBSq() << " " << m_ang_amp->mChCSq() << std::endl;
-  m_mff = new BlattWeisskopf(m_spin,psqMoRef,FFType::FFMeson);
-  m_rff = new BlattWeisskopf(m_spin,psqResRef,FFType::FFResonance);
-  return sqrt(psqResRef);
+  m_mff = new BlattWeisskopf(m_spin,pMoRef,FFType::FFMeson);
+  m_rff = new BlattWeisskopf(m_spin,pResRef,FFType::FFResonance);
+  return pResRef;
 }

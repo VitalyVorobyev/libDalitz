@@ -17,9 +17,19 @@ SymDalitzModel(mB,mD,mpi,-M_PI/8.,15.*M_PI/8.),m_type(type)
   if(m_type == B0toD0pipiModelType::Belle) InitBelleModel();
 }
 
-//void B0toD0pipiModel::InitLHCbModel(void){
+void B0toD0pipiModel::InitLHCbModel(void){
+  const double beta1 = 0.95;// +- 0.05
+  const double beta2 = 0.51;// +- 0.05
+  AddRes(new DalitzResonance("Dv*(2010)",ResPropType::VDst,    this,ResPath::AB,beta1,beta2,amp,phi));
+  AddRes(new DalitzResonance("D*0(2400)",ResPropType::RBW,     this,ResPath::AB,2.400,0.500,0,amp,phi));
+  AddRes(new DalitzResonance("D*2(2460)",ResPropType::RBW,     this,ResPath::AB,2.460,0.500,2,amp,phi));
+  AddRes(new DalitzResonance("D*J(2760)",ResPropType::RBW,     this,ResPath::AB,2.760,0.500,3,amp,phi));
 
-//}
+  AddRes(new DalitzResonance("rho(770)", ResPropType::RhoOmega,this,ResPath::BC,omamp,phiamp,amp,phi));
+  AddRes(new DalitzResonance("rho(1450)",ResPropType::GS,      this,ResPath::BC,1.493,0.427,1,amp,phi));
+  AddRes(new DalitzResonance("rho(1450)",ResPropType::GS,      this,ResPath::BC,1.450,0.5,1,amp,phi));
+
+}
 
 void B0toD0pipiModel::InitBelleModel(void){
 // ** A. Kuzmin et al. (Belle Collaboration) Phys. Rev. D 76, 012006 – Published 30 July 2007 **
@@ -35,6 +45,8 @@ void B0toD0pipiModel::InitBelleModel(void){
 //  AddRes(new EvtResonance2(p4_p,moms2,moms3, 0.08,-2.48*radtodeg, 0.044,   0.978,   0));//f0(980)
 //  AddRes(new EvtResonance2(p4_p,moms2,moms3, 0.21,-1.52*radtodeg, 0.173,   1.434,   0));//f0(1470)
   AddRes(new DalitzResonance("D2*",ResPropType::RBW,this,ResPath::AB,2.4657,0.0496,2,2.15,0));
+
+
 }
 
 //EvtComplex B0toD0pipiModel::Amp(const EvtVector4R& p4_p,const EvtVector4R& moms1,const EvtVector4R& moms2,const EvtVector4R& moms3){

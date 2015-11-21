@@ -25,6 +25,7 @@ double ResDecayAngularDistribution::operator()(const double& mACsq,const double&
                     (mABsq-m_pc_var4+m_pc_var5/m_mre_sq);
     break;
   }
+//  std::cout << "ResDecayAngAmp: " << pdf << std::endl;
   return pdf;
 }
 
