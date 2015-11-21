@@ -13,7 +13,7 @@ public:
 /// \brief Implementation of B0 -> D0 pi+ pi- decay amplitude
 /// Belle and LHCb models are available.
 /// The Belle one is from A. Kuzmin et al. (Belle Collaboration) Phys. Rev. D 76, 012006 – Published 30 July 2007
-/// The LHCb one is from R. Aaij et al. (LHCb Collaboration) Phys. Rev. D 92, 032002 (2015)
+/// The LHCb  one is from R. Aaij   et al. (LHCb Collaboration)  Phys. Rev. D 92, 032002 (2015)
 
 class B0toD0pipiModel : public SymDalitzModel{
 public:
@@ -25,6 +25,7 @@ public:
 private:
   EvtComplex amp_BelleKuzmin(const EvtVector4R& p4_p,const EvtVector4R& moms1,const EvtVector4R& moms2,const EvtVector4R& moms3);
   void InitBelleModel(void);
+  void InitLHCbModel(void);
   int m_type;
 };
 

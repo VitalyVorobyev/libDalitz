@@ -27,14 +27,6 @@ double DalitzPhaseSpace::mBCsq(const double& mAB,const double& mAC){
   return m_mMo_sq+m_mChA_sq+m_mChB_sq+m_mChC_sq-mAB-mAC;
 }
 
-double DalitzPhaseSpace::mBCsq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq, const double& mChC_sq, const double& mABsq,const double& mACsq){
-  return mMo_sq+mChA_sq+mChB_sq+mChC_sq-mABsq-mACsq;
-}
-
-double DalitzPhaseSpace::pResSq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq){
-  return (0.25*pow(mMo_sq-mChA_sq-mChB_sq,2)-mChA_sq*mChB_sq)/mMo_sq;
-}
-
 // a particle energy in a resonance rest frame
 //double DalitzPhaseSpace::eA_AB(const double& mAB) const{return 0.5*(mAB-m_mChB_sq+m_mChA_sq)/sqrt(mAB);}
 //double DalitzPhaseSpace::eB_AB(const double& mAB) const{return 0.5*(mAB-m_mChA_sq+m_mChB_sq)/sqrt(mAB);}
@@ -100,4 +92,34 @@ void DalitzPhaseSpace::GetLVs(const double& mAB,const double& mAC, EvtVector4R& 
 //  pB = EvtVector4R(eB,pxB,pyB,pzB);
 //  pC = EvtVector4R(eC,pxC,pyC,pzC);
   return;
+}
+
+// * Static methods * //
+double DalitzPhaseSpace::mBCsq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq, const double& mChC_sq, const double& mABsq,const double& mACsq){
+  return mMo_sq+mChA_sq+mChB_sq+mChC_sq-mABsq-mACsq;
+}
+
+double DalitzPhaseSpace::pRes(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq){
+  const double res = (0.25*pow(mMo_sq-mChA_sq-mChB_sq,2)-mChA_sq*mChB_sq)/mMo_sq;
+  return res>0 ? sqrt(res) : 0;
+}
+
+double DalitzPhaseSpace::q(const double& mRsq, const double& mA, const double& mB){
+  const double var = (mRsq-pow(mA+mB,2))*(mRsq-pow(mA-mB,2));
+  return var>0 ? sqrt(var/(4.*mRsq)) : 0;
+}
+
+double DalitzPhaseSpace::p(const double& mRsq, const double& mM, const double& mC){
+  const double var = (pow(mM-mC,2)-mRsq)*(pow(mM+mC,2)-mRsq);
+  return var>0 ? sqrt(var/(4.*mRsq)) : 0;
+}
+
+double DalitzPhaseSpace::ysq(const double& mMo_sq, const double& mAB_sq, const double& mChC_sq){
+  return 0.5*(mMo_sq + mAB_sq - mChC_sq)/sqrt(mAB_sq*mMo_sq) - 1.;
+}
+
+double DalitzPhaseSpace::CosHelAB(const double& mMo,const double& mA,const double& mB,const double& mC,const double& mAB){
+  const double mABmin = mABsqMin(mA,mB);
+  const double mABmax = mABsqMax(mMo,mC);
+  return (mABmax+mABmin-2.*mAB)/(mABmax-mABmin);
 }

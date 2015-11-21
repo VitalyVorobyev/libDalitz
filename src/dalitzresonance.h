@@ -33,7 +33,7 @@ public:
   DalitzResonance(const std::string& name,const int PropType,const DalitzPhaseSpace* phsp, const int respath,const double& beta1,const double& beta2, const EvtComplex& amp);               /// Constructor for virtual D*(2010) and rho-omega interference
   DalitzResonance(const std::string& name,const int PropType,const DalitzPhaseSpace* phsp, const int respath,const double& beta1,const double& beta2, const double& amp,const double& phi); /// Constructor for virtual D*(2010) and rho-omega interference
 
-  EvtComplex evaluate(const double& mACsq,const double& mBCsq);
+  EvtComplex evaluate(const double& mACsq,const double& mBCsq) const;
 
   int Path(void) const {return m_path;}
 

@@ -101,13 +101,16 @@ DalitzResonance::DalitzResonance(const std::string& name,const int PropType,cons
 {
 }
 
-EvtComplex DalitzResonance::evaluate(const double& mACsq,const double& mBCsq){
+EvtComplex DalitzResonance::evaluate(const double& mACsq,const double& mBCsq) const{
   const ResDecayAngularDistribution& angamp = *m_ang_amp;
   const double mABsq    = DalitzPhaseSpace::mBCsq(angamp.mMotSq(),angamp.mChASq(),angamp.mChBSq(),angamp.mChCSq(),mACsq,mBCsq);
-  const double pMoAB  = sqrt(fabs(DalitzPhaseSpace::pResSq(angamp.mMotSq(),mABsq,angamp.mChCSq())));
-  const double pResAB = sqrt(fabs(DalitzPhaseSpace::pResSq(mABsq,angamp.mChASq(),angamp.mChBSq())));
-//  std::cout << CAmp() << " " << (*m_mff)(pMoAB) << " " << (*m_rff)(pResAB) << " " << angamp(mACsq,mBCsq) << " " << (*m_prop)(mABsq,pResAB) << std::endl;
-  return CAmp()*(*m_mff)(pMoAB)*(*m_rff)(pResAB)*angamp(mACsq,mBCsq)*(*m_prop)(mABsq,pResAB);
+  const double p = DalitzPhaseSpace::pRes(angamp.mMotSq(),mABsq,angamp.mChCSq());
+  const double q = DalitzPhaseSpace::pRes(mABsq,angamp.mChASq(),angamp.mChBSq());
+//  const double q = DalitzPhaseSpace::q(mABsq,m_ang_amp->mChA(),m_ang_amp->mChB());
+//  const double p = DalitzPhaseSpace::p(mABsq,m_ang_amp->mMot(),m_ang_amp->mChC());
+
+  //  std::cout << CAmp() << " " << (*m_mff)(pMoAB) << " " << (*m_rff)(pResAB) << " " << angamp(mACsq,mBCsq) << " " << (*m_prop)(mABsq,pResAB) << std::endl;
+  return CAmp()*(*m_mff)(p)*(*m_rff)(q)*angamp(mACsq,mBCsq)*(*m_prop)(mABsq,q);
 }
 
 double DalitzResonance::SetFFAngAmp(const DalitzPhaseSpace *phsp, const double& mres){
@@ -126,11 +129,16 @@ double DalitzResonance::SetFFAngAmp(const DalitzPhaseSpace *phsp, const double& 
     return 0;
   }
 
-  const double pResRef = sqrt(fabs(DalitzPhaseSpace::pResSq(m_ang_amp->mResSq(),m_ang_amp->mChASq(),m_ang_amp->mChBSq())));
-  const double pMoRef  = sqrt(fabs(DalitzPhaseSpace::pResSq(m_ang_amp->mMotSq(),m_ang_amp->mResSq(),m_ang_amp->mChCSq())));
+  const double q0 = DalitzPhaseSpace::pRes(m_ang_amp->mResSq(),m_ang_amp->mChASq(),m_ang_amp->mChBSq());
+  const double p0 = DalitzPhaseSpace::pRes(m_ang_amp->mMotSq(),m_ang_amp->mResSq(),m_ang_amp->mChCSq());
+//  const double q  = DalitzPhaseSpace::q(m_ang_amp->mResSq(),m_ang_amp->mChA(),m_ang_amp->mChB());
+//  const double p  = DalitzPhaseSpace::p(m_ang_amp->mResSq(),m_ang_amp->mMot(),m_ang_amp->mChC());
+//  std::cout << "q: " << q0 << " -> " << q << std::endl;
+//  std::cout << "p: " << p0 << " -> " << p  << " " << m_ang_amp->mResSq() << " " << m_ang_amp->mMotSq() << " " << m_ang_amp->mChCSq() << std::endl;
+
 //  std::cout << "SetFFAngAmp: " << sqrt(psqResRef) << " " << sqrt(psqMoRef) << " " << m_spin << std::endl;
 //  std::cout << "  " << m_ang_amp->mMotSq() << " " << m_ang_amp->mResSq() << " " << m_ang_amp->mChASq() << " " << m_ang_amp->mChBSq() << " " << m_ang_amp->mChCSq() << std::endl;
-  m_mff = new BlattWeisskopf(m_spin,pMoRef,FFType::FFMeson);
-  m_rff = new BlattWeisskopf(m_spin,pResRef,FFType::FFResonance);
-  return pResRef;
+  m_mff = new BlattWeisskopf(m_spin,p0,FFType::FFMeson);
+  m_rff = new BlattWeisskopf(m_spin,q0,FFType::FFResonance);
+  return q0;
 }

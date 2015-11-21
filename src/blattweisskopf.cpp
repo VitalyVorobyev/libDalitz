@@ -1,20 +1,12 @@
 #include "blattweisskopf.h"
 #include <math.h>
 #include <iostream>
-/*******************************************************************************
- * Project: BaBar detector at the SLAC PEP-II B-factory
- * Package: EvtGenBase
- *    File: $Id: EvtBlattWeisskopf.cpp,v 1.3 2009-03-16 15:56:37 robbep Exp $
- *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
- *
- * Copyright (C) 2002 Caltech
- *******************************************************************************/
 
 double BlattWeisskopf::m_r_meson     = 5.0;
 double BlattWeisskopf::m_r_resonance = 1.5;
 
-BlattWeisskopf::BlattWeisskopf(const int LL,const double& p0, const int type):
-  FormFactor(type == FFType::FFMeson ? m_r_meson : m_r_resonance,p0),m_spin(LL),
+BlattWeisskopf::BlattWeisskopf(const int spin,const double& p0, const int type):
+  FormFactor(type == FFType::FFMeson ? m_r_meson : m_r_resonance,p0),m_spin(spin),
   m_type(type)
 {
   m_F0 = compute(p0);

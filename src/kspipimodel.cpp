@@ -17,6 +17,7 @@ SymDalitzModel(md,mks,mpi,-M_PI/8.,15.*M_PI/8.)
   const double dtr = 1./EvtConst::radToDegrees;
   BlattWeisskopf::m_r_meson     = 5.0;
   BlattWeisskopf::m_r_resonance = 1.5;
+  ResDecayAngularDistribution::m_use_mRsq = true;
 
   // CF //
 //  std::cout << "VarWType::BW = " << VarWType::BW << std::endl;
@@ -43,33 +44,3 @@ SymDalitzModel(md,mks,mpi,-M_PI/8.,15.*M_PI/8.)
 //  // NR
   AddRes(new DalitzResonance("NR",           ResPropType::NR,this,ResPath::BC,0,EvtComplex(-2.537,0.923)));
 }
-
-//EvtComplex KspipiModel::Amp(const EvtVector4R& p4_p,const EvtVector4R& moms1,const EvtVector4R& moms2,const EvtVector4R& moms3){
-//  return amp_Belle2010(p4_p,moms1,moms2,moms3);
-//}
-
-//EvtComplex KspipiModel::amp_Belle2010(const EvtVector4R& p4_p,const EvtVector4R& moms1,const EvtVector4R& moms2,const EvtVector4R& moms3){
-//  EvtComplex amp(-2.537,0.923);
-//  SetMomenta(0,p4_p,moms1,moms2);//K*(892)
-//  SetMomenta(1,p4_p,moms1,moms2);//K0*(1430)
-//  SetMomenta(2,p4_p,moms1,moms2);//K2*(1430)
-//  SetMomenta(3,p4_p,moms1,moms2);//K*(1680)
-//  SetMomenta(4,p4_p,moms1,moms2);//K*(1410)
-
-//  SetMomenta(5,p4_p,moms1,moms3);//DCS K*(892)
-//  SetMomenta(6,p4_p,moms1,moms3);//DCS K0*(1430)
-//  SetMomenta(7,p4_p,moms1,moms3);//DCS K2*(1430)
-//  SetMomenta(8,p4_p,moms1,moms3);//DCS K*(1680)
-//  SetMomenta(9,p4_p,moms1,moms3);//DCS K*(1410)
-
-//  SetMomenta(10,p4_p,moms3,moms2);//Rho
-//  SetMomenta(11,p4_p,moms3,moms2);//Omega
-//  SetMomenta(12,p4_p,moms3,moms2);//f0(980)
-//  SetMomenta(13,p4_p,moms3,moms2);//f0(1370)
-//  SetMomenta(14,p4_p,moms3,moms2);//f2(1270)
-//  SetMomenta(15,p4_p,moms3,moms2);//Rho(1450)
-//  SetMomenta(16,p4_p,moms3,moms2);//sigma1
-//  SetMomenta(17,p4_p,moms3,moms2);//sigma2
-//  for(int i=0; i<ResNum(); i++){ amp += const_cast<EvtResonance2*>(Res(i))->resAmpl();}
-//  return amp;
-//}

@@ -1,14 +1,7 @@
-/*******************************************************************************
- * Project: BaBar detector at the SLAC PEP-II B-factory
- * Package: EvtGenBase
- *    File: $Id: EvtBlattWeisskopf.hh,v 1.2 2009-03-16 16:43:40 robbep Exp $
- *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
- *
- * Copyright (C) 2002 Caltech
- *******************************************************************************/
-
 /// \brief Blatt-Weisskopf penetration form factor for a resonance R->AB.
 /// Taken from CLEO preprint 00-23 (hep-ex/0011065)
+/// See original paper J. Blatt and V. Weisskopf, "Theoretical Nuclear Physics"
+/// (Wiley, New York, 1952).
 
 #ifndef BLATTWEISSKOPF_H
 #define BLATTWEISSKOPF_H
@@ -23,11 +16,11 @@ public:
 
 class BlattWeisskopf : public FormFactor{
 public:
-  BlattWeisskopf(const int LL, const double& p0sq, const int type);
+  BlattWeisskopf(const int spin, const double& p0, const int type);
   BlattWeisskopf(const BlattWeisskopf&);
   ~BlattWeisskopf();
 
-  double operator()(const double& psq) const;
+  double operator()(const double& p) const;
 
   static double m_r_meson;     /// radius of a meson state
   static double m_r_resonance; /// radius of a resonance

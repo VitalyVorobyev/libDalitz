@@ -29,7 +29,13 @@ public:
 
   // Static methods
   static double mBCsq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq, const double& mChC_sq, const double& mABsq,const double& mACsq); /// Calculates third Dalitz variable using other two ones
-  static double pResSq(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq);/// Calculates momentum of either daugter in the mother particle rest frame
+  static double pRes(const double& mMo_sq, const double& mChA_sq, const double& mChB_sq);/// Calculates momentum of either daugter in the mother particle rest frame
+  static double ysq(const double& mMo_sq, const double& mAB_sq, const double& mChC_sq); /// Factor for relativistic transformation between the Mo and the resonance rest frames
+  static double CosHelAB(const double& mMo,const double& mA,const double& mB,const double& mC,const double& mAB); /// Cos of helisity angle for resonance R -> AB
+  static inline double mABsqMin(const double& mA, const double& mB) {return pow(mA+mB,2);} /// Min value of AB squared invariant mass
+  static inline double mABsqMax(const double& mM, const double& mC) {return pow(mM-mC,2);} /// Max value of AB squared invariant mass
+  static double q(const double& mRsq, const double& mA, const double& mB); /// Momentum of daughter particle in the resonance rest frame
+  static double p(const double& mRsq, const double& mM, const double& mC); /// Momentum of mother particle in the resonance rest frame
 private:
   double m_mMo;
   double m_mChA;

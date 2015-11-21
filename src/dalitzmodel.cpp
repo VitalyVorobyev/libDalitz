@@ -14,24 +14,26 @@ double DalitzModel::Arg(const double& mAB,const double& mAC){
 }
 
 EvtComplex DalitzModel::Amp(const double& mAB, const double& mAC){
-  EvtComplex res(0.,0.);
-  for(int i=0; i<(int)m_res_v.size(); i++){
-    switch(m_res_v[i]->Path()){
-    case ResPath::AB:
-      res += m_res_v[i]->evaluate(mAC,mBCsq(mAC,mAB));
-//      res += m_res_v[i]->evaluate(mBC(mAC,mAB),mAC);
-      break;
-    case ResPath::AC:
-      res += m_res_v[i]->evaluate(mAB,mBCsq(mAC,mAB));
-//      res += m_res_v[i]->evaluate(mBC(mAC,mAB),mAB);
-      break;
-    case ResPath::BC:
-//      res += m_res_v[i]->evaluate(mAB,mAC);
-      res += m_res_v[i]->evaluate(mAC,mAB);
-      break;
-    default:
-      break;
-    }
+  EvtComplex amp(0.,0.);
+  for(int i=0; i<(int)m_res_v.size(); i++) amp += GetResAmp(m_res_v[i],mAB,mAC);
+  return amp;
+}
+
+EvtComplex DalitzModel::GetResAmp(const DalitzPlotObject* res,const double& mAB, const double& mAC){
+  switch(res->Path()){
+  case ResPath::AB: return res->evaluate(mAC,mBCsq(mAC,mAB));
+  case ResPath::AC: return res->evaluate(mAB,mBCsq(mAC,mAB));
+  case ResPath::BC: return res->evaluate(mAC,mAB);
   }
-  return res;// + EvtComplex(-2.537,0.923);
+  return EvtComplex(0.,0.);
+}
+
+EvtComplex DalitzModel::GetAmplitudes(std::vector<EvtComplex>& vec,const double& mAB, const double& mAC){
+  vec.clear();
+  EvtComplex amp(0.,0.);
+  for(int i=0; i<(int)m_res_v.size(); i++){
+    vec.push_back(GetResAmp(m_res_v[i],mAB,mAC));
+    amp += vec[i];
+  }
+  return amp;
 }

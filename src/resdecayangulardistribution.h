@@ -1,7 +1,7 @@
 #ifndef RESDECAYANGULARDISTRIBUTION_H
 #define RESDECAYANGULARDISTRIBUTION_H
 
-/// Class for computation of angular pdf for intermidiate resonance decay in a three-body decay.
+/// \brief Angular pdf for intermidiate resonance decay in a three-body decay.
 /// Final state particles are assumed to be scalars.
 /// Resonance may be scalar, vector or tensor.
 
@@ -18,8 +18,20 @@ public:
   double mChCSq(void) const {return m_mcc_sq;}
   double mResSq(void) const {return m_mre_sq;}
 
+  double mMot(void) const {return m_mmo;}
+  double mChA(void) const {return m_mca;}
+  double mChB(void) const {return m_mcb;}
+  double mChC(void) const {return m_mcc;}
+
+  static bool m_use_mRsq;
 private:
   int m_spin;
+
+  double m_mmo;
+  double m_mca;
+  double m_mcb;
+  double m_mcc;
+
   double m_mmo_sq;
   double m_mca_sq;
   double m_mcb_sq;

@@ -12,7 +12,7 @@ class DalitzPlotObject{
 public:
   DalitzPlotObject(const std::string& name, const EvtComplex& amp = EvtComplex(0,0));
   DalitzPlotObject(const std::string& name, const double& a, const double& phi);
-  virtual EvtComplex evaluate(const double& mACsq,const double& mBCsq) = 0;
+  virtual EvtComplex evaluate(const double& mACsq,const double& mBCsq) const = 0;
   virtual int Path(void) const = 0;
 
   /// Modificators
