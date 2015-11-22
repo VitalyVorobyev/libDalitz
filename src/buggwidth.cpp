@@ -1,5 +1,6 @@
 #include "buggwidth.h"
 #include "consts.h"
+#include <iostream>
 
 #include "math.h"
 
@@ -19,7 +20,12 @@ double BuggWidth::rho_4pi(const double& s){
 }
 
 double BuggWidth::rho(const double& m, const double& s){
-  return sqrt(1.-4.*m*m/s);
+  const double var = 1.-4.*m*m/s;
+//  if(var<0){
+//    std::cout << "BuggWidth::rho<0: " << m << " " << s << " " << var << std::endl;
+//    return 0;
+//  }
+  return var>0 ? sqrt(var) : 0;
 }
 
 double BuggWidth::j1(const double& s){

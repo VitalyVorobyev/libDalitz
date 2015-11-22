@@ -109,7 +109,7 @@ EvtComplex DalitzResonance::evaluate(const double& mACsq,const double& mBCsq) co
 //  const double q = DalitzPhaseSpace::q(mABsq,m_ang_amp->mChA(),m_ang_amp->mChB());
 //  const double p = DalitzPhaseSpace::p(mABsq,m_ang_amp->mMot(),m_ang_amp->mChC());
 
-  //  std::cout << CAmp() << " " << (*m_mff)(pMoAB) << " " << (*m_rff)(pResAB) << " " << angamp(mACsq,mBCsq) << " " << (*m_prop)(mABsq,pResAB) << std::endl;
+//  std::cout << Name() << " " << CAmp() << " " << (*m_mff)(p) << " " << (*m_rff)(q) << " " << angamp(mACsq,mBCsq) << " " << (*m_prop)(mABsq,q) << std::endl;
   return CAmp()*(*m_mff)(p)*(*m_rff)(q)*angamp(mACsq,mBCsq)*(*m_prop)(mABsq,q);
 }
 

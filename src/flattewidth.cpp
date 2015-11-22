@@ -3,7 +3,7 @@
 #include "math.h"
 
 FlatteWidth::FlatteWidth(const double &m):
-  AbsVarWidth(1,m,1),m_g1(199),m_g2(m_g1*3.0),
+  AbsVarWidth(1,m,1),m_g1(0.199),m_g2(m_g1*3.0),
   m_pi_sq(m_PI_Mass*m_PI_Mass),
   m_pi0_sq(m_PI0_Mass*m_PI0_Mass),
   m_K_sq(m_K_Mass*m_K_Mass),
@@ -23,5 +23,6 @@ double FlatteWidth::rho_KK(const double& s) const{
 }
 
 double FlatteWidth::phsp_factor(const double& msq, const double&s) const{
-  return sqrt(1.-4.*msq/s);
+  const double var = 1.-4.*msq/s;
+  return var>0 ? sqrt(var) : 0;
 }

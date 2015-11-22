@@ -24,6 +24,7 @@ EvtComplex DalitzModel::GetResAmp(const DalitzPlotObject* res,const double& mAB,
   case ResPath::AB: return res->evaluate(mAC,mBCsq(mAC,mAB));
   case ResPath::AC: return res->evaluate(mAB,mBCsq(mAC,mAB));
   case ResPath::BC: return res->evaluate(mAC,mAB);
+//  case ResPath::BC: return res->evaluate(mAB,mAC);
   }
   return EvtComplex(0.,0.);
 }

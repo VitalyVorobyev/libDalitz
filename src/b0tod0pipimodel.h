@@ -19,7 +19,7 @@ class B0toD0pipiModel : public SymDalitzModel{
 public:
   B0toD0pipiModel(const int type = B0toD0pipiModelType::LHCb);
   B0toD0pipiModel(const double& mB, const double& mD, const double& mpi,const int type);
-  EvtComplex Amp(const EvtVector4R& p4_p,const EvtVector4R& moms1,const EvtVector4R& moms2,const EvtVector4R& moms3);
+//  EvtComplex Amp(const EvtVector4R& p4_p,const EvtVector4R& moms1,const EvtVector4R& moms2,const EvtVector4R& moms3);
   int GetBin(const double& mp, const double& mm);
 
 private:

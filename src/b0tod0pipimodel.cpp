@@ -28,12 +28,13 @@ void B0toD0pipiModel::InitLHCbModel(void){
   AddRes(new DalitzResonance("D*0(2400)",ResPropType::RBW,     this,ResPath::AB,2.349,0.217,  0,12.10, 83.6*dtr));
   AddRes(new DalitzResonance("D*2(2460)",ResPropType::RBW,     this,ResPath::AB,2.4686,0.0473,2,1.310,262.9*dtr));
   AddRes(new DalitzResonance("D*J(2760)",ResPropType::RBW,     this,ResPath::AB,2.798,0.105,  3,0.053, 91.1*dtr));
-  AddRes(new DalitzResonance("rho(770)", ResPropType::RhoOmega,this,ResPath::BC,0.30,176.8*dtr, 1.000,  0.0*dtr));
+  AddRes(new DalitzResonance("rho(770)", ResPropType::RhoOmega,this,ResPath::BC,0.30,176.8*dtr,1.000,  0.0*dtr));
+//  AddRes(new DalitzResonance("rho(770)", ResPropType::GS,      this,ResPath::BC,0.770,0.130,  1,1.000,0.0*dtr));
   AddRes(new DalitzResonance("rho(1450)",ResPropType::GS,      this,ResPath::BC,1.4930,0.4270,1,0.230,149.0*dtr));
   AddRes(new DalitzResonance("rho(1700)",ResPropType::GS,      this,ResPath::BC,1.8610,0.3160,1,0.078,103.5*dtr));
   AddRes(new DalitzResonance("f2(1270)", ResPropType::RBW,     this,ResPath::BC,1.2751,0.1851,2,0.072,158.1*dtr));
-//  AddRes(new DalitzResonance("f0(500)",  ResPropType::Bugg,    this,ResPath::BC,                18.70, 38.4*dtr));
-//  AddRes(new DalitzResonance("f0(980)",  ResPropType::Flatte,  this,ResPath::BC,0.9399,         2.620,138.9*dtr));
+  AddRes(new DalitzResonance("f0(500)",  ResPropType::Bugg,    this,ResPath::BC,                18.70, 38.4*dtr));
+  AddRes(new DalitzResonance("f0(980)",  ResPropType::Flatte,  this,ResPath::BC,0.9399,         2.620,138.9*dtr));
   AddRes(new DalitzResonance("f0(2020)", ResPropType::RBW,     this,ResPath::BC,1.992,0.442,  0,4.410,258.5*dtr));
   AddRes(new DalitzResonance("NR",       ResPropType::NR,      this,ResPath::BC,-0.363,         3.430, 77.1*dtr));
 }
