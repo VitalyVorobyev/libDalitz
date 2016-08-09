@@ -22,3 +22,4 @@ List of classes
     DalitzMCIntegral
     DalitzGenerator
     ModelIntegral
+# libTatami

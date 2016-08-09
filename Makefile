@@ -1,9 +1,10 @@
-Sources=EvtComplex.cpp EvtConst.cpp EvtKine.cpp EvtResonance2.cpp EvtVector3C.cpp EvtVector3R.cpp EvtVector4C.cpp EvtVector4R.cpp EvtTensor4C.cpp symdalitzmodel.cpp dalitzmodel.cpp kspipimodel.cpp dalitzphasespace.cpp b0tod0pipimodel.cpp modelintegral.cpp libdalitz.cpp randomdalitzpoint.cpp dalitzmcintegral.cpp dalitzgenerator.cpp formfactor.cpp blattweisskopf.cpp virtualresff.cpp absvarwidth.cpp abspropagator.cpp constwidth.cpp bwwidth.cpp relbreitwigner.cpp gswidth.cpp gounarissakurai.cpp rhoomegapropagator.cpp virtualdstarpropagator.cpp buggwidth.cpp buggpropagator.cpp flattewidth.cpp dalitzplotobject.cpp resdecayangulardistribution.cpp dalitzresonance.cpp nrpropagator.cpp
-Executable=libdalitz.so
-CFlags=-c -Wall -fPIC -g -Iinc -std=c++11 -I. `root-config --cflags`
-LDFlags= -shared -fPIC -std=c++11 -I. -Wl,--no-as-needed `root-config --glibs` -lm -lstdc++ -lRooFit -lRooFitCore
-ObjectDir=obj/
 SourceDir=src/
+ObjectDir=obj/
+BinDir=bin/
+Sources=$(notdir $(wildcard $(SourceDir)*.cpp))
+Executable=libdalitz.so
+CFlags=-c -Wall -fPIC -g -Iinc -std=c++14 
+LDFlags= -shared -fPIC -std=c++14 -I. -lm -lstdc++
 BinDir=bin/
 
 CC=g++

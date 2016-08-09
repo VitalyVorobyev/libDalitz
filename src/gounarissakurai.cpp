@@ -1,22 +1,24 @@
 #include "gounarissakurai.h"
-#include "math.h"
-#include "consts.h"
+
+#include <cmath>
+#include <iostream>
+
+using namespace std;
 
 GounarisSakurai::GounarisSakurai(const double &G0, const double &m, const double &p0, const bool constwidth):
   AbsPropagator(m,p0), m_const_width(constwidth),
-  m_width(constwidth ? (AbsVarWidth*) new ConstWidth(G0) : new GSWidth(G0,m,p0))
+  m_width(m_const_width ? (AbsVarWidth*) new ConstWidth(G0) : new GSWidth(G0,m,p0))
 {
   g();
 }
 
-EvtComplex GounarisSakurai::operator()(const double& s, const double& p) const{
-  const EvtComplex ione(0,1);
-//  const GSWidth& G  = *((GSWidth*)width());
+compld GounarisSakurai::operator()(const double& s, const double& p) const{
   const double& mr  = m();
   const double mrsq = mr*mr;
   const double& G0  = m_width->G0();
-
-  return mrsq*(1.*G0*m_g/mr)/(mrsq-s+f(s,p)-ione*mr*(*m_width)(s,p));
+  const double Ggs  = (*m_width)(s,p);
+//  cout << "GounarisSakurai::operator(): G0 " << G0 << ", Ggs " << Ggs << endl;
+  return mrsq*(1.+G0*m_g/mr)/(mrsq-s+f(s,p)-imone*mr*Ggs);
 }
 
 GounarisSakurai::~GounarisSakurai(){
@@ -25,12 +27,11 @@ GounarisSakurai::~GounarisSakurai(){
 }
 
 double GounarisSakurai::g(void){
-  const double& mpi  = m_PI_Mass;
-  const double mpisq = mpi*mpi;
-  const double& pi   = M_PI;
-  const double p0sq  = p0()*p0();
-  const double& mr   = m();
-
+  const double& mpi   = m_PI_Mass;
+  const double  mpisq = mpi*mpi;
+  const double& pi    = M_PI;
+  const double  p0sq  = p0()*p0();
+  const double& mr    = m();
   return m_g = 3./pi*mpisq/(p0sq)*log((mr+2.*p0())/2.*mpi) + mr/(2.*pi*p0()) - mpisq*mr/(pi*p0sq*p0());
 }
 
@@ -58,7 +59,6 @@ double GounarisSakurai::h(const double& s, const double& p) const {
 
   const double logi = log(var);
   return coeff*p/sqrts*logi;
-  return 0;
 }
 
 double GounarisSakurai::f(const double& s, const double& p) const {

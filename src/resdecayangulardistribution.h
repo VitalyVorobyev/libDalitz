@@ -1,10 +1,10 @@
 #ifndef RESDECAYANGULARDISTRIBUTION_H
 #define RESDECAYANGULARDISTRIBUTION_H
 
+///
 /// \brief Angular pdf for intermidiate resonance decay in a three-body decay.
 /// Final state particles are assumed to be scalars.
 /// Resonance may be scalar, vector or tensor.
-
 class ResDecayAngularDistribution{
 public:
   ResDecayAngularDistribution(const int spin, const double& mmo, const double& mca, const double& mcb, const double& mcc, const double& mres);

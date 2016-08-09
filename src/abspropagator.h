@@ -1,8 +1,7 @@
 #ifndef ABSPROPAGATOR_H
 #define ABSPROPAGATOR_H
 
-//#include "absvarwidth.h"
-#include "EvtComplex.h"
+#include "consts.h"
 
 class ResPropType{
 public:
@@ -13,6 +12,7 @@ public:
   static const int Bugg     = 4;
   static const int VDst     = 5;
   static const int Flatte   = 6;
+  static const int VDst2    = 7;
 };
 
 class AbsPropagator{
@@ -20,7 +20,7 @@ public:
 //  AbsPropagator(const double &m, const double &p0, AbsVarWidth* width);
   AbsPropagator(const double &m, const double &p0);
   virtual ~AbsPropagator() {}
-  virtual EvtComplex operator()(const double& s, const double& p) const = 0;
+  virtual compld operator()(const double& s, const double& p) const = 0;
 
   double m(void)  const {return m_m;}
   double p0(void) const {return m_p0;}

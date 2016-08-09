@@ -7,5 +7,6 @@
 #include "dalitzgenerator.h"
 #include "abspropagator.h"
 #include "consts.h"
+#include "randomdalitzpoint.h"
 
 #endif // LIBDALITZ_H

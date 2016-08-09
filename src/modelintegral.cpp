@@ -1,82 +1,103 @@
 #include "modelintegral.h"
+#include "eqphasebin.h"
+
+#include <fstream>
+#include <cmath>
+#include <iostream>
+
 using namespace std;
 
-ModelIntegral::ModelIntegral(SymDalitzModel *model){
-  m_model = model;
-  m_nbins = model->GetNBins();
-  m_gsize = 500;
+ModelIntegral::ModelIntegral(const AbsDalitzModel *model,const int NBins, const int gridsize):
+  m_model(model), m_nbins(NBins), m_gsize(gridsize)
+{
 }
 
-double ModelIntegral::Calculate(const string& label,vector<double>& C,vector<double>& S,vector<double>& K,vector<double>& Kb){
-  C.clear();
-  S.clear();
-  K.clear();
-  Kb.clear();
-  for(int i=0; i<m_nbins; i++){
-    C.push_back(0);
-    S.push_back(0);
-    K.push_back(0);
-    Kb.push_back(0);
-  }
+int ModelIntegral::Calculate(cstr& label,vectd& C,vectd& S,vectd& Kp,vectd& Kn){
+   C.resize(m_nbins,0);
+   S.resize(m_nbins,0);
+  Kp.resize(m_nbins,0);
+  Kn.resize(m_nbins,0);
+  EqPhaseBin eqbin(m_model,m_nbins);
+
   double mmMax;
   double mmMin;
-  const double M_min = m_model->mAB_min();
-  const double M_max = m_model->mAB_max();
-  const double dm = (M_max - M_min)/m_gsize;
-  double mp = M_min;
-  m_majorant = 0;
-  const string fname = label + string("_binning.txt");
+  cdouble M_min = m_model->mABsq_min();
+  cdouble M_max = m_model->mABsq_max();
+  cdouble dm = (M_max - M_min)/m_gsize;
+  const str fname = str("params/") + label + str("_binning.txt");
   ofstream ofile(fname.c_str());
   ofile << "GridSize " << m_gsize << endl;
   ofile << m_model->mM() << " -> " << m_model->mA();
   ofile << " " << m_model->mB();
   ofile << " " << m_model->mC() << endl;
-  ofile << "mAB: " << m_model->mAB_min() << " " << m_model->mAB_max() << endl;
-  ofile << "mAC: " << m_model->mAC_min() << " " << m_model->mAC_max() << endl;
-  ofile << "mBC: " << m_model->mBC_min() << " " << m_model->mBC_max() << endl;
+  ofile << "mAB: " << m_model->mABsq_min() << " " << m_model->mABsq_max() << endl;
+  ofile << "mAC: " << m_model->mACsq_min() << " " << m_model->mACsq_max() << endl;
+  ofile << "mBC: " << m_model->mBCsq_min() << " " << m_model->mBCsq_max() << endl;
   ofile << m_model->ABaxis() << endl;
   ofile << m_model->ACaxis() << endl;
   ofile << m_model->BCaxis() << endl;
+  double mp = M_min;
   for(int i=0; i<m_gsize; i++){
     mp += dm;
-    m_model->mAB_range(mp,mmMin,mmMax);
+    m_model->mABsqRange_AC(mp,mmMin,mmMax);
     if(mp>mmMax) break;
-    double mm = mmMin;
+    double mm = mp;
     for(int j=0; mm<mmMax; j++){
       mm += dm;
       if(!m_model->IsInPlot(mp,mm)) continue;
-      int bin = abs(m_model->GetBin(mp,mm));
-      ofile << mp << " " << mm << " " << m_model->mBCsq(mp,mm) << " " << bin << endl;
+      int bin = abs(eqbin.Bin(mp,mm));
+      ofile << mp << " " << mm << " " << m_model->GetmBCsq(mp,mm) << " " << bin << endl;
       double delta, P, Pbar;
-      m_model->PPbarDelta(mp,mm,P,Pbar,delta);
-      if(std::isnan(delta)) continue;
-      if(P+Pbar > m_majorant) m_majorant = P+Pbar;
+      if(PPbarDelta(mp,mm,P,Pbar,delta)) continue;
       bin -= 1;
+
       C[bin]  += sqrt(P*Pbar)*cos(delta);
       S[bin]  += sqrt(P*Pbar)*sin(delta);
-      K[bin]  += P;
-      Kb[bin] += Pbar;
+      Kp[bin] += P;
+      Kn[bin] += Pbar;
     }
   }
   ofile.close();
 
   double norm = 0;
   for(int i=0; i<8; i++){
-    C[i] /= sqrt(K[i]*Kb[i]);
-    S[i] /= sqrt(K[i]*Kb[i]);
-    norm += K[i] + Kb[i];
+    C[i] /= sqrt(Kp[i]*Kn[i]);
+    S[i] /= sqrt(Kp[i]*Kn[i]);
+    norm += Kp[i] + Kn[i];
   }
 
-  const string fname1 = label + string("_eq_phase_params.txt");
+  cout << "Hello, God! " << label << endl;
+  cstr fname1("params/test.txt");//= str("params/") + label + str("_eq_phase_params.txt");
+  cout << fname1 << endl;
   ofstream ofile1(fname1.c_str());
   cout << "Norm     = " << norm << endl;
-  cout << "Majorant = " << m_majorant << endl;
   for(int i=0; i<m_nbins; i++){
-    K[i]  /= norm;
-    Kb[i] /= norm;
-    cout << i+1 << ": C = " << C[i] << ", S = " << S[i] << ", K = " << K[i] << ", Kb = " << Kb[i] << ", Q = " << C[i]*C[i]+S[i]*S[i] << endl;
-    ofile1 << i+1 << ": C = " << C[i] << ", S = " << S[i] << ", K = " << K[i] << ", Kb = " << Kb[i] << ", Q = " << C[i]*C[i]+S[i]*S[i] << endl;
+    Kp[i] /= norm;
+    Kn[i] /= norm;
+
+    cout << i+1;
+    cout << ": C = "  << C[i];
+    cout << ", S = "  << S[i];
+    cout << ", Kp = " << Kp[i];
+    cout << ", Kn = " << Kn[i];
+    cout << ", Q = "  << C[i]*C[i]+S[i]*S[i] << endl;
+
+    ofile1 << i+1;
+    ofile1 << ": C = "  << C[i];
+    ofile1 << ", S = "  << S[i];
+    ofile1 << ", Kp = " << Kp[i];
+    ofile1 << ", Kn = " << Kn[i];
+    ofile1 << ", Q = "  << C[i]*C[i]+S[i]*S[i] << endl;
   }
   ofile1.close();
-  return m_majorant;
+  return 0;
+}
+
+int ModelIntegral::PPbarDelta(cdouble& mABsq, cdouble& mACsq, double& P, double& Pbar, double& delta){
+  compld A  = m_model->Amp(mABsq,mACsq);
+  compld Ab = m_model->Amp(mACsq,mABsq);
+  delta = -(std::arg(Ab) - std::arg(A));
+  if(std::isnan(delta)){ cout << "delta: " << delta << endl; return -1;}
+  P = norm(A); Pbar = norm(Ab);
+  return 0;
 }

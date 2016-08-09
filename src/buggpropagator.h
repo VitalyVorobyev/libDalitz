@@ -3,13 +3,14 @@
 
 #include "abspropagator.h"
 #include "buggwidth.h"
+#include "consts.h"
 
 class BuggPropagator : public AbsPropagator{
 public:
   BuggPropagator(void);
   ~BuggPropagator(void);
 
-  EvtComplex operator()(const double& s, const double& p = 0) const;
+  compld operator()(const double& s, const double& p = 0) const;
 
 private:
   BuggWidth* m_width;

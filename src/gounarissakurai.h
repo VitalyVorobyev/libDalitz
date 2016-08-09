@@ -4,6 +4,7 @@
 #include "abspropagator.h"
 #include "gswidth.h"
 #include "constwidth.h"
+#include "consts.h"
 
 /// \brief Class implementing Gounaris-Sakurai lineshape
 /// Gounaris-Sakurai lineshape is introduced by
@@ -19,7 +20,7 @@ public:
   GounarisSakurai(const double& G0, const double& m, const double& p0, const bool constwidth = false);
   ~GounarisSakurai();
 
-  EvtComplex operator()(const double& s, const double& p) const;
+  compld operator()(const double& s, const double& p) const;
 
 private:
   double f(const double& s, const double& p) const;

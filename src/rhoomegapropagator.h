@@ -3,6 +3,7 @@
 
 #include "gounarissakurai.h"
 #include "relbreitwigner.h"
+#include "consts.h"
 
 /// \brief Class implementing rho(770)-omega(782) interfering propagator.
 /// Taken from Eq.(13) in Phys. Rev. D92, 032002 (2015).
@@ -14,10 +15,10 @@ class RhoOmegaPropagator : public GounarisSakurai{
 public:
   RhoOmegaPropagator(const double& a, const double& theta);
 
-  EvtComplex operator()(const double& s, const double& p) const;
+  compld operator()(const double& s, const double& p) const;
 
 private:
-  EvtComplex m_omega_amp;
+  compld m_omega_amp;
   RelBreitWigner* omega_prop;
 };
 

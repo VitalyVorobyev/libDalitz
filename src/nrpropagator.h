@@ -2,11 +2,12 @@
 #define NRPROPAGATOR_H
 
 #include "abspropagator.h"
+#include "consts.h"
 
 class NRPropagator : public AbsPropagator{
 public:
   NRPropagator(const double& alpha);
-  EvtComplex operator()(const double& s,const double& p=0) const;
+  compld operator()(const double& s,const double& p=0) const;
 
 private:
   double m_alpha;

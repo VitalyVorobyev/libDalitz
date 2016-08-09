@@ -2,15 +2,13 @@
 #include <math.h>
 #include <iostream>
 
-double BlattWeisskopf::m_r_meson     = 5.0;
-double BlattWeisskopf::m_r_resonance = 1.5;
+double BlattWeisskopf::m_r_meson     = 5.0;// GeV-1
+double BlattWeisskopf::m_r_resonance = 1.5;// GeV-1
 
 BlattWeisskopf::BlattWeisskopf(const int spin,const double& p0, const int type):
   FormFactor(type == FFType::FFMeson ? m_r_meson : m_r_resonance,p0),m_spin(spin),
-  m_type(type)
-{
-  m_F0 = compute(p0);
-}
+  m_type(type),m_F0(compute(p0))
+{}
 
 BlattWeisskopf::BlattWeisskopf(const BlattWeisskopf& other):
    FormFactor(other.r(),other.p0()),m_spin(other.m_spin),m_F0(other.m_F0)
@@ -64,8 +62,5 @@ double BlattWeisskopf::compute(const double& p) const {
     std::cout << "BlattWeisskopf::compute: wrong spin " << m_spin << std::endl;
     break;
   }
-
-//  std::cout << "BlattWeisskopf::compute: " << r() << " " << sqrt(psq) << " " << 1./sqrt(denom)/m_F0 << std::endl;
-
   return sqrt(1.0/denom);
 }

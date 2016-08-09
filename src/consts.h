@@ -1,6 +1,14 @@
 #ifndef CONSTS_H
 #define CONSTS_H
 
+#include <complex>
+#include <cmath>
+
+//const double EvtConst::pi           =  3.141592653589793238;
+//const double EvtConst::twoPi        =  2*pi;
+const double radToDegrees =  180./M_PI;
+//const double EvtConst::c            =  2.99792458E11;       // mm/sec
+
 const double m_PI_Mass  = 0.13957018;
 const double m_PI0_Mass = 0.1349767;
 const double m_Ks0_Mass = 0.497614;
@@ -22,5 +30,8 @@ const double m_rho1450_Width = 0.427;// +- 0.031
 const double m_rho1700_Mass  = 1.861;// +- 0.017
 const double m_rho1700_Width = 0.316;// +- 0.026
 //
+
+typedef std::complex<double> compld;
+const compld imone = compld(0,1);
 
 #endif // CONSTS_H

@@ -1,0 +1,30 @@
+\hypertarget{class_abs_propagator}{}\section{Abs\+Propagator Class Reference}
+\label{class_abs_propagator}\index{Abs\+Propagator@{Abs\+Propagator}}
+
+
+Inheritance diagram for Abs\+Propagator\+:
+% FIG 0
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_abs_propagator_a0f70421a5ccf006ab2f3a8da4685c1e1}{}{\bfseries Abs\+Propagator} (const double \&m, const double \&p0, \hyperlink{class_abs_var_width}{Abs\+Var\+Width} $\ast$width)\label{class_abs_propagator_a0f70421a5ccf006ab2f3a8da4685c1e1}
+
+\item 
+\hypertarget{class_abs_propagator_a4522b5299d616bd50e875a9cc1edc982}{}virtual \hyperlink{class_evt_complex}{Evt\+Complex} {\bfseries operator()} (const double \&s, const double \&p) const =0\label{class_abs_propagator_a4522b5299d616bd50e875a9cc1edc982}
+
+\item 
+\hypertarget{class_abs_propagator_a1735b25ffab9a805c1bd62f6d7f84275}{}double {\bfseries m} (void) const \label{class_abs_propagator_a1735b25ffab9a805c1bd62f6d7f84275}
+
+\item 
+\hypertarget{class_abs_propagator_a2b2a4fa091102e19b86d476b1048e782}{}double {\bfseries p0} (void) const \label{class_abs_propagator_a2b2a4fa091102e19b86d476b1048e782}
+
+\item 
+\hypertarget{class_abs_propagator_a73662398768acce1c39d18ab8cc105b4}{}\hyperlink{class_abs_var_width}{Abs\+Var\+Width} $\ast$ {\bfseries width} (void) const \label{class_abs_propagator_a73662398768acce1c39d18ab8cc105b4}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/abspropagator.\+h\item 
+src/abspropagator.\+cpp\end{DoxyCompactItemize}

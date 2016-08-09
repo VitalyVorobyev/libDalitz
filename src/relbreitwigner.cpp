@@ -3,6 +3,10 @@
 #include "constwidth.h"
 #include "flattewidth.h"
 
+#include <iostream>
+
+using namespace std;
+
 //const int VarWType::Const  = 0;
 //const int VarWType::BW     = 1;
 //const int VarWType::GS     = 2;
@@ -25,13 +29,13 @@ RelBreitWigner::RelBreitWigner(const double &G0, const double &m, const double &
     m_width = new FlatteWidth(m);
     break;
   default:
-    std::cout << "RelBreitWigner: wrong VarWType " << m_wtype << std::endl;
+    cout << "RelBreitWigner: wrong VarWType " << m_wtype << endl;
     break;
   }
 }
 
-EvtComplex RelBreitWigner::operator()(const double& s, const double& p) const{
-  const EvtComplex ione(0,1);
+compld RelBreitWigner::operator()(const double& s, const double& p) const{
+  const compld ione(0,1);
   const double& mass = m();
 //  std::cout << "RBW: m: " << mass << " s: " << s << " width: " << (*m_width)(s,p) << std::endl;
   return 1./(mass*mass-s-ione*mass*(*m_width)(s,p));

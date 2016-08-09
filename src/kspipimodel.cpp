@@ -3,10 +3,14 @@
 #include "blattweisskopf.h"
 #include "absvarwidth.h"
 
+#include <cmath>
+//#include <vector>
+
 KspipiModel::KspipiModel(void):
 KspipiModel(m_D0_Mass,m_Ks0_Mass,m_PI_Mass)
 {
 }
+
 KspipiModel::KspipiModel(const double &md, const double &mks, const double& mpi):
 SymDalitzModel(md,mks,mpi,-M_PI/8.,15.*M_PI/8.)
 {
@@ -14,7 +18,7 @@ SymDalitzModel(md,mks,mpi,-M_PI/8.,15.*M_PI/8.)
   SetACaxis("m_{-}^{2}, GeV^{2}/c^{4}");
   SetBCaxis("m_{#pi#pi}^{2}, GeV^{2}/c^{4}");
   // ** A. Poluektov et al. Phys. Rev. D 81, 112002 – Published 16 June 2010 **
-  const double dtr = 1./EvtConst::radToDegrees;
+  const double dtr = 1./radToDegrees;
   BlattWeisskopf::m_r_meson     = 5.0;
   BlattWeisskopf::m_r_resonance = 1.5;
   ResDecayAngularDistribution::m_use_mRsq = true;
@@ -42,5 +46,5 @@ SymDalitzModel(md,mks,mpi,-M_PI/8.,15.*M_PI/8.)
   AddRes(new DalitzResonance("sigma1",       ResPropType::RBW,this,ResPath::BC,0.5220,0.4530,0,1.560,214.0*dtr));
   AddRes(new DalitzResonance("sigma2",       ResPropType::RBW,this,ResPath::BC,1.0330,0.0880,0,0.200,212.0*dtr));
 //  // NR
-  AddRes(new DalitzResonance("NR",           ResPropType::NR,this,ResPath::BC,0,EvtComplex(-2.537,0.923)));
+  AddRes(new DalitzResonance("NR",           ResPropType::NR,this,ResPath::BC,0,compld(-2.537,0.923)));
 }

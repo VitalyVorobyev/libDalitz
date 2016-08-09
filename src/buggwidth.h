@@ -6,6 +6,7 @@
 class BuggWidth : public AbsVarWidth{
 public:
   BuggWidth(void);
+//  ~BuggWidth() {}
   double mrGamma1(const double& s);
   void GetWidths(const double& s, double& G1, double& GTot);
   double sA(void) const {return m_sA;}

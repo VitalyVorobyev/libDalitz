@@ -1,15 +1,13 @@
 #include "virtualdstarpropagator.h"
 #include "constwidth.h"
 
-#include <complex>
+using namespace std;
 
 VirtualDstarPropagator::VirtualDstarPropagator(const double &beta1, const double &beta2):
   AbsPropagator(2.01,0),m_b1(beta1),m_b2(beta2)
 {
 }
 
-EvtComplex VirtualDstarPropagator::operator()(const double& s,const double& p) const{
-  const std::complex<double> ione(0,1);
-  const std::complex<double> res = std::exp(-(m_b1+ione*m_b2)*s);
-  return EvtComplex(res.real(),res.imag());
+compld VirtualDstarPropagator::operator()(const double& s,const double& p) const{
+  return exp(-(m_b1+imone*m_b2)*s);
 }

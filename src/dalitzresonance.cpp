@@ -3,18 +3,25 @@
 #include "dalitzphasespace.h"
 #include "relbreitwigner.h"
 #include "blattweisskopf.h"
+#include "virtualresff.h"
 #include "gounarissakurai.h"
 #include "nrpropagator.h"
 #include "buggpropagator.h"
 #include "virtualdstarpropagator.h"
+//#include "virtualdstarpropagator2.h"
 #include "rhoomegapropagator.h"
 
-#include <math.h>
+#include <cmath>
+#include <iostream>
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType, const int WidthType,const DalitzPhaseSpace* phsp, const int respath, const double& mres, const double& wres, const int spin, const EvtComplex& camp):
+using namespace std;
+
+typedef DalitzResonance DRes;
+
+DalitzResonance::DalitzResonance(cstr& name,cint PropType, cint WidthType,cDPhSp* phsp, cint respath, cdouble& mres, cdouble& wres, cint spin, ccompld& camp):
   DalitzPlotObject(name,camp), m_ptype(PropType),m_wtype(WidthType),m_spin(spin),m_path(respath)
 {
-  const double pResRef = SetFFAngAmp(phsp,mres);
+  cdouble pResRef = SetFFAngAmp(phsp,mres);
   switch(PropType){
   case ResPropType::RBW:
 //    if(WidthType == VarWType::Flatte){
@@ -31,33 +38,33 @@ DalitzResonance::DalitzResonance(const std::string& name,const int PropType, con
     m_prop = new RelBreitWigner(wres,mres,pResRef,spin,VarWType::Flatte);
     break;
   default:
-    std::cout << "DalitzResonance: wrong proparator type for " << name;
-    std::cout << ". Should be " << ResPropType::RBW << " or " << ResPropType::GS << std::endl;
+    cout << "DalitzResonance: wrong proparator type for " << name;
+    cout << ". Should be " << ResPropType::RBW << " or " << ResPropType::GS << endl;
     return;
   }
   return;
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType, const int WidthType,const DalitzPhaseSpace* phsp, const int respath, const double& mres, const double& wres, const int spin, const double& amp, const double& phi):
-  DalitzResonance(name,PropType,WidthType,phsp,respath,mres,wres,spin,amp*EvtComplex(cos(phi),sin(phi)))
+DalitzResonance::DalitzResonance(cstr& name,cint PropType, cint WidthType,cDPhSp* phsp, cint respath, cdouble& mres, cdouble& wres, cint spin, cdouble& amp, cdouble& phi):
+  DRes(name,PropType,WidthType,phsp,respath,mres,wres,spin,amp*compld(cos(phi),sin(phi)))
 {
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const DalitzPhaseSpace* phsp, const int respath, const double& mres, const double& wres, const int spin, const EvtComplex& camp):
+DalitzResonance::DalitzResonance(cstr& name,cint PropType,cDPhSp* phsp, cint respath, cdouble& mres, cdouble& wres, cint spin, ccompld& camp):
   DalitzResonance(name,PropType,VarWType::BW,phsp,respath,mres,wres,spin,camp)
 {
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const DalitzPhaseSpace* phsp, const int respath, const double& mres, const double& wres, const int spin, const double& amp, const double& phi):
+DalitzResonance::DalitzResonance(cstr& name,cint PropType,cDPhSp* phsp, cint respath, cdouble& mres, cdouble& wres, cint spin, cdouble& amp, cdouble& phi):
   DalitzResonance(name,PropType,VarWType::BW,phsp,respath,mres,wres,spin,amp,phi)
 {
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const DalitzPhaseSpace* phsp, const int respath,const double& alpha, const EvtComplex& camp):
+DalitzResonance::DalitzResonance(cstr& name,cint PropType,cDPhSp* phsp, cint respath,cdouble& alpha, ccompld& camp):
   DalitzPlotObject(name,camp), m_ptype(PropType),m_spin(0),m_path(respath)
 {
   if(PropType != ResPropType::NR && PropType != ResPropType::Flatte){
-    std::cout << "DalitzResonance: wrong propagator type specified in NR of Flatte constructor for " << name << std::endl;
+    cout << "DalitzResonance: wrong propagator type specified in NR of Flatte constructor for " << name << endl;
     return;
   }
   m_wtype = PropType == ResPropType::Flatte ? VarWType::Flatte : VarWType::Const;
@@ -65,55 +72,58 @@ DalitzResonance::DalitzResonance(const std::string& name,const int PropType,cons
   m_prop  = PropType == ResPropType::Flatte ? (AbsPropagator*) new RelBreitWigner(1,alpha,1,0,VarWType::Flatte) : new NRPropagator(alpha);
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const DalitzPhaseSpace* phsp, const int respath,const double& alpha,const double& amp,const double& phi):
-  DalitzResonance(name,PropType,phsp,respath,alpha,amp*EvtComplex(cos(phi),sin(phi)))
+DalitzResonance::DalitzResonance(cstr& name,cint PropType,cDPhSp* phsp, cint respath,cdouble& alpha,cdouble& amp,cdouble& phi):
+  DalitzResonance(name,PropType,phsp,respath,alpha,amp*compld(cos(phi),sin(phi)))
 {
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const DalitzPhaseSpace* phsp, const int respath,const EvtComplex& camp):
-  DalitzPlotObject(name,camp),m_prop(new BuggPropagator()),m_ptype(PropType),m_wtype(VarWType::Const),m_spin(0),m_path(respath)
+DalitzResonance::DalitzResonance(cstr& name,cint PropType,cDPhSp* phsp, cint respath,const compld& camp):
+  DalitzPlotObject(name,camp),m_ptype(PropType),m_path(respath)
 {
-  if(PropType != ResPropType::Bugg){
-    std::cout << "DalitzResonance: wrong propagator type specified in Bugg constructor for " << name << std::endl;
+  if(PropType != ResPropType::Bugg && PropType != ResPropType::VDst2){
+    cout << "DalitzResonance: wrong propagator type specified in Bugg (of Dv*0(2010)) constructor for " << name << endl;
     return;
   }
-  SetFFAngAmp(phsp,0.5);
+  cdouble mres = PropType == ResPropType::VDst2 ? 2.01027 : 0.5;
+  m_spin  = PropType == ResPropType::VDst2 ? 1 : 0;
+  cdouble pResRef = SetFFAngAmp(phsp,mres,PropType == ResPropType::VDst2 ? true : false);
+  m_wtype = PropType == ResPropType::VDst2 ? VarWType::BW : VarWType::Const;
+  m_prop  = PropType == ResPropType::VDst2 ? (AbsPropagator*) new RelBreitWigner(0.0834,mres,pResRef,1,m_wtype) : (AbsPropagator*) new BuggPropagator();
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const DalitzPhaseSpace* phsp, const int respath,const double& amp,const double& phi)
-  : DalitzResonance(name,PropType,phsp,respath,amp*EvtComplex(cos(phi),sin(phi)))
+DalitzResonance::DalitzResonance(cstr& name,cint PropType,cDPhSp* phsp, cint respath,cdouble& amp,cdouble& phi)
+  : DalitzResonance(name,PropType,phsp,respath,amp*compld(cos(phi),sin(phi)))
 {
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const DalitzPhaseSpace* phsp, const int respath,const double& beta1,const double& beta2, const EvtComplex& camp):
+DalitzResonance::DalitzResonance(cstr& name,cint PropType,cDPhSp* phsp, cint respath,cdouble& beta1,cdouble& beta2, ccompld& camp):
   DalitzPlotObject(name,camp),m_ptype(PropType),m_wtype(VarWType::Const),m_spin(1),m_path(respath)
 {
   if(PropType != ResPropType::VDst && PropType != ResPropType::RhoOmega){
-    std::cout << "DalitzResonance: wrong propagator type specified in VDst or RhoOmega constructor for " << name << std::endl;
+    cout << "DalitzResonance: wrong propagator type specified in VDst or RhoOmega constructor for " << name << endl;
     return;
   }
   SetFFAngAmp(phsp,PropType == ResPropType::VDst ? 2.01 : 0.77);
   m_prop = PropType == ResPropType::VDst ? (AbsPropagator*) new VirtualDstarPropagator(beta1,beta2) : (AbsPropagator*) new RhoOmegaPropagator(beta1,beta2);
 }
 
-DalitzResonance::DalitzResonance(const std::string& name,const int PropType,const DalitzPhaseSpace* phsp, const int respath,const double& beta1,const double& beta2, const double& amp,const double& phi):
-  DalitzResonance(name,PropType,phsp,respath,beta1,beta2,amp*EvtComplex(cos(phi),sin(phi)))
+DalitzResonance::DalitzResonance(cstr& name,cint PropType,cDPhSp* phsp, cint respath,cdouble& beta1,cdouble& beta2, cdouble& amp,cdouble& phi):
+  DalitzResonance(name,PropType,phsp,respath,beta1,beta2,amp*compld(cos(phi),sin(phi)))
 {
 }
 
-EvtComplex DalitzResonance::evaluate(const double& mACsq,const double& mBCsq) const{
+compld DalitzResonance::evaluate(cdouble& mACsq,cdouble& mBCsq) const{
   const ResDecayAngularDistribution& angamp = *m_ang_amp;
-  const double mABsq    = DalitzPhaseSpace::mBCsq(angamp.mMotSq(),angamp.mChASq(),angamp.mChBSq(),angamp.mChCSq(),mACsq,mBCsq);
-  const double p = DalitzPhaseSpace::pRes(angamp.mMotSq(),mABsq,angamp.mChCSq());
-  const double q = DalitzPhaseSpace::pRes(mABsq,angamp.mChASq(),angamp.mChBSq());
-//  const double q = DalitzPhaseSpace::q(mABsq,m_ang_amp->mChA(),m_ang_amp->mChB());
-//  const double p = DalitzPhaseSpace::p(mABsq,m_ang_amp->mMot(),m_ang_amp->mChC());
-
-//  std::cout << Name() << " " << CAmp() << " " << (*m_mff)(p) << " " << (*m_rff)(q) << " " << angamp(mACsq,mBCsq) << " " << (*m_prop)(mABsq,q) << std::endl;
+  cdouble mABsq = DalitzPhaseSpace::GetmBCsq(angamp.mMotSq(),angamp.mChASq(),angamp.mChBSq(),angamp.mChCSq(),mACsq,mBCsq);
+  cdouble p     = DalitzPhaseSpace::pRes(angamp.mMotSq(),mABsq,angamp.mChCSq());
+  cdouble q     = DalitzPhaseSpace::pRes(mABsq,angamp.mChASq(),angamp.mChBSq());
+//  cdouble q = DalitzPhaseSpace::q(mABsq,m_ang_amp->mChA(),m_ang_amp->mChB());
+//  cdouble p = DalitzPhaseSpace::p(mABsq,m_ang_amp->mMot(),m_ang_amp->mChC());
+//  cout << Name() << " " << CAmp() << " " << (*m_mff)(p) << " " << (*m_rff)(q) << " " << angamp(mACsq,mBCsq) << " " << (*m_prop)(mABsq,q) << endl;
   return CAmp()*(*m_mff)(p)*(*m_rff)(q)*angamp(mACsq,mBCsq)*(*m_prop)(mABsq,q);
 }
 
-double DalitzResonance::SetFFAngAmp(const DalitzPhaseSpace *phsp, const double& mres){
+double DalitzResonance::SetFFAngAmp(cDPhSp* phsp, cdouble& mres, const bool vdst){
   switch(m_path){
   case ResPath::AB:
     m_ang_amp = new ResDecayAngularDistribution(m_spin,phsp->mM(),phsp->mA(),phsp->mB(),phsp->mC(),mres);
@@ -125,20 +135,20 @@ double DalitzResonance::SetFFAngAmp(const DalitzPhaseSpace *phsp, const double& 
     m_ang_amp = new ResDecayAngularDistribution(m_spin,phsp->mM(),phsp->mB(),phsp->mC(),phsp->mA(),mres);
     break;
   default:
-    std::cout << "DalitzResonance: wrong resonance path " << m_path << " for resonance " << Name() << std::endl;
+    cout << "DalitzResonance: wrong resonance path " << m_path << " for resonance " << Name() << endl;
     return 0;
   }
 
-  const double q0 = DalitzPhaseSpace::pRes(m_ang_amp->mResSq(),m_ang_amp->mChASq(),m_ang_amp->mChBSq());
-  const double p0 = DalitzPhaseSpace::pRes(m_ang_amp->mMotSq(),m_ang_amp->mResSq(),m_ang_amp->mChCSq());
-//  const double q  = DalitzPhaseSpace::q(m_ang_amp->mResSq(),m_ang_amp->mChA(),m_ang_amp->mChB());
-//  const double p  = DalitzPhaseSpace::p(m_ang_amp->mResSq(),m_ang_amp->mMot(),m_ang_amp->mChC());
-//  std::cout << "q: " << q0 << " -> " << q << std::endl;
-//  std::cout << "p: " << p0 << " -> " << p  << " " << m_ang_amp->mResSq() << " " << m_ang_amp->mMotSq() << " " << m_ang_amp->mChCSq() << std::endl;
+  cdouble q0 = DalitzPhaseSpace::pRes(m_ang_amp->mResSq(),m_ang_amp->mChASq(),m_ang_amp->mChBSq());
+  cdouble p0 = DalitzPhaseSpace::pRes(m_ang_amp->mMotSq(),m_ang_amp->mResSq(),m_ang_amp->mChCSq());
+//  cdouble q  = DalitzPhaseSpace::q(m_ang_amp->mResSq(),m_ang_amp->mChA(),m_ang_amp->mChB());
+//  cdouble p  = DalitzPhaseSpace::p(m_ang_amp->mResSq(),m_ang_amp->mMot(),m_ang_amp->mChC());
+//  cout << "q: " << q0 << " -> " << q << endl;
+//  cout << "p: " << p0 << " -> " << p  << " " << m_ang_amp->mResSq() << " " << m_ang_amp->mMotSq() << " " << m_ang_amp->mChCSq() << endl;
 
-//  std::cout << "SetFFAngAmp: " << sqrt(psqResRef) << " " << sqrt(psqMoRef) << " " << m_spin << std::endl;
-//  std::cout << "  " << m_ang_amp->mMotSq() << " " << m_ang_amp->mResSq() << " " << m_ang_amp->mChASq() << " " << m_ang_amp->mChBSq() << " " << m_ang_amp->mChCSq() << std::endl;
+//  cout << "SetFFAngAmp: " << sqrt(psqResRef) << " " << sqrt(psqMoRef) << " " << m_spin << endl;
+//  cout << "  " << m_ang_amp->mMotSq() << " " << m_ang_amp->mResSq() << " " << m_ang_amp->mChASq() << " " << m_ang_amp->mChBSq() << " " << m_ang_amp->mChCSq() << endl;
   m_mff = new BlattWeisskopf(m_spin,p0,FFType::FFMeson);
-  m_rff = new BlattWeisskopf(m_spin,q0,FFType::FFResonance);
+  m_rff = !vdst ? (FormFactor*) new BlattWeisskopf(m_spin,q0,FFType::FFResonance) : (FormFactor*) new VirtualResFF(BlattWeisskopf::m_r_resonance,q0);
   return q0;
 }

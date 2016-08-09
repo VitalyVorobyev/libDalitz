@@ -13,6 +13,7 @@ public:
 class AbsVarWidth{
 public:
   AbsVarWidth(const double& G0, const double& m, const double& p0);
+  virtual ~AbsVarWidth() {}
   virtual double operator()(const double& s, const double& p) const = 0;
 
   double G0(void) const {return m_G0;}
