@@ -1,16 +1,27 @@
-#ifndef NRPROPAGATOR_H
-#define NRPROPAGATOR_H
+/** Copyright 2017 Vitaly Vorobyev
+ ** @file nrpropagator.h
+ **
+ ** @brief This message displayed in Doxygen Files index
+ **
+ ** @author Vitaly Vorobyev
+ ** Contact: vit.vorobiev@gmail.com
+ **/
 
-#include "abspropagator.h"
-#include "consts.h"
+#ifndef SRC_NRPROPAGATOR_H_
+#define SRC_NRPROPAGATOR_H_
 
-class NRPropagator : public AbsPropagator{
-public:
-  NRPropagator(const double& alpha);
-  compld operator()(const double& s,const double& p=0) const;
+#include <complex>
 
-private:
-  double m_alpha;
+#include "./abspropagator.h"
+
+class NRPropagator : public AbsPropagator {
+ public:
+    explicit NRPropagator(const double& alpha);
+    std::complex<double> operator()(const double& s,
+                                    const double& p = 0) const;
+
+ private:
+    double m_alpha;
 };
 
-#endif // NRPROPAGATOR_H
+#endif  // SRC_NRPROPAGATOR_H_

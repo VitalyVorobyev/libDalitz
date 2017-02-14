@@ -1,72 +1,113 @@
-#include "b0tod0pipimodel.h"
-#include "blattweisskopf.h"
-#include "dalitzvetodst2010.h"
-#include "consts.h"
+/** Copyright 2017 Vitaly Vorobyev
+ ** @file b0tod0pipimodel.cpp
+ **
+ ** @brief This message displayed in Doxygen Files index
+ **
+ ** @author Vitaly Vorobyev
+ ** Contact: vit.vorobiev@gmail.com
+ **
+ **/
 
-using namespace std;
+#include "../src/b0tod0pipimodel.h"
 
-B0toD0pipiModel::B0toD0pipiModel(const int type):
-B0toD0pipiModel(m_B0_Mass,m_D0_Mass,m_PI_Mass,type)
-{
+#include <cmath>
+
+#include "./blattweisskopf.h"
+#include "./dalitzvetodst2010.h"
+
+const double B0toD0pipiModel::m_B0_Mass = 5.279;
+const double B0toD0pipiModel::m_D0_Mass = 1.865;
+const double B0toD0pipiModel::m_PI_Mass = 0.139568;
+const double B0toD0pipiModel::dtr = M_PI / 180.;
+
+const int AB = DalitzResonance::AB;
+const int BC = DalitzResonance::BC;
+
+const int B0toD0pipiModel::Belle = 0;
+const int B0toD0pipiModel::LHCb = 1;
+
+B0toD0pipiModel::B0toD0pipiModel(const int type) :
+    B0toD0pipiModel(m_B0_Mass, m_D0_Mass, m_PI_Mass, type) {}
+
+B0toD0pipiModel::B0toD0pipiModel(const double& mB, const double& mD,
+                                 const double& mpi, const int type) :
+    SymDalitzModel(mB, mD, mpi, -M_PI/8., 15.*M_PI/8.), m_type(type) {
+    SetABaxis("m^{2}(D^{0}#pi^{+}), GeV^{2}/c^{4}");
+    SetACaxis("m^{2}(D^{0}#pi^{-}), GeV^{2}/c^{4}");
+    SetBCaxis("m^{2}(#pi^{+}#pi^{-}), GeV^{2}/c^{4}");
+    if (m_type == Belle) InitBelleModel();
+    if (m_type == LHCb) InitLHCbModel();
 }
 
-B0toD0pipiModel::B0toD0pipiModel(const double& mB, const double& mD, const double& mpi, const int type):
-SymDalitzModel(mB,mD,mpi,-M_PI/8.,15.*M_PI/8.),m_type(type)
-{
-  SetABaxis("m^{2}(D^{0}#pi^{+}), GeV^{2}/c^{4}");
-  SetACaxis("m^{2}(D^{0}#pi^{-}), GeV^{2}/c^{4}");
-  SetBCaxis("m^{2}(#pi^{+}#pi^{-}), GeV^{2}/c^{4}");
-  if(m_type == B0toD0pipiModelType::Belle) InitBelleModel();
-  if(m_type == B0toD0pipiModelType::LHCb)  InitLHCbModel();
-//  std::cout << ABaxis() << " " << ACaxis() << " " << BCaxis() << std::endl;
+void B0toD0pipiModel::InitLHCbModel(void) {
+    BlattWeisskopf::m_r_meson = 1.6;
+    BlattWeisskopf::m_r_resonance = 1.6;
+    //                             mass     width    J   amp     phase
+    AddRes(new DalitzResonance("Dv*(2010)", ResPropType::VDst, this,
+                     AB,  0.95,    0.51,       18.80, 266.7*dtr));
+    AddRes(new DalitzResonance("D*0(2400)", ResPropType::RBW, this,
+                     AB,  2.349,   0.217,   0, 12.10,  83.6*dtr));
+    AddRes(new DalitzResonance("D*2(2460)", ResPropType::RBW, this,
+                     AB,  2.4686,  0.0473,  2,  1.310, 262.9*dtr));
+    AddRes(new DalitzResonance("D*J(2760)", ResPropType::RBW, this,
+                     AB,  2.798,   0.105,   3,  0.053,  91.1*dtr));
+    AddRes(new DalitzResonance("rho(770)",  ResPropType::RhoOmega, this,
+                     BC,  0.30,    176.8*dtr,   1.000,   0.0*dtr));
+//    AddRes(new DalitzResonance("rho(770)",  ResPropType::GS, this,
+//                     BC,  0.7700,  0.1300,  1,  1.000,   0.0*dtr));
+//    AddRes(new DalitzResonance("rho(770)",  ResPropType::RBW, this,
+//                     BC,  0.77502, 0.14959, 1,  1.000,   0.0*dtr));
+    AddRes(new DalitzResonance("rho(1450)", ResPropType::GS, this,
+                     BC,  1.4930,  0.4270,  1,  0.230, 149.0*dtr));
+    AddRes(new DalitzResonance("rho(1700)", ResPropType::GS, this,
+                     BC,  1.8610,  0.3160,  1,  0.078, 103.5*dtr));
+    AddRes(new DalitzResonance("f2(1270)",  ResPropType::RBW, this,
+                     BC,  1.2751,  0.1851,  2,  0.072, 158.1*dtr));
+    AddRes(new DalitzResonance("f0(500)",   ResPropType::Bugg, this,
+                     BC,                       18.70,   38.4*dtr));
+    AddRes(new DalitzResonance("f0(980)",   ResPropType::Flatte, this,
+                     BC,  0.9399,               2.620, 138.9*dtr));
+    AddRes(new DalitzResonance("f0(2020)",  ResPropType::RBW, this,
+                     BC,  1.992,   0.442,   0,  4.410, 258.5*dtr));
+    AddRes(new DalitzResonance("NR",        ResPropType::NR, this,
+                     BC, -0.363,                3.430,  77.1*dtr));
 }
 
-void B0toD0pipiModel::InitLHCbModel(void){
-// ** R. Aaij   et al. (LHCb Collaboration)  Phys. Rev. D 92, 032002 (2015) **
-  BlattWeisskopf::m_r_meson     = 1.6;
-  BlattWeisskopf::m_r_resonance = 1.6;
-  const double dtr = 1./radToDegrees;
-  //                                                                            mass  width   J amp   phase
-  AddRes(new DalitzResonance("Dv*(2010)",ResPropType::VDst,    this,ResPath::AB,0.95,0.51,      18.80,266.7*dtr));
-  AddRes(new DalitzResonance("D*0(2400)",ResPropType::RBW,     this,ResPath::AB,2.349,0.217,  0,12.10, 83.6*dtr));
-  AddRes(new DalitzResonance("D*2(2460)",ResPropType::RBW,     this,ResPath::AB,2.4686,0.0473,2,1.310,262.9*dtr));
-//  AddRes(new DalitzResonance("D*J(2760)",ResPropType::RBW,     this,ResPath::AB,2.798,0.105,  3,0.053, 91.1*dtr));
-//  AddRes(new DalitzResonance("rho(770)", ResPropType::RhoOmega,this,ResPath::BC,0.30,176.8*dtr,1.000,  0.0*dtr));
-//  AddRes(new DalitzResonance("rho(770)", ResPropType::GS,      this,ResPath::BC,0.7700,0.1300,1,1.000,0.000*dtr));
-  AddRes(new DalitzResonance("rho(770)", ResPropType::RBW,      this,ResPath::BC,0.77502,0.14959,1,1.000,0.000*dtr));
-//  AddRes(new DalitzResonance("rho(1450)",ResPropType::GS,      this,ResPath::BC,1.4930,0.4270,1,0.230,149.0*dtr));
-//  AddRes(new DalitzResonance("rho(1700)",ResPropType::GS,      this,ResPath::BC,1.8610,0.3160,1,0.078,103.5*dtr));
-  AddRes(new DalitzResonance("f2(1270)", ResPropType::RBW,     this,ResPath::BC,1.2751,0.1851,2,0.072,158.1*dtr));
-  AddRes(new DalitzResonance("f0(500)",  ResPropType::Bugg,    this,ResPath::BC,                18.70, 38.4*dtr));
-//  AddRes(new DalitzResonance("f0(980)",  ResPropType::Flatte,  this,ResPath::BC,0.9399,         2.620,138.9*dtr));
-//  AddRes(new DalitzResonance("f0(2020)", ResPropType::RBW,     this,ResPath::BC,1.992,0.442,  0,4.410,258.5*dtr));
-  AddRes(new DalitzResonance("NR",       ResPropType::NR,      this,ResPath::BC,-0.363,         3.430, 77.1*dtr));
+void B0toD0pipiModel::InitBelleModel(void) {
+    BlattWeisskopf::m_r_meson     = 1.6;
+    BlattWeisskopf::m_r_resonance = 1.6;
+    const double omegaAmp = 2.0*0.027/(0.7756*0.7756);
+    const double omegaPha = 1.99+2.25;
+  //                     mass  width      J amp   phase
+    AddRes(new DalitzResonance("D2*", ResPropType::RBW, this,
+                     AB, 2.46570, 0.04960, 2, 1.00,  0.00));
+    AddRes(new DalitzResonance("D0*", ResPropType::RBW, this,
+                     AB, 2.30800, 0.27611, 0, 40.6, -3.00));
+    AddRes(new DalitzResonance("Dv*", ResPropType::VDst2, this,
+                     AB,                  271., -2.62));
+    AddRes(new DalitzResonance("Dv*", ResPropType::RBW, this,
+                     AB, 2.0103, 83.4e-6, 1, 0.0000, -2.62));
+    AddRes(new DalitzResonance("rho(770)", ResPropType::GS, this,
+                     BC, 0.77560, 0.14400, 1, 2.0, 2.25));
+    AddRes(new DalitzResonance("rho(770)", ResPropType::RBW, this,
+                     BC, 0.7756, 0.14400, 1, 2.0, 2.25));
+    AddRes(new DalitzResonance("omega",    ResPropType::RBW, this,
+                     BC, 0.78265, 0.00890, 1, omegaAmp, omegaPha));
+    AddRes(new DalitzResonance("f2", ResPropType::RBW, this,
+                     BC, 1.27500, 0.18500, 2, 0.10, 2.97));
+    AddRes(new DalitzResonance("f0(600)",  ResPropType::RBW, this,
+                     BC, 0.51300, 0.33500, 0, 15.7, -0.44));
+    AddRes(new DalitzResonance("f0(980)",  ResPropType::RBW, this,
+                     BC, 0.97800, 0.04400, 0, 3.08, -2.48));
+    AddRes(new DalitzResonance("f0(1370)", ResPropType::RBW, this,
+                     BC, 1.43400, 0.17300, 0, 10.2, -1.52));
+    // Cut off 3 MeV around D*(2010) mass
+    AddVeto(new DalitzVetoDst2010(0.003));
 }
 
-void B0toD0pipiModel::InitBelleModel(void){
-// ** A. Kuzmin et al. (Belle Collaboration) Phys. Rev. D 76, 012006 – Published 30 July 2007 **
-  BlattWeisskopf::m_r_meson     = 1.6;
-  BlattWeisskopf::m_r_resonance = 1.6;
-  //const double dtr = 1./radToDegrees;
-  //                                                                        mass  width      J amp   phase
-  AddRes(new DalitzResonance("D2*",      ResPropType::RBW,  this,ResPath::AB,2.46570,0.04960,2,1.00, 0.00));
-  AddRes(new DalitzResonance("D0*",      ResPropType::RBW,  this,ResPath::AB,2.30800,0.27611,0,40.6,-3.00));
-//  AddRes(new DalitzResonance("Dv*",      ResPropType::VDst2,this,ResPath::AB,                  271.,-2.62));
-//  AddRes(new DalitzResonance("Dv*",      ResPropType::RBW,  this,ResPath::AB,2.0103,83.4e-6,1,0.0000,-2.62));
-//  AddRes(new DalitzResonance("rho(770)", ResPropType::GS,   this,ResPath::BC,0.77560,0.14400,1,2.0, 2.25));
-  AddRes(new DalitzResonance("rho(770)", ResPropType::RBW,  this,ResPath::BC,0.7756, 0.14400,1,2.0, 2.25));
-//  AddRes(new DalitzResonance("omega",    ResPropType::RBW,  this,ResPath::BC,0.78265,0.00890,1,2.0*0.027/(0.7756*0.7756),1.99+2.25));
-  AddRes(new DalitzResonance("f2",       ResPropType::RBW,  this,ResPath::BC,1.27500,0.18500,2,0.10, 2.97));
-  AddRes(new DalitzResonance("f0(600)",  ResPropType::RBW,  this,ResPath::BC,0.51300,0.33500,0,15.7,-0.44));
-  AddRes(new DalitzResonance("f0(980)",  ResPropType::RBW,  this,ResPath::BC,0.97800,0.04400,0,3.08,-2.48));
-  AddRes(new DalitzResonance("f0(1370)", ResPropType::RBW,  this,ResPath::BC,1.43400,0.17300,0,10.2,-1.52));
+// START MIGRAD MINIMIZATION.  STRATEGY 1.  CONVERGENCE WHEN EDM .LT. 0.10E-03
 
-  AddVeto(new DalitzVetoDst2010(0.003));// Cut off 3 MeV around D*(2010) mass
-}
-
-//START MIGRAD MINIMIZATION.  STRATEGY 1.  CONVERGENCE WHEN EDM .LT. 0.10E-03
-
-// FCN=   112567.1     FROM MIGRAD    STATUS=INITIATE     254 CALLS      256 TOTAL
+// FCN=   112567.1     FROM MIGRAD    STATUS=INITIATE     254 CALLS  256 TOTAL
 //                     EDM= unknown      STRATEGY= 1      NO ERROR MATRIX
 
 //  EXT PARAMETER               CURRENT GUESS       STEP         FIRST
@@ -102,9 +143,9 @@ void B0toD0pipiModel::InitBelleModel(void){
 //  29      f7        0.0000       constant
 //  30      amom     0.27200E-01   constant
 
-//COVARIANCE MATRIX CALCULATED SUCCESSFULLY
+// COVARIANCE MATRIX CALCULATED SUCCESSFULLY
 
-// FCN=   112390.9     FROM HESSE     STATUS=OK           213 CALLS     1368 TOTAL
+// FCN=   112390.9     FROM HESSE     STATUS=OK       213 CALLS     1368 TOTAL
 //                     EDM=  0.37E-03    STRATEGY= 1      ERROR MATRIX ACCURATE
 
 //  EXT PARAMETER                                   STEP         FIRST

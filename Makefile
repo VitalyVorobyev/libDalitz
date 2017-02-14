@@ -4,10 +4,10 @@ BinDir=bin/
 Sources=$(notdir $(wildcard $(SourceDir)*.cpp))
 Executable=libdalitz.so
 CFlags=-c -Wall -fPIC -g -Iinc -std=c++14 
-LDFlags= -shared -fPIC -std=c++14 -I. -lm -lstdc++
+LDFlags= -shared -fPIC -std=c++14 -I. -lm -lstdc++ -llinal
 BinDir=bin/
 
-CC=g++
+CC=g++ -O2
 RM=rm
 
 #!!!!!DO NOT EDIT ANYTHING UNDER THIS LINE!!!!!

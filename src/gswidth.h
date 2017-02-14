@@ -1,16 +1,25 @@
-#ifndef GSWIDTH_H
-#define GSWIDTH_H
+/** Copyright 2017 Vitaly Vorobyev
+ ** @file gswidth.h
+ **
+ ** @brief This message displayed in Doxygen Files index
+ **
+ ** @author Vitaly Vorobyev
+ ** Contact: vit.vorobiev@gmail.com
+ **/
 
-#include "absvarwidth.h"
+#ifndef SRC_GSWIDTH_H_
+#define SRC_GSWIDTH_H_
 
-class GSWidth : public AbsVarWidth{
-public:
-  GSWidth(const double& G0, const double& m, const double& p0);
+#include "./absvarwidth.h"
 
-  double operator()(const double& s, const double& p) const;
+class GSWidth : public AbsVarWidth {
+ public:
+    GSWidth(const double& G0, const double& m, const double& p0);
 
-private:
-  double m_precalc;
+    double operator()(const double& s, const double& p) const;
+
+ private:
+    double m_precalc;
 };
 
-#endif // GSWIDTH_H
+#endif  // SRC_GSWIDTH_H_

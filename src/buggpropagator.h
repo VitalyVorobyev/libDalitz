@@ -1,19 +1,31 @@
-#ifndef BUGGPROPAGATOR_H
-#define BUGGPROPAGATOR_H
+/** Copyright 2017 Vitaly Vorobyev
+ ** @file buggproparator.h
+ **
+ ** @brief This message displayed in Doxygen Files index
+ **
+ ** @author Vitaly Vorobyev
+ ** Contact: vit.vorobiev@gmail.com
+ **
+ **/
 
-#include "abspropagator.h"
-#include "buggwidth.h"
-#include "consts.h"
+#ifndef SRC_BUGGPROPAGATOR_H_
+#define SRC_BUGGPROPAGATOR_H_
 
-class BuggPropagator : public AbsPropagator{
-public:
-  BuggPropagator(void);
-  ~BuggPropagator(void);
+#include <complex>
 
-  compld operator()(const double& s, const double& p = 0) const;
+#include "./abspropagator.h"
+#include "./buggwidth.h"
 
-private:
-  BuggWidth* m_width;
+class BuggPropagator : public AbsPropagator {
+ public:
+    BuggPropagator(void);
+    ~BuggPropagator(void);
+
+    std::complex<double> operator()(const double& s,
+                                    const double& p = 0) const;
+
+ private:
+    BuggWidth* m_width;
 };
 
-#endif // BUGGPROPAGATOR_H
+#endif  // SRC_BUGGPROPAGATOR_H_

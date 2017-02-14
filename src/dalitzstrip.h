@@ -1,14 +1,23 @@
-#ifndef DALITZSTRIP_H
-#define DALITZSTRIP_H
+/** Copyright 2017 Vitaly Vorobyev
+ ** @file dalitzstrip.h
+ **
+ ** @brief This message displayed in Doxygen Files index
+ **
+ ** @author Vitaly Vorobyev
+ ** Contact: vit.vorobiev@gmail.com
+ **/
 
-#include "dalitzveto.h"
+#ifndef SRC_DALITZSTRIP_H_
+#define SRC_DALITZSTRIP_H_
 
-class DalitzStrip : public DalitzVeto{
-public:
-  DalitzStrip();
+#include "./dalitzveto.h"
 
-private:
-  int m_type;
+class DalitzStrip : public DalitzVeto {
+ public:
+    DalitzStrip();
+
+ private:
+    int m_type;
 };
 
-#endif // DALITZSTRIP_H
+#endif  // SRC_DALITZSTRIP_H_

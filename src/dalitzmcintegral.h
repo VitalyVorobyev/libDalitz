@@ -1,9 +1,25 @@
-#ifndef DALITZMCINTEGRAL_H
-#define DALITZMCINTEGRAL_H
+/** Copyright 2017 Vitaly Vorobyev
+ ** @file dalitzmcintegral.h
+ **
+ ** @brief This message displayed in Doxygen Files index
+ **
+ ** @author Vitaly Vorobyev
+ ** Contact: vit.vorobiev@gmail.com
+ **
+ **/
 
-#include "randomdalitzpoint.h"
-#include "absdalitzmodel.h"
+#ifndef SRC_DALITZMCINTEGRAL_H_
+#define SRC_DALITZMCINTEGRAL_H_
 
+#include <string>
+#include <vector>
+#include <complex>
+#include <cstdint>
+
+#include "./randomdalitzpoint.h"
+#include "./absdalitzmodel.h"
+
+///
 /// \brief Class for MC integration of DalitzModel.
 /// Method CalcIntegral() calculates normalization integral usefull in
 /// maximum likelihood fit.
@@ -27,43 +43,60 @@
 ///
 /// See also Stefan Weinzierl, "Introduction to Monte Carlo methods",
 /// http://arxiv.org/abs/hep-ph/0006269
+///
+class DalitzMCIntegral : public RandomDalitzPoint {
+ public:
+    explicit DalitzMCIntegral(const AbsDalitzModel* model);
 
-typedef unsigned long long U64;
+    /// MC calculation of the Dalirz plot area
+    double GetDalitzPlotArea(const uint64_t& nc = 0) const;
+    /// Get normalization integral for DalitzModel
+    int CalcIntegral(double* val, double* err, const uint64_t &nc = 0,
+                     const bool morm_flag = false) const;
+    /// \brief CalcBranchings calculates fit fractions of each
+    /// resonance in Dalitz model
+    double CalcBranchings(std::vector<double>* brvec,
+                          std::vector<double>* brerr,
+                          const uint64_t& nc = 0) const;
+    /// Calculates all integrals needed for fast calculation of normalization
+    int CalcNormMap(std::string* ofile, const uint64_t& nc = 0) const;
+    /// \brief DalitzMCIntegral::SmartNromMap
+    std::vector<std::vector<std::complex<double>>>
+    SmartNormMap(const uint64_t& nc = 0) const;
+    ///
+    void CheckNormalization(const uint64_t &nc = 0) const;
+    /// \brief NCounts
+    uint64_t NCounts(void) const {return m_ncounts;}
+    /// \brief SetNCounts
+    void SetNCounts(const uint64_t& p) {m_ncounts = p; return;}
+    ///
+    void SetPrefix(const std::string& prefix) {m_prefix = prefix;}
 
-class DalitzMCIntegral : public RandomDalitzPoint{
-public:
-  DalitzMCIntegral(const AbsDalitzModel* model);
+ private:
+    double GetGaussIntegral(const unsigned resnum, const uint64_t &nc) const;
+    std::complex<double> GetGaussIntegral(const unsigned resnum1,
+                                          const unsigned resnum2,
+                                          const uint64_t& nc) const;
+    void ShowIntMatrix(
+            const std::vector<std::vector<std::complex<double>>>& vals) const;
+    void ShowIntMatrix(
+            const std::vector<std::vector<std::complex<double>>>& vals,
+            const std::vector<std::vector<std::complex<double>>>& errs) const;
+    int WriteIntMatrix(
+            const std::string& fname,
+            const std::vector<std::vector<std::complex<double>>>& vals) const;
+    int WriteIntMatrix(
+            const std::string& fname,
+            const std::vector<std::vector<std::complex<double>>>& vals,
+            const std::vector<std::vector<std::complex<double>>>& errs) const;
 
-  /// MC calculation of the Dalirz plot area
-  double GetDalitzPlotArea(const U64& nc = 0) const;
-  /// Get normalization integral for DalitzModel
-  int CalcIntegral(double& val, double& err, const U64 &nc = 0, const bool morm_flag = false) const;
-  /// \brief CalcBranchings calculates fit fractions of each resonance in Dalitz model
-  double CalcBranchings(vectd& brvec,vectd& brerr,const U64& nc = 0) const;
-  /// Calculates all integrals needed for fast calculation of normalization
-  std::vector<vectcd> CalcNormMap(str &ofile, const U64& nc = 0) const;
-  /// \brief DalitzMCIntegral::SmartNromMap
-  std::vector<vectcd> SmartNormMap(const U64& nc = 0) const;
-  ///
-  void CheckNormalization(const U64 &nc = 0) const;
-  /// \brief NCounts
-  long NCounts(void) const {return m_ncounts;}
-  /// \brief SetNCounts
-  void SetNCounts(const long& p){m_ncounts = p; return;}
-  ///
-  void SetPrefix(cstr& prefix) {m_prefix = prefix;}
-private:
-  double GetGaussIntegral(const int resnum, const U64 &nc) const;
-  compld GetGaussIntegral(const int resnum1,const int resnum2, const U64& nc) const;
-  void ShowIntMatrix(const std::vector<vectcd>& vals) const;
-  void ShowIntMatrix(const std::vector<vectcd>& vals,const std::vector<vectcd>& errs) const;
-  int WriteIntMatrix(const str& fname,const std::vector<vectcd>& vals) const;
-  int WriteIntMatrix(const str& fname,const std::vector<vectcd>& vals,const std::vector<vectcd>& errs) const;
+    const AbsDalitzModel* m_model;
+    uint64_t m_ncounts;
+    std::string m_prefix;
 
-  const AbsDalitzModel* m_model;
-  U64 m_ncounts;
-  str m_prefix;
+    static double normal_pdf(const double x, const double m, const double s);
+    static const double inv_sqrt_2pi;
 };
 
-#endif // DALITZMCINTEGRAL_H
+#endif  // SRC_DALITZMCINTEGRAL_H_
 

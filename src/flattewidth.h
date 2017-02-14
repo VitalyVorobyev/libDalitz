@@ -1,25 +1,38 @@
-#ifndef FLATTEWIDTH_H
-#define FLATTEWIDTH_H
+/** Copyright 2017 Vitaly Vorobyev
+ ** @file flattewidth.h
+ **
+ ** @brief This message displayed in Doxygen Files index
+ **
+ ** @author Vitaly Vorobyev
+ ** Contact: vit.vorobiev@gmail.com
+ **/
 
-#include "absvarwidth.h"
+#ifndef SRC_FLATTEWIDTH_H_
+#define SRC_FLATTEWIDTH_H_
 
-class FlatteWidth : public AbsVarWidth{
-public:
-  FlatteWidth(const double& m);
+#include "./absvarwidth.h"
 
-  double operator()(const double& s, const double& p) const;
+class FlatteWidth : public AbsVarWidth {
+ public:
+    explicit FlatteWidth(const double& m);
 
-private:
-  double m_g1;
-  double m_g2;
-  double m_pi_sq;
-  double m_pi0_sq;
-  double m_K_sq;
-  double m_K0_sq;
+    double operator() (const double& s, const double& p) const;
 
-  double rho_pipi(const double& s) const;
-  double rho_KK(const double& s) const;
-  double phsp_factor(const double& msq, const double&s) const;
+ private:
+    static const double m_g1;
+    static const double m_g2;
+    static const double m_pi;
+    static const double m_pi_sq;
+    static const double m_pi0;
+    static const double m_pi0_sq;
+    static const double m_K;
+    static const double m_K_sq;
+    static const double m_K0;
+    static const double m_K0_sq;
+
+    double rho_pipi(const double& s) const;
+    double rho_KK(const double& s) const;
+    double phsp_factor(const double& msq, const double&s) const;
 };
 
-#endif // FLATTEWIDTH_H
+#endif  // SRC_FLATTEWIDTH_H_

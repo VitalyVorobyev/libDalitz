@@ -1,10 +1,19 @@
-#ifndef GOUNARISSAKURAI_H
-#define GOUNARISSAKURAI_H
+/** Copyright 2017 Vitaly Vorobyev
+ ** @file gounarissakurai.h
+ **
+ ** @brief This message displayed in Doxygen Files index
+ **
+ ** @author Vitaly Vorobyev
+ ** Contact: vit.vorobiev@gmail.com
+ **/
 
-#include "abspropagator.h"
-#include "gswidth.h"
-#include "constwidth.h"
-#include "consts.h"
+#ifndef SRC_GOUNARISSAKURAI_H_
+#define SRC_GOUNARISSAKURAI_H_
+
+#include <complex>
+
+#include "./abspropagator.h"
+#include "./absvarwidth.h"
 
 /// \brief Class implementing Gounaris-Sakurai lineshape
 /// Gounaris-Sakurai lineshape is introduced by
@@ -15,21 +24,24 @@
 /// GS lineshape is applied in LHCb experiment
 /// (Eq.(11,12) in Phys. Rev. D92, 032002 (2015))
 
-class GounarisSakurai : public AbsPropagator{
-public:
-  GounarisSakurai(const double& G0, const double& m, const double& p0, const bool constwidth = false);
-  ~GounarisSakurai();
+class GounarisSakurai : public AbsPropagator {
+ public:
+    GounarisSakurai(const double& G0, const double& m, const double& p0,
+                    const bool constwidth = false);
+    ~GounarisSakurai();
 
-  compld operator()(const double& s, const double& p) const;
+    std::complex<double> operator()(const double& s, const double& p) const;
 
-private:
-  double f(const double& s, const double& p) const;
-  double h(const double& s, const double& p) const;
-  int hhder(double& h,double& hder,const double& p) const;
-  double g(void);
-  double m_g;
-  const bool m_const_width;
-  AbsVarWidth* m_width;
+ private:
+    double f(const double& s, const double& p) const;
+    double h(const double& s, const double& p) const;
+    int hhder(double* h, double* hder, const double& p) const;
+    double g(void);
+    double m_g;
+    const bool m_const_width;
+    AbsVarWidth* m_width;
+
+    static const double mpi;
 };
 
-#endif // GOUNARISSAKURAI_H
+#endif  // SRC_GOUNARISSAKURAI_H_

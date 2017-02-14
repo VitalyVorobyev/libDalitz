@@ -1,7 +1,13 @@
-#include "dalitzveto.h"
+/** Copyright 2017 Vitaly Vorobyev
+ ** @file dalitzveto.cpp
+ **
+ ** @brief This message displayed in Doxygen Files index
+ **
+ ** @author Vitaly Vorobyev
+ ** Contact: vit.vorobiev@gmail.com
+ **/
 
-DalitzVeto::DalitzVeto()
-{
+#include "../src/dalitzveto.h"
 
-}
+DalitzVeto::DalitzVeto() {}
 
