@@ -78,16 +78,25 @@ class AbsDalitzModel : public DalitzPhaseSpace {
     int OpenCachedIntegrals(const std::string& fname,
                             const bool silent = true);
 
-    ///
-    /// \brief NormWithCache. Speed up the computation of normalization using
-    /// the relation
-    /// I = \sum_i |a_i|^2 I_i + 2Re(\sum_{i>j} a_i a_j^* I_{ij}), where
-    /// I_i = \int |A_i|^2 dm_+^2 dm_-^2 and
-    /// I_{ij} = \int A_i A_j^* dm_+^2 dm_-^2, where
-    /// A_i is a complex amplitude of i^th resonance
-    /// \return Value of normalization integral
-    ///
+    /**
+     * @brief NormWithCache. Speed up the computation of normalization using
+     * the relation
+     * I = \sum_i |a_i|^2 I_i + 2Re(\sum_{i>j} a_i a_j^* I_{ij}), where
+     * I_i = \int |A_i|^2 dm_+^2 dm_-^2 and
+     * I_{ij} = \int A_i A_j^* dm_+^2 dm_-^2,
+     * where A_i is a complex amplitude of i^th resonance
+     * @return Value of normalization integral
+     */
     double NormWithCache(void) const;
+
+    /**
+     * @brief Tabulate. Calculate amplitude on a grid and save the
+     * result in text file
+     * @param fname. File name
+     * @param grid_size. Grid size
+     */
+    void Tabulate(const std::string& fname,
+                  const unsigned grid_size=1000) const;
 
     ///
     /// Vector of coef

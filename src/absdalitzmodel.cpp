@@ -184,8 +184,31 @@ double AbsDM::NormWithCache(void) const {
 void AbsDM::GetCoefficients(vectcd* coefv) const {*coefv = m_ampl;}
 
 void AbsDM::SetResAreas(const vectd& ledge, const vectd& redge,
-                                 const vecti& types) {
+                        const vecti& types) {
     m_res_areas.clear();
     for (unsigned i=0; i < types.size(); i++)
         m_res_areas.push_back(new DStrip(ledge[i], redge[i], types[i]));
+}
+
+void AbsDM::Tabulate(const str& fname, const unsigned grid_size) const {
+    std::ofstream file(fname, std::ofstream::out);
+    if (!file.is_open()) {
+        cerr << "Can't open file " << fname << endl;
+        return;
+    }
+    file << "GridSize " << grid_size << endl << AsText();
+    double mmMax, mmMin;
+    const double dm = (mABsq_max() - mABsq_min()) / grid_size;
+    double mp = mABsq_min();
+    for (unsigned i=0; i < grid_size; i++) {
+        mp += dm;
+        mABsqRange_AC(mp, &mmMin, &mmMax);
+        if (mp > mmMax) break;
+        for (double mm = mp; mm < mmMax; mm += dm) {
+            if (!IsInPlot(mp, mm)) continue;
+            file << mp << " " << mm << " "
+                 << Amp(mp, mm) << " " << Amp(mm, mp) << endl;
+        }
+    }
+    file.close();
 }
