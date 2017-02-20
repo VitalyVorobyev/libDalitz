@@ -24,8 +24,8 @@ class ModelIntegral {
     ModelIntegral(const AbsDalitzModel* model, const unsigned NBins = 8,
                   const unsigned gridsize = 1000);
 
-    void SetGridSize(const int gsize) {m_gsize = gsize; return;}
-    void SetNBins(const int nbins) {m_nbins = nbins; return;}
+    void SetGridSize(const unsigned gsize) {m_gsize = gsize;}
+    void SetNBins(const unsigned nbins) {m_nbins = nbins;}
     int Calculate(const std::string& label,
                   std::vector<double>* C, std::vector<double>* S,
                   std::vector<double>* K, std::vector<double>* Kb);

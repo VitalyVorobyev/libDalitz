@@ -60,9 +60,7 @@ int ModelIntegral::Calculate(const str& label,
         mp += dm;
         m_model->mABsqRange_AC(mp, &mmMin, &mmMax);
         if (mp > mmMax) break;
-        double mm = mp;
-        for (int j=0; mm < mmMax; j++) {
-            mm += dm;
+        for (double mm = mp; mm < mmMax; mm += dm) {
             if (!m_model->IsInPlot(mp, mm)) continue;
             int bin = abs(eqbin.Bin(mp, mm));
             ofile << mp << " " << mm << " " << m_model->GetmBCsq(mp, mm)
@@ -75,40 +73,43 @@ int ModelIntegral::Calculate(const str& label,
             S->at(bin)  += sqrt(P*Pbar)*std::sin(delta);
             Kp->at(bin) += P;
             Kn->at(bin) += Pbar;
+//            cout << P << " " << Pbar << endl;
         }
     }
     ofile.close();
 
     double norm = 0;
-    for (unsigned i=0; i < 8; i++) {
+    for (unsigned i=0; i < m_nbins; i++) {
         const double rmp = sqrt(Kp->at(i)*Kn->at(i));
         C->at(i) /= rmp;
         S->at(i) /= rmp;
         norm += Kp->at(i) + Kn->at(i);
     }
 
-    cout << "Hello, God! " << label << endl;
+    cout << label << endl;
     const str fname1("params/test.txt");
     cout << fname1 << endl;
     std::ofstream ofile1(fname1.c_str());
     cout << "Norm     = " << norm << endl;
-    for (unsigned i=0; i < m_nbins; i++) {
-        Kp->at(i) /= norm;
-        Kn->at(i) /= norm;
+    unsigned i = 0;
+    for (auto KpIt = Kp->begin(), KnIt = Kn->begin(),
+               CIt = C->begin(),   SIt = S->begin(); i < m_nbins;
+         i++, KpIt++, KnIt++, CIt++, SIt++) {
+        *KpIt /= norm; *KnIt /= norm;
 
         cout << i+1;
-        cout << ": C = "  << C->at(i);
-        cout << ", S = "  << S->at(i);
-        cout << ", Kp = " << Kp->at(i);
-        cout << ", Kn = " << Kn->at(i);
-        cout << ", Q = "  << C->at(i)*C->at(i)+S->at(i)*S->at(i) << endl;
+        cout << ": C = "  << *CIt;
+        cout << ", S = "  << *SIt;
+        cout << ", Kp = " << *KpIt;
+        cout << ", Kn = " << *KnIt;
+        cout << ", Q = "  << pow(*CIt, 2)+pow(*SIt, 2) << endl;
 
         ofile1 << i+1;
-        ofile1 << ": C = "  << C->at(i);
-        ofile1 << ", S = "  << S->at(i);
-        ofile1 << ", Kp = " << Kp->at(i);
-        ofile1 << ", Kn = " << Kn->at(i);
-        ofile1 << ", Q = "  << C->at(i)*C->at(i)+S->at(i)*S->at(i) << endl;
+        ofile1 << ": C = "  << *CIt;
+        ofile1 << ", S = "  << *SIt;
+        ofile1 << ", Kp = " << *KpIt;
+        ofile1 << ", Kn = " << *KnIt;
+        ofile1 << ", Q = "  << pow(*CIt, 2)+pow(*SIt, 2) << endl;
     }
     ofile1.close();
     return 0;

@@ -36,9 +36,9 @@ KAmp::KuzBtoDpipiAmp() : AbsDalitzModel(m_fm, m_dstm, m_pm, m_pm) {
                  "f(980)", "f(1370)"});
     SetAmpNames({"D*", "D2", "D0", "rho", "f2", "f0(550)",
                  "f(980)", "f(1370)"});
-    SetABaxis("m^2(D#pi^{+}) (GeV^{2}/c^{4})");
-    SetACaxis("m^2(D#pi^{-}) (GeV^{2}/c^{4})");
-    SetBCaxis("m^2(#pi^{+}#pi^{-}) (GeV^{2}/c^{4})");
+    SetABaxis("m^{2}(D#pi^{+}) (GeV^{2}/c^{4})");
+    SetACaxis("m^{2}(D#pi^{-}) (GeV^{2}/c^{4})");
+    SetBCaxis("m^{2}(#pi^{+}#pi^{-}) (GeV^{2}/c^{4})");
     init();
     PrintSummary();
 }
@@ -46,39 +46,50 @@ KAmp::KuzBtoDpipiAmp() : AbsDalitzModel(m_fm, m_dstm, m_pm, m_pm) {
 compld KAmp::DstarAmp(const double& qp, const double& h2, const double& pq2) {
     return ang1(h2, pq2)*amrs1(qp);
 }
+
 compld KAmp::DdstarAmp(const double& qp, const double& h2, const double& pq2) {
     return ang2(h2, pq2)*amrs2(qp, m_ams2, m_gms2);
 }
+
 compld KAmp::DzeroAmp(const double& qp) {
     return amrs0(qp, m_ams0, m_gms0);
 }
+
 compld KAmp::rhoAmp(const double& q3, const double& h3, const double& pq3) {
     return ang1(h3, pq3)*amrs1h(q3, m_amrh, m_gmrh);
 }
+
 compld KAmp::omegaAmp(const double& q3, const double& h3, const double& pq3) {
     return ang1(h3, pq3)*amrs1hm(q3)*m_amom*exp(1.99*ione)*(-1.);
 }
+
 compld KAmp::rhopAmp(const double& q3, const double& h3, const double& pq3) {
     return ang1(h3, pq3)*amrs1h(q3, m_amrh1, m_gmrh1)*(-0.248);
 }
+
 compld KAmp::f2Amp(const double& q3, const double& h3, const double& pq3) {
     return ang2(h3, pq3)*amrs2h(q3, m_amf2, m_gmf2);
 }
+
 compld KAmp::f0Amp(const double& q3) {
     return amrs0h(q3, m_amf0, m_gmf0);
 }
+
 compld KAmp::f980Amp(const double& q3) {
     return amrs0h(q3, m_amf098, m_gmf098);
 }
+
 compld KAmp::f1370Amp(const double& q3) {
     return amrs0h(q3, m_am3, m_gm3);
 }
+
 compld KAmp::FullRhoAmp(const double& q3, const double& h3,
                         const double& pq3) {
     return ang1(h3, pq3)*(amrs1h(q3, m_amrh, m_gmrh)
                          +amrs1hm(q3)*m_amom*exp(1.99*ione)*(-1.)
                          +amrs1h(q3, m_amrh1, m_gmrh1)*(-0.248));
 }
+
 compld KAmp::GetResVal(const double& mABsq, const double& mACsq,
                        const int resnum) const {
     double pq  = 0;
@@ -127,29 +138,32 @@ void KAmp::init(void) {
                      m_dmf0, m_dmbs, m_d3});
     SetAmpSignature({1, 1, 1, 3, 1, 1, 1, 1});
 
-    const double nsig = 0.5;
-    vectd ledge = {
-        pow(2.01-0.05, 2),
-        pow(m_ams2-nsig*m_gms2, 2),
-        pow(m_ams0-nsig*m_gms0, 2),
-        pow(m_amrh, 2),
-        pow(m_amf2-nsig*m_gmf2, 2),
-        pow(m_amf0-m_gmf0, 2),
-        pow(m_amf098-nsig*m_gmf098, 2),
-        pow(m_am3-nsig*m_gm3, 2)
-    };
-    vectd redge = {
-        pow(2.01+nsig*0.05, 2),
-        pow(m_ams2+nsig*m_gms2, 2),
-        pow(m_ams0+nsig*m_gms0, 2),
-        pow(m_amrh1, 2),
-        pow(m_amf2+nsig*m_gmf2, 2),
-        pow(m_amf0+m_gmf0, 2),
-        pow(m_amf098+nsig*m_gmf098, 2),
-        pow(m_am3+nsig*m_gm3, 2)
-    };
-    vecti types {1, 1, 1, 3, 3, 3, 3, 3};
-    SetResAreas(ledge, redge, types);
+//    SetCoefficients({m_dm2, m_dmrh});
+//    SetAmpSignature({1, 2});
+
+//    const double nsig = 0.5;
+//    vectd ledge = {
+//        pow(2.01-0.05, 2),
+//        pow(m_ams2-nsig*m_gms2, 2),
+//        pow(m_ams0-nsig*m_gms0, 2),
+//        pow(m_amrh, 2),
+//        pow(m_amf2-nsig*m_gmf2, 2),
+//        pow(m_amf0-m_gmf0, 2),
+//        pow(m_amf098-nsig*m_gmf098, 2),
+//        pow(m_am3-nsig*m_gm3, 2)
+//    };
+//    vectd redge = {
+//        pow(2.01+nsig*0.05, 2),
+//        pow(m_ams2+nsig*m_gms2, 2),
+//        pow(m_ams0+nsig*m_gms0, 2),
+//        pow(m_amrh1, 2),
+//        pow(m_amf2+nsig*m_gmf2, 2),
+//        pow(m_amf0+m_gmf0, 2),
+//        pow(m_amf098+nsig*m_gmf098, 2),
+//        pow(m_am3+nsig*m_gm3, 2)
+//    };
+//    vecti types {1, 1, 1, 3, 3, 3, 3, 3};
+//    SetResAreas(ledge, redge, types);
 }
 
 double KAmp::Norm(void) const {return NormWithCache();}
@@ -165,7 +179,7 @@ void KAmp::SetParams(const vectd& pars) {
     for (unsigned i=0; i < AmpNum(); i++) {
         const double amp = pars[2*i];
         const double pha = pars[2*i+1];
-        coeffs.push_back(amp*compld(cos(pha), sin(pha)));
+        coeffs.push_back(amp * compld(cos(pha), sin(pha)));
     }
     SetCoefficients(coeffs);
 }
@@ -452,20 +466,22 @@ compld KAmp::amrs1hm(const double& q2) {
     }
     const double ar = q2-am2;
     const double gr = sqrt(q2)*0.00849;
-    return 1./compld(ar, gr);
+    return 1. / compld(ar, gr);
 }
 
 // amplitude wrappers
 double KAmp::anf0(const double& am, const double& ag) {
     const vectd pars =
         {-69.398, 608.83, -1152.1, 940.13, -198.62, -148.03, 66.298};
-    const double poly = pars[0]+pars[1]*am+
+    const double poly =
+            pars[0]+
+            pars[1]*am+
             pars[2]*pow(am, 2)+
             pars[3]*pow(am, 3)+
             pars[4]*pow(am, 4)+
             pars[5]*pow(am, 5)+
             pars[6]*pow(am, 6);
-    const double result = poly/(pow(am, 0.6)*pow(ag, 1.25));
+    const double result = poly / (pow(am, 0.6) * pow(ag, 1.25));
     if (std::isnan(result)) {
         cout << "anf0: bad result" << endl;
         return 1;
@@ -475,43 +491,62 @@ double KAmp::anf0(const double& am, const double& ag) {
 
 double KAmp::anf2(const double& am, const double& ag) {
     const vectd pars = {4635.9, -21.723, 388.72, -94.873, 1162.3, -4993.5};
-  const double poly = pars[0]+pars[1]*am+pars[2]*ag+
-                      pars[3]*pow(am, 2)+pars[4]*am*ag+pars[5]*pow(ag, 2);
-  return poly/pow(am, 1.55)/pow(ag, 1.095);
+    const double poly =
+            pars[0]+
+            pars[1]*am+
+            pars[2]*ag+
+            pars[3]*pow(am, 2)+
+            pars[4]*am*ag+
+            pars[5]*pow(ag, 2);
+    return poly / pow(am, 1.55) / pow(ag, 1.095);
 }
 
 double KAmp::anrh(const double& am, const double& ag) {
-    return 546.8/pow(am, 0.6)/pow(ag, 1.12);
+    return 546.8 / pow(am, 0.6) / pow(ag, 1.12);
 }
 
 double KAmp::an2(const double& am, const double& ag) {
-    const vectd pars = { 0.18907E-02,
-                         -0.50839E-05,
-                         0.16955E-02,
-                         -0.19040E-05,
-                         0.69806E-03,
-                         -0.59716E-01};
-    const double poly = pars[0]+pars[1]*am+pars[2]*ag+
-            pars[3]*pow(am, 2)+pars[4]*am*ag+pars[5]*pow(ag, 2);
+    const vectd pars = {
+         0.18907E-02,
+        -0.50839E-05,
+         0.16955E-02,
+        -0.19040E-05,
+         0.69806E-03,
+        -0.59716E-01};
+    const double poly =
+            pars[0]+
+            pars[1]*am+
+            pars[2]*ag+
+            pars[3]*pow(am, 2)+
+            pars[4]*am*ag+
+            pars[5]*pow(ag, 2);
     return poly*pow(am, 0.5)/pow(ag, 1.02);
 }
 
 double KAmp::an0(const double& am, const double& ag) {
-    const vectd pars = {-9.5637,
-                        8.7421,
-                        -0.28803,
-                        -1.8988,
-                        0.40894,
-                        -1.5582,
-                        -0.84441E-03,
-                        0.29120E-01,
-                        -0.32185,
-                        1.9611};
-    const double poly = pars[0]+pars[1]*am+pars[2]*ag
-            +pars[3]*pow(am, 2)+pars[4]*am*ag+pars[5]*pow(ag, 2)
-            +pars[6]*pow(am, 3)+pars[7]*pow(am, 2)*ag
-            +pars[8]*am*pow(ag, 2)+pars[9]*pow(ag, 3);
-    return poly*pow(am, 3)/pow(ag, 1.15);
+    const vectd pars = {
+        -9.5637,
+         8.7421,
+        -0.28803,
+        -1.8988,
+         0.40894,
+        -1.5582,
+        -0.84441E-03,
+         0.29120E-01,
+        -0.32185,
+         1.9611};
+    const double poly =
+            pars[0]+
+            pars[1]*am+
+            pars[2]*ag+
+            pars[3]*pow(am, 2)+
+            pars[4]*am*ag+
+            pars[5]*pow(ag, 2)+
+            pars[6]*pow(am, 3)+
+            pars[7]*pow(am, 2)*ag+
+            pars[8]*am*pow(ag, 2)+
+            pars[9]*pow(ag, 3);
+    return poly * pow(am, 3) / pow(ag, 1.15);
 }
 
 // Row amplitudes and phases
@@ -561,40 +596,48 @@ const double KAmp::m_dstm2 = pow(KAmp::m_dstm, 2);
 const double KAmp::m_ddd   = get_ddd();
 
 // Complex amplitudes
-const compld KAmp::m_dm2  = get_dm2();
-const compld KAmp::m_dm0  = get_dm0();
-const compld KAmp::m_dm1  = get_dm1();
-const compld KAmp::m_dmrh = get_dmrh();
-const compld KAmp::m_dmf2 = get_dmf2();
-const compld KAmp::m_dmf0 = get_dmf0();
+const compld KAmp::m_dm2  = 0.6*get_dm2();
+const compld KAmp::m_dm0  = 0.6*get_dm0();
+const compld KAmp::m_dm1  = 1.4*get_dm1();
+const compld KAmp::m_dmrh = 1.1*get_dmrh();
+const compld KAmp::m_dmf2 = 1.1*get_dmf2();
+const compld KAmp::m_dmf0 = 1.4*get_dmf0();
 const compld KAmp::m_dmbs = get_dmbs();
-const compld KAmp::m_d3   = get_d3();
+const compld KAmp::m_d3   = 0.15*get_d3();
 
 // Amplitude wrappers
 double KAmp::get_ddd(void) {
     return 1. - m_a0 + m_a1 + m_ab + m_a3 + m_ar + m_af0 + m_af2;
 }
+
 compld KAmp::get_dm0(void) {
-    return exp(m_f0  *ione)*sqrt(m_a0/an0(m_ams0, m_gms0));
+    return exp(m_f0 * ione)*sqrt(m_a0/an0(m_ams0, m_gms0));
 }
+
 compld KAmp::get_dm1(void) {
-    return exp(m_f1*ione)*sqrt(m_a1);
+    return exp(m_f1 * ione)*sqrt(m_a1);
 }
+
 double KAmp::get_dm2(void) {
-    return sqrt(get_ddd()/an2(m_ams2, m_gms2));
+    return 0.05;  // sqrt(get_ddd()/an2(m_ams2, m_gms2));
 }
+
 compld KAmp::get_dmbs(void) {
     return exp(m_fb*ione)*sqrt(m_ab/anf0(m_amf098, m_gmf098));
 }
+
 compld KAmp::get_d3(void) {
     return exp(m_f3*ione)*sqrt(m_a3/anf0(m_am3, m_gm3));
 }
+
 compld KAmp::get_dmrh(void) {
     return exp(m_fr*ione)*sqrt(m_ar/anrh(m_amrh, m_gmrh));
 }
+
 compld KAmp::get_dmf0(void) {
     return exp((m_fr+m_ff0)*ione)*sqrt(m_af0/anf0(m_amf0, m_gmf0));
 }
+
 compld KAmp::get_dmf2(void) {
     return exp((m_fr+m_ff2)*ione)*sqrt(m_af2/anf2(m_amf2, m_gmf2));
 }
