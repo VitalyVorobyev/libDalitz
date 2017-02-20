@@ -21,7 +21,7 @@ using std::sqrt;
 using linal::LVect;
 
 DPhSp::DalitzPhaseSpace(const double& mM, const double& mA,
-                                   const double& mB, const double& mC) :
+                        const double& mB, const double& mC) :
     m_mM(mM), m_mA(mA), m_mB(mB), m_mC(mC),
     m_mMsq(m_mM*m_mM), m_mAsq(m_mA*m_mA),
     m_mBsq(m_mB*m_mB), m_mCsq(m_mC*m_mC),
@@ -34,8 +34,8 @@ DPhSp::DalitzPhaseSpace(const double& mM, const double& mA,
     m_mass_sq_sum(m_mMsq+m_mAsq+m_mBsq+m_mCsq),
     m_area(0) {}
 
-DalitzPhaseSpace::DalitzPhaseSpace(const DalitzPhaseSpace& phsp) :
-    DalitzPhaseSpace(phsp.mM(), phsp.mA(), phsp.mB(), phsp.mC()) {}
+// DalitzPhaseSpace::DalitzPhaseSpace(const DalitzPhaseSpace& phsp) :
+//     DalitzPhaseSpace(phsp.mM(), phsp.mA(), phsp.mB(), phsp.mC()) {}
 
 double DPhSp::GetmBCsq(const double& mABsq, const double& mACsq) const {
     const double mBCsq = m_mass_sq_sum-mABsq-mACsq;
@@ -47,12 +47,12 @@ double DPhSp::GetmBCsq(const double& mABsq, const double& mACsq) const {
     return mBCsq;
 }
 
-/// Min value of AB squared invariant mass
+// Min value of AB squared invariant mass
 double DPhSp::GetmABsqMin(const double& mA, const double& mB) {
     return pow(mA+mB, 2);
 }
 
-/// Max value of AB squared invariant mass
+// Max value of AB squared invariant mass
 double DPhSp::GetmABsqMax(const double& mM, const double& mC) {
     return pow(mM-mC, 2);
 }

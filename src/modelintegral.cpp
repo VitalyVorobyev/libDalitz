@@ -9,6 +9,7 @@
 
 #include "../src/modelintegral.h"
 
+#include <sstream>
 #include <fstream>
 #include <cmath>
 #include <iostream>
@@ -35,26 +36,14 @@ int ModelIntegral::Calculate(const str& label,
     Kn->resize(m_nbins, 0);
     EqPhaseBin eqbin(m_model, m_nbins);
 
-    double mmMax;
-    double mmMin;
+    double mmMax, mmMin;
     const double M_min = m_model->mABsq_min();
     const double M_max = m_model->mABsq_max();
-    const double dm = (M_max - M_min)/m_gsize;
-    const str fname = "params/" + label + "_binning.txt";
-    std::ofstream ofile(fname.c_str());
-    ofile << "GridSize " << m_gsize << endl;
-    ofile << m_model->mM() << " -> " << m_model->mA();
-    ofile << " " << m_model->mB();
-    ofile << " " << m_model->mC() << endl;
-    ofile << "mAB: " << m_model->mABsq_min() << " "
-          << m_model->mABsq_max() << endl;
-    ofile << "mAC: " << m_model->mACsq_min() << " "
-          << m_model->mACsq_max() << endl;
-    ofile << "mBC: " << m_model->mBCsq_min() << " "
-          << m_model->mBCsq_max() << endl;
-    ofile << m_model->ABaxis() << endl;
-    ofile << m_model->ACaxis() << endl;
-    ofile << m_model->BCaxis() << endl;
+    const double dm = (M_max - M_min) / m_gsize;
+    const str file_name_binning = "params/" + label + "_binning.txt";
+    std::ofstream file_binning(file_name_binning);
+    file_binning << "GridSize " << m_gsize << endl;
+    file_binning << m_model->AsText() << endl;
     double mp = M_min;
     for (unsigned i=0; i < m_gsize; i++) {
         mp += dm;
@@ -63,8 +52,8 @@ int ModelIntegral::Calculate(const str& label,
         for (double mm = mp; mm < mmMax; mm += dm) {
             if (!m_model->IsInPlot(mp, mm)) continue;
             int bin = abs(eqbin.Bin(mp, mm));
-            ofile << mp << " " << mm << " " << m_model->GetmBCsq(mp, mm)
-                  << " " << bin << endl;
+            file_binning << mp << " " << mm << " "
+                         << m_model->GetmBCsq(mp, mm) << " " << bin << endl;
             double delta, P, Pbar;
             if (PPbarDelta(mp, mm, &P, &Pbar, &delta)) continue;
             bin -= 1;
@@ -73,10 +62,9 @@ int ModelIntegral::Calculate(const str& label,
             S->at(bin)  += sqrt(P*Pbar)*std::sin(delta);
             Kp->at(bin) += P;
             Kn->at(bin) += Pbar;
-//            cout << P << " " << Pbar << endl;
         }
     }
-    ofile.close();
+    file_binning.close();
 
     double norm = 0;
     for (unsigned i=0; i < m_nbins; i++) {
@@ -87,31 +75,25 @@ int ModelIntegral::Calculate(const str& label,
     }
 
     cout << label << endl;
-    const str fname1("params/test.txt");
-    cout << fname1 << endl;
-    std::ofstream ofile1(fname1.c_str());
+    const str file_name_binned_params("params/test.txt");
+    cout << file_name_binned_params << endl;
+    std::ofstream file_binned_params(file_name_binned_params);
     cout << "Norm     = " << norm << endl;
     unsigned i = 0;
+    std::stringstream out;
     for (auto KpIt = Kp->begin(), KnIt = Kn->begin(),
-               CIt = C->begin(),   SIt = S->begin(); i < m_nbins;
+              CIt = C->begin(), SIt = S->begin(); i < m_nbins;
          i++, KpIt++, KnIt++, CIt++, SIt++) {
         *KpIt /= norm; *KnIt /= norm;
 
-        cout << i+1;
-        cout << ": C = "  << *CIt;
-        cout << ", S = "  << *SIt;
-        cout << ", Kp = " << *KpIt;
-        cout << ", Kn = " << *KnIt;
-        cout << ", Q = "  << pow(*CIt, 2)+pow(*SIt, 2) << endl;
-
-        ofile1 << i+1;
-        ofile1 << ": C = "  << *CIt;
-        ofile1 << ", S = "  << *SIt;
-        ofile1 << ", Kp = " << *KpIt;
-        ofile1 << ", Kn = " << *KnIt;
-        ofile1 << ", Q = "  << pow(*CIt, 2)+pow(*SIt, 2) << endl;
+        out.str("");
+        out << i+1 << ": C = "  << *CIt << ", S = "  << *SIt
+            << ", Kp = " << *KpIt << ", Kn = " << *KnIt
+            << ", Q = "  << pow(*CIt, 2)+pow(*SIt, 2) << endl;
+        cout << out.str();
+        file_binned_params << out.str();
     }
-    ofile1.close();
+    file_binned_params.close();
     return 0;
 }
 

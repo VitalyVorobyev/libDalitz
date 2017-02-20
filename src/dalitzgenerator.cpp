@@ -11,18 +11,22 @@
 #include "../src/dalitzgenerator.h"
 
 #include <iostream>
+#include <fstream>
+
+using std::ofstream;
 
 typedef DalitzGenerator DGen;
 typedef std::uniform_real_distribution<double> unifdist;
-typedef std::default_random_engine rndmeng;
+//typedef std::default_random_engine rndmeng;
 typedef std::vector<double> vectd;
 
 using std::cout;
+using std::cerr;
 using std::endl;
 
 DalitzGenerator::DalitzGenerator(const AbsDalitzModel *model) :
     RandomDalitzPoint(model), m_ntries(1e8), m_maj_counts(1e4),
-    m_maj(-1), m_model(model), ren(new rndmeng()) {
+    m_maj(-1), m_model(model) {
     SetMajorant(CalcMajorant());
 }
 
@@ -45,17 +49,15 @@ double DGen::CalcMajorant(void) const {
     return maj;
 }
 
-int DGen::Generate(double *mABsq, double *mACsq) const {
+int DGen::Generate(double *mABsq, double *mACsq, unifdist* dist) const {
     uint64_t tries = 0;
-    double xi = 0;
-    unifdist unifMaj(0., m_maj);
+    if (dist == nullptr) *dist = unifdist(0., m_maj);
     while (tries++ < m_ntries) {
         GetPoint(mABsq, mACsq);
-        xi = unifMaj(*ren);
-        if (xi < m_model->P(*mABsq, *mACsq)) break;
+        if ((*dist)(*re) < m_model->P(*mABsq, *mACsq)) break;
     }
     if (tries == m_ntries) {
-        cout << "DalitzGenerator::Generate: tries limit exceeded!" << endl;
+        cerr << "DalitzGenerator::Generate: tries limit exceeded!" << endl;
         return 0;
     }
     return tries;
@@ -66,10 +68,11 @@ int DGen::Generate(const uint64_t NEv, vectd* mABv, vectd* mACv,
     mABv->resize(NEv); mACv->resize(NEv);
     uint64_t tries = 0;
     uint64_t Evtn = 0;
+    unifdist unifMaj(0., m_maj);
     cout << "Generating " << NEv << " events..." << endl;
     for (auto itAB = mABv->begin(), itAC = mACv->begin();
          itAB != mABv->end() && itAC != mACv->end(); itAB++, itAC++) {
-        const unsigned ntries = Generate(&*itAB, &*itAC);
+        const unsigned ntries = Generate(&*itAB, &*itAC, &unifMaj);
         if (ntries == 0) break;
         tries += ntries;
         Evtn++;
@@ -86,4 +89,22 @@ int DGen::Generate(const uint64_t NEv, vectd* mABv, vectd* mACv,
         cout << "Done!. Efficiency " << Eff << endl;
     }
     return 0;
+}
+
+int DGen::WriteDDist(const uint64_t& NEv, const std::string& fname) const {
+    ofstream file(fname, ofstream::out);
+    if (!file.is_open()) {
+        cerr << "Can't open file " << fname << endl;
+        return -1;
+    }
+    file << NEv << " events" << endl << m_model->AsText();
+    uint64_t eve_counter = 0;
+    double mAB, mAC;
+    unifdist unifMaj(0., m_maj);
+    while (eve_counter++ < NEv) {
+        if (Generate(&mAB, &mAC, &unifMaj) == 0) break;
+        file << mAB << " " << mAC << endl;
+    }
+    file.close();
+    return eve_counter != NEv;
 }

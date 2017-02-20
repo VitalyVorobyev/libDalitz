@@ -29,6 +29,13 @@ class DalitzGenerator : public RandomDalitzPoint {
     /// \param model
     ///
     explicit DalitzGenerator(const AbsDalitzModel* model);
+    /**
+     * @brief WriteDDist. Generate events and write it in text file
+     * @param NEv. Number of events to generate
+     * @param fname. Output text file name.
+     * @return 0 if succeed
+     */
+    int WriteDDist(const uint64_t& NEv, const std::string& fname) const;
     ///
     /// \brief Generate method generates Dalitz distribution via
     /// Neumann method
@@ -48,7 +55,8 @@ class DalitzGenerator : public RandomDalitzPoint {
     /// \param mACsq m^2(AC) value to be written in this variable
     /// \return Returns 0 if worked properly
     ///
-    int Generate(double* mABsq, double* mACsq) const;
+    int Generate(double* mABsq, double* mACsq,
+                 std::uniform_real_distribution<double> *dist=nullptr) const;
     ///
     /// \brief SetMaxTries
     /// \param p
@@ -84,7 +92,7 @@ class DalitzGenerator : public RandomDalitzPoint {
     double m_maj;
     const AbsDalitzModel* m_model;
 
-    std::default_random_engine*    ren;
+//    std::default_random_engine* ren;
 };
 
 #endif  // SRC_DALITZGENERATOR_H_

@@ -26,7 +26,7 @@ class RandomDalitzPoint : public DalitzPhaseSpace {
     RandomDalitzPoint(const double& mmo, const double& mca,
                       const double& mcb, const double& mcc);
     int GetPoint(double* mABsq, double* mACsq) const;
-    int GetUnconstrainedPoint(double* mABsq, double* mACsq) const;
+    void GetUnconstrainedPoint(double* mABsq, double* mACsq) const;
     int GetStripPoint(double* mABsq, double* mACsq, const DStrip* shape) const;
     int GetGaussPoint(double* mABsq, double* mACsq, double* mBCsq,
                       const DStrip* shape) const;
@@ -54,8 +54,11 @@ class RandomDalitzPoint : public DalitzPhaseSpace {
                        const unsigned N, const DStrip* shape1,
                        const DStrip* shape2) const;
     // * Static methods * //
-    static void SetSeed(const unsigned seed);
-    static unsigned GetSeed(void) {return m_seed;}
+    void SetSeed(const unsigned seed);
+    unsigned GetSeed(void) {return m_seed;}
+
+ protected:
+    std::default_random_engine *re;
 
  private:
     void init();
@@ -75,13 +78,9 @@ class RandomDalitzPoint : public DalitzPhaseSpace {
                       const DStrip* shape2,
                       std::normal_distribution<double>* dist2) const;
     uint64_t m_max_tries;
-    const double mABsqMin;
-    const double mABsqMax;
-    const double mACsqMin;
-    const double mACsqMax;
-
-    static std::default_random_engine re;
-    static unsigned m_seed;
+    std::uniform_real_distribution<double>* unifAB;
+    std::uniform_real_distribution<double>* unifAC;
+    unsigned m_seed;
 };
 
 #endif  // SRC_RANDOMDALITZPOINT_H_

@@ -36,12 +36,20 @@ class AbsDalitzModel : public DalitzPhaseSpace {
     double Arg(const double& mABsq, const double& mACsq) const;
 
     /// Set caption for mAB^2 axis
-    void SetABaxis(const std::string& s) {mABaxis = s; return;}
+    void SetABaxis(const std::string& s) {mABaxis = s;}
     /// Set caption for mAC^2 axis
-    void SetACaxis(const std::string& s) {mACaxis = s; return;}
+    void SetACaxis(const std::string& s) {mACaxis = s;}
     /// Set caption for mBC^2 axis
-    void SetBCaxis(const std::string& s) {mBCaxis = s; return;}
-    ///
+    void SetBCaxis(const std::string& s) {mBCaxis = s;}
+    /**
+     * @brief SetModelTitle. Set model Title
+     * @param s. The title string
+     */
+    void SetModelTitle(const std::string& s) {m_title = s;}
+    /**
+     * @brief SetParState
+     * @param v
+     */
     void SetParState(const std::vector<bool>& v) {m_parstate = v;}
 
     /// Get caption for mAB^2 axis
@@ -69,6 +77,7 @@ class AbsDalitzModel : public DalitzPhaseSpace {
     ///
     int OpenCachedIntegrals(const std::string& fname,
                             const bool silent = true);
+
     ///
     /// \brief NormWithCache. Speed up the computation of normalization using
     /// the relation
@@ -79,24 +88,37 @@ class AbsDalitzModel : public DalitzPhaseSpace {
     /// \return Value of normalization integral
     ///
     double NormWithCache(void) const;
+
     ///
     /// Vector of coef
     void GetCoefficients(std::vector<std::complex<double>>* coefv) const;
+
     ///
     std::vector<DStrip*> GetResAreas(void) const {return m_res_areas;}
+
     ///
     const DStrip* GetResArea(const int i) const {return m_res_areas[i];}
+
     /// Get number of DalitzPlotObject in DalitzModel
     unsigned ResNum(void) const {return m_res_names.size();}
+
     /// Get vector of complex amplitudes for precalculation of
     /// the normalization integrals
     void GetAmpVals(std::vector<std::complex<double>>* resv,
                     const double& mABsq,
                     const double& mACsq) const;
-    /// Get
-    void ShowAmpls(void) const;
-    ///
+
+    /**
+     * @brief GetAmpStr. Generates text with values of complex amplitudes
+     * @return std::string
+     */
     std::string GetAmpStr(void) const;
+
+    /**
+     * @brief AsText. String with amplitude info.
+     * @return std::string
+     */
+    std::string AsText(void) const;
 
     /// Get vector of complex amplitudes for all resonances
     virtual void GetResVals(std::vector<std::complex<double>>* resv,
@@ -136,6 +158,10 @@ class AbsDalitzModel : public DalitzPhaseSpace {
                      const std::vector<int>& types);
 
  private:
+    /**
+     * @brief m_title. Decay model title
+     */
+    std::string m_title;
     /// Matrix of cached normalization integrals
     std::vector<std::vector<std::complex<double>>> m_res_int;
     /// List of complex coefficients (Amplitudes) for normalization units

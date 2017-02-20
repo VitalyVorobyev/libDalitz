@@ -24,6 +24,7 @@ typedef std::vector<compld> vectcd;
 typedef std::string str;
 
 using std::cout;
+using std::cerr;
 using std::endl;
 using std::fabs;
 using std::to_string;
@@ -31,9 +32,6 @@ using std::abs;
 using std::arg;
 using std::norm;
 using std::real;
-
-AbsDalitzModel::AbsDalitzModel(const DalitzPhaseSpace& phsp) :
-    DalitzPhaseSpace(phsp) {}
 
 AbsDalitzModel::AbsDalitzModel(const double& mM, const double& mA,
                                const double& mB, const double& mC) :
@@ -53,7 +51,7 @@ std::vector<MnPar> AbsDM::MnPars(void) const {
     const double pherr =  0.1*M_PI;
     std::vector<MnPar> parv;
     if (m_parstate.size() != 2*m_amp_names.size()) {
-        cout << "Wrong size of m_parstate: " << m_parstate.size()
+        cerr << "Wrong size of m_parstate: " << m_parstate.size()
              << ". Expected: " << 2*m_amp_names.size() << endl;
         return parv;
     }
@@ -99,17 +97,17 @@ compld AbsDM::GetAmplitudes(vectcd* resv,
 void AbsDM::GetAmpVals(vectcd* resv,
                        const double& mABsq, const double& mACsq) const {
     resv->clear();
-    vectcd* resvals = new vectcd();
-    GetResVals(resvals, mABsq, mACsq);
-    if (m_ampl.size() == resvals->size()) {
-        resv = resvals;
+    vectcd resvals;
+    GetResVals(&resvals, mABsq, mACsq);
+    if (m_ampl.size() == resvals.size()) {
+        *resv = resvals;
         return;
     } else {
         int resnum = 0;
         for (unsigned i=0; i < m_amp_signature.size(); i++) {
             resv->push_back(0);
             for (unsigned j=0; j < m_amp_signature[i]; j++) {
-                resv->at(i) += resvals->at(resnum++);
+                resv->at(i) += resvals[resnum++];
             }
         }
     }
@@ -118,7 +116,7 @@ void AbsDM::GetAmpVals(vectcd* resv,
 int AbsDM::OpenCachedIntegrals(const str& fname, const bool silent) {
     std::ifstream ifile(fname, std::ifstream::in);
     if (!ifile.is_open()) {
-        cout << "Can't open file " << fname << endl;
+        cerr << "Can't open file " << fname << endl;
         return -1;
     }
     if (!silent) cout << "Reading cashed normalization from file "
@@ -151,17 +149,23 @@ int AbsDM::OpenCachedIntegrals(const str& fname, const bool silent) {
 str AbsDM::GetAmpStr(void) const {
     std::stringstream out;
     out.str(""); out << std::setprecision(2) << std::fixed;
-    for (compld amp : m_ampl) out << abs(amp) << "*exp(i*" << arg(amp) << ") ";
+    for (auto& amp : m_ampl) out << abs(amp) << "*exp(i*" << arg(amp) << ") ";
     return out.str();
 }
 
-void AbsDM::ShowAmpls(void) const {
-    cout << GetAmpStr() << endl;
+str AbsDM::AsText(void) const {
+    std::stringstream out; out.str("");
+    out << "### " << m_title << " ###" << endl;
+    out << mM() << " -> " << mA() << " " << mB() << " " << mC() << endl;
+    out << "mAB: " << mABaxis << " (" << mABsq_min() << ", " << mABsq_max() << ")" << endl;
+    out << "mAC: " << mACaxis << " (" << mACsq_min() << ", " << mACsq_max() << ")" << endl;
+    out << "mBC: " << mBCaxis << " (" << mBCsq_min() << ", " << mBCsq_max() << ")" << endl;
+    return out.str();
 }
 
-double AbsDalitzModel::NormWithCache(void) const {
+double AbsDM::NormWithCache(void) const {
     if (!m_ampl.size() || m_ampl.size() != m_res_int.size()) {
-        cout << "Can't calculate normalizations with cached integrals: "
+        cerr << "Can't calculate normalizations with cached integrals: "
              << m_ampl.size() << ", " << m_res_int.size() << endl;
         return 1;
     }
@@ -177,9 +181,9 @@ double AbsDalitzModel::NormWithCache(void) const {
     return res;
 }
 
-void AbsDalitzModel::GetCoefficients(vectcd* coefv) const {*coefv = m_ampl;}
+void AbsDM::GetCoefficients(vectcd* coefv) const {*coefv = m_ampl;}
 
-void AbsDalitzModel::SetResAreas(const vectd& ledge, const vectd& redge,
+void AbsDM::SetResAreas(const vectd& ledge, const vectd& redge,
                                  const vecti& types) {
     m_res_areas.clear();
     for (unsigned i=0; i < types.size(); i++)

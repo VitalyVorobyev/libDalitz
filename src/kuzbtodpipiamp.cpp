@@ -32,13 +32,14 @@ using std::cout;
 using std::endl;
 
 KAmp::KuzBtoDpipiAmp() : AbsDalitzModel(m_fm, m_dstm, m_pm, m_pm) {
+    SetModelTitle("Belle amplitude (Kuzmin)");
     SetResNames({"D*", "D2", "D0", "rho", "omega", "rho'", "f2", "f0(550)",
                  "f(980)", "f(1370)"});
     SetAmpNames({"D*", "D2", "D0", "rho", "f2", "f0(550)",
                  "f(980)", "f(1370)"});
-    SetABaxis("m^{2}(D#pi^{+}) (GeV^{2}/c^{4})");
-    SetACaxis("m^{2}(D#pi^{-}) (GeV^{2}/c^{4})");
-    SetBCaxis("m^{2}(#pi^{+}#pi^{-}) (GeV^{2}/c^{4})");
+    SetABaxis("m^{2}(D\pi^{+}) (GeV^{2}/c^{4})");
+    SetACaxis("m^{2}(D\pi^{-}) (GeV^{2}/c^{4})");
+    SetBCaxis("m^{2}(\pi^{+}\pi^{-}) (GeV^{2}/c^{4})");
     init();
     PrintSummary();
 }
