@@ -21,9 +21,9 @@ typedef std::vector<compld> vectcd;
 using std::cout;
 using std::endl;
 
-DalitzModel::DalitzModel(const double& mmo, const double& mcha,
-                         const double& mchb, const double& mchc) :
-    AbsDalitzModel(mmo, mcha, mchb, mchc), use_subset(false) {}
+DalitzModel::DalitzModel(const double& mm, const double& ma,
+                         const double& mb, const double& mc) :
+    AbsDalitzModel(mm, ma, mb, mc), use_subset(false) {}
 
 bool DalitzModel::IsVetoed(const double& mAB, const double& mAC) const {
     for (unsigned i=0; i < m_veto_v.size(); i++) {
@@ -70,8 +70,8 @@ compld DalitzModel::ResAmp(const unsigned n, const double& mAB,
 compld DalitzModel::GetResAmp(const DalitzPlotObject* res, const double& mAB,
                               const double& mAC) const {
     switch (res->Path()) {
-    case DalitzResonance::AB: return res->evaluate(mAC, GetmBCsq(mAC, mAB));
-    case DalitzResonance::AC: return res->evaluate(mAB, GetmBCsq(mAC, mAB));
+    case DalitzResonance::AB: return res->evaluate(mAC, m3sq(mAC, mAB));
+    case DalitzResonance::AC: return res->evaluate(mAB, m3sq(mAC, mAB));
     case DalitzResonance::BC: return res->evaluate(mAC, mAB);
     }
     return compld(0., 0.);

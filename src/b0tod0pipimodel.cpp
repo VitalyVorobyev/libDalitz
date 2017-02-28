@@ -31,10 +31,13 @@ B0toD0pipiModel::B0toD0pipiModel(const int type) :
 
 B0toD0pipiModel::B0toD0pipiModel(const double& mB, const double& mD,
                                  const double& mpi, const int type) :
-    SymDalitzModel(mB, mD, mpi, -M_PI/8., 15.*M_PI/8.), m_type(type) {
-    SetABaxis("m^{2}(D^{0}#pi^{+}), GeV^{2}/c^{4}");
-    SetACaxis("m^{2}(D^{0}#pi^{-}), GeV^{2}/c^{4}");
-    SetBCaxis("m^{2}(#pi^{+}#pi^{-}), GeV^{2}/c^{4}");
+    DalitzModel(mB, mD, mpi, mpi),
+    AbsSymDalitzModel(mB, mD, mpi),
+    AbsDalitzModel(mB, mD, mpi, mpi),
+    m_type(type) {
+    SetABaxis("m^{2}(D^{0}\\pi^{+}),\\ GeV^{2}/c^{4}");
+    SetACaxis("m^{2}(D^{0}\\pi^{-}),\\ GeV^{2}/c^{4}");
+    SetBCaxis("m^{2}(\\pi^{+}\\pi^{-}),\\ GeV^{2}/c^{4}");
     if (m_type == Belle) InitBelleModel();
     if (m_type == LHCb) InitLHCbModel();
 }

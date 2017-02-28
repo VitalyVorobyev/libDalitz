@@ -201,7 +201,8 @@ double DalitzMCIntegral::CalcBranchings(vectd* brvec, vectd* brerr,
         brerr->at(j) = sqrt(err1*err1+err2*err2)*100.;
         BrSum += brvec->at(j);
         cout << "Br = (" << brvec->at(j) << " +- " << brerr->at(j);
-        cout << ")%, rel err " << (brvec->at(j) > 0 ? 100.*brerr->at(j)/brvec->at(j) : 0);
+        cout << ")%, rel err " << (brvec->at(j) > 0 ?
+             100.*brerr->at(j)/brvec->at(j) : 0);
         cout << "% for " << m_model->ResName(j) << endl;
     }
     cout << "Branchings sum: " << BrSum << endl;

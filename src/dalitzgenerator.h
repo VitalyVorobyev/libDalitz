@@ -12,6 +12,7 @@
 #define SRC_DALITZGENERATOR_H_
 
 #include <vector>
+#include <string>
 #include <cstdint>
 
 #include "./absdalitzmodel.h"
@@ -56,7 +57,7 @@ class DalitzGenerator : public RandomDalitzPoint {
     /// \return Returns 0 if worked properly
     ///
     int Generate(double* mABsq, double* mACsq,
-                 std::uniform_real_distribution<double> *dist=nullptr) const;
+                 std::uniform_real_distribution<double> *dist = nullptr) const;
     ///
     /// \brief SetMaxTries
     /// \param p

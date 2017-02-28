@@ -157,9 +157,12 @@ str AbsDM::AsText(void) const {
     std::stringstream out; out.str("");
     out << "### " << m_title << " ###" << endl;
     out << mM() << " -> " << mA() << " " << mB() << " " << mC() << endl;
-    out << "mAB: " << mABaxis << " (" << mABsq_min() << ", " << mABsq_max() << ")" << endl;
-    out << "mAC: " << mACaxis << " (" << mACsq_min() << ", " << mACsq_max() << ")" << endl;
-    out << "mBC: " << mBCaxis << " (" << mBCsq_min() << ", " << mBCsq_max() << ")" << endl;
+    out << "mAB: " << mABaxis << " (" << mABsq_min() << ", "
+        << mABsq_max() << ")" << endl;
+    out << "mAC: " << mACaxis << " (" << mACsq_min() << ", "
+        << mACsq_max() << ")" << endl;
+    out << "mBC: " << mBCaxis << " (" << mBCsq_min() << ", "
+        << mBCsq_max() << ")" << endl;
     return out.str();
 }
 
@@ -190,24 +193,54 @@ void AbsDM::SetResAreas(const vectd& ledge, const vectd& redge,
         m_res_areas.push_back(new DStrip(ledge[i], redge[i], types[i]));
 }
 
-void AbsDM::Tabulate(const str& fname, const unsigned grid_size) const {
+void AbsDM::TabulateABAC(const str& fname, const unsigned grid_size) const {
     std::ofstream file(fname, std::ofstream::out);
     if (!file.is_open()) {
         cerr << "Can't open file " << fname << endl;
         return;
     }
-    file << "GridSize " << grid_size << endl << AsText();
-    double mmMax, mmMin;
-    const double dm = (mABsq_max() - mABsq_min()) / grid_size;
-    double mp = mABsq_min();
-    for (unsigned i=0; i < grid_size; i++) {
-        mp += dm;
-        mABsqRange_AC(mp, &mmMin, &mmMax);
-        if (mp > mmMax) break;
-        for (double mm = mp; mm < mmMax; mm += dm) {
-            if (!IsInPlot(mp, mm)) continue;
-            file << mp << " " << mm << " "
-                 << Amp(mp, mm) << " " << Amp(mm, mp) << endl;
+    file << "mAB x mAC, GridSize " << grid_size << endl << AsText();
+    file << std::setprecision(7) << std::fixed;
+    const double dmAB = (mABsq_max() - mABsq_min()) / grid_size;
+    const double dmAC = (mACsq_max() - mACsq_min()) / grid_size;
+    for (double mAB = mABsq_min(); mAB < mABsq_max(); mAB += dmAB) {
+        double mACmax, mACmin;
+        mACsqRange_AB(mAB, &mACmin, &mACmax);
+        for (double mAC = mACmin; mAC < mACmax; mAC += dmAC) {
+            const compld amp = Amp(mAB, mAC);
+            if (std::isnan(std::real(amp))) {
+                cerr << "TabulateABAC: nan detected: "
+                     << mAB << " " << mAC << " " << mAC << amp << endl;
+                continue;
+            }
+            file << mAB << " " << mAC << " " << amp << endl;
+        }
+    }
+    file.close();
+}
+
+void AbsDM::TabulateABBC(const str& fname, const unsigned grid_size) const {
+    std::ofstream file(fname, std::ofstream::out);
+    if (!file.is_open()) {
+        cerr << "Can't open file " << fname << endl;
+        return;
+    }
+    file << "mAB x mBC, GridSize " << grid_size << endl << AsText();
+    file << std::setprecision(7) << std::fixed;
+    const double dmAB = (mABsq_max() - mABsq_min()) / grid_size;
+    const double dmBC = (mBCsq_max() - mBCsq_min()) / grid_size;
+    for (double mAB = mABsq_min(); mAB < mABsq_max(); mAB += dmAB) {
+        double mBCmax, mBCmin;
+        mBCsqRange_AB(mAB, &mBCmin, &mBCmax);
+        for (double mBC = mBCmin; mBC < mBCmax; mBC += dmBC) {
+            const compld amp = Amp(mAB, m3sq(mAB, mBC));
+            if (std::isnan(std::real(amp))) {
+                cerr << "TabulateABAC: nan detected: "
+                     << mAB << " " << mBC << " " << amp << endl;
+                continue;
+            }
+            file << mAB << " " << mBC << " "
+                 << amp << endl;
         }
     }
     file.close();

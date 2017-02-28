@@ -29,10 +29,13 @@ KspipiModel::KspipiModel(void) :
 
 KspipiModel::KspipiModel(const double &md, const double &mks,
                          const double& mpi) :
-    SymDalitzModel(md, mks, mpi, -M_PI/8., 15.*M_PI/8.) {
-    SetABaxis("m_{+}^{2}, GeV^{2}/c^{4}");
-    SetACaxis("m_{-}^{2}, GeV^{2}/c^{4}");
-    SetBCaxis("m_{#pi#pi}^{2}, GeV^{2}/c^{4}");
+    DalitzModel(md, mks, mpi, mpi),
+    AbsSymDalitzModel(md, mks, mpi),
+    AbsDalitzModel(md, mks, mpi, mpi)
+    {
+    SetABaxis("m_{+}^{2}\\ (GeV^{2}/c^{4})");
+    SetACaxis("m_{-}^{2}\\ (GeV^{2}/c^{4})");
+    SetBCaxis("m_{\\pi\\pi}^{2}\\ (GeV^{2}/c^{4})");
     // ** A. Poluektov et al. Phys. Rev. D 81, 112002 – 16 June 2010 **
     BlattWeisskopf::m_r_meson     = 5.0;
     BlattWeisskopf::m_r_resonance = 1.5;
@@ -81,3 +84,4 @@ KspipiModel::KspipiModel(const double &md, const double &mks,
     AddRes(new DalitzResonance("NR", ResPropType::NR,
                this, BC, 0, std::complex<double>(-2.537, 0.923)));
 }
+

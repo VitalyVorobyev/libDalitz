@@ -53,7 +53,7 @@ int ModelIntegral::Calculate(const str& label,
             if (!m_model->IsInPlot(mp, mm)) continue;
             int bin = abs(eqbin.Bin(mp, mm));
             file_binning << mp << " " << mm << " "
-                         << m_model->GetmBCsq(mp, mm) << " " << bin << endl;
+                         << m_model->m3sq(mp, mm) << " " << bin << endl;
             double delta, P, Pbar;
             if (PPbarDelta(mp, mm, &P, &Pbar, &delta)) continue;
             bin -= 1;

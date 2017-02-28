@@ -22,7 +22,7 @@ SmallDPBin::SmallDPBin(const double &mAB, const double &mAC) :
     m_ABbin(GetBin(m_mAB)),
     m_ACbin(GetBin(m_mAC)) {}
 
-SmallDPBin::SmallDPBin(DalitzModel* model, const double& mAB,
+SmallDPBin::SmallDPBin(AbsDalitzModel* model, const double& mAB,
                        const double& mAC) :
     SmallDPBin(mAB, mAC) {
     SetModel(model);
@@ -33,7 +33,7 @@ SmallDPBin::SmallDPBin(const SmallDPBin& x) {
     *this = x;
 }
 
-void SmallDPBin::SetModel(DalitzModel* model) {
+void SmallDPBin::SetModel(AbsDalitzModel* model) {
     m_model  = model;
     m_dpmin  = m_model->mABsq_min();
     m_dpsize = m_model->mABsq_max() - m_dpmin;

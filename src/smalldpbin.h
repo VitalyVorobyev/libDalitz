@@ -13,7 +13,7 @@
 
 #include <complex>
 
-#include "./dalitzmodel.h"
+#include "./absdalitzmodel.h"
 
 ///
 /// \brief The SmallDPBin class
@@ -21,12 +21,12 @@
 class SmallDPBin {
  public:
     explicit SmallDPBin(const double& mAB = 0, const double& mAC = 0);
-    SmallDPBin(DalitzModel* model, const double& mAB = 0,
+    SmallDPBin(AbsDalitzModel* model, const double& mAB = 0,
                                    const double& mAC = 0);
     SmallDPBin(const SmallDPBin& x);
     SmallDPBin& operator=(const SmallDPBin& x) = default;
 
-    void SetModel(DalitzModel* model);
+    void SetModel(AbsDalitzModel* model);
     void SetGridSize(const int gsize);
     void SetGridStep(const double& gstep);
     void SetPoint(const double& mAB, const double& mAC);
@@ -51,7 +51,7 @@ class SmallDPBin {
  private:
     int Calc(void);
 
-    DalitzModel* m_model;
+    AbsDalitzModel* m_model;
 
     /// Amplitude value for m_mAB and m_mAC
     std::complex<double> m_val;

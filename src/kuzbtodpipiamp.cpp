@@ -29,9 +29,13 @@ using std::pow;
 using std::sqrt;
 
 using std::cout;
+using std::cerr;
 using std::endl;
 
-KAmp::KuzBtoDpipiAmp() : AbsDalitzModel(m_fm, m_dstm, m_pm, m_pm) {
+KAmp::KuzBtoDpipiAmp() :
+    AbsSymDalitzModel(m_fm, m_dstm, m_pm),
+    AbsDalitzModel(m_fm, m_dstm, m_pm, m_pm)
+    {
     SetModelTitle("Belle amplitude (Kuzmin)");
     SetResNames({"D*", "D2", "D0", "rho", "omega", "rho'", "f2", "f0(550)",
                  "f(980)", "f(1370)"});
@@ -61,7 +65,8 @@ compld KAmp::rhoAmp(const double& q3, const double& h3, const double& pq3) {
 }
 
 compld KAmp::omegaAmp(const double& q3, const double& h3, const double& pq3) {
-    return ang1(h3, pq3)*amrs1hm(q3)*m_amom*exp(1.99*ione)*(-1.);
+    return ang1(h3, pq3)*amrs1hm(q3)*m_amom*exp(2.93*ione);
+//    return -ang1(h3, pq3)*amrs1hm(q3)*m_amom;
 }
 
 compld KAmp::rhopAmp(const double& q3, const double& h3, const double& pq3) {
@@ -87,7 +92,7 @@ compld KAmp::f1370Amp(const double& q3) {
 compld KAmp::FullRhoAmp(const double& q3, const double& h3,
                         const double& pq3) {
     return ang1(h3, pq3)*(amrs1h(q3, m_amrh, m_gmrh)
-                         +amrs1hm(q3)*m_amom*exp(1.99*ione)*(-1.)
+                         +amrs1hm(q3)*m_amom*exp(1.99*ione)
                          +amrs1h(q3, m_amrh1, m_gmrh1)*(-0.248));
 }
 
@@ -95,7 +100,7 @@ compld KAmp::GetResVal(const double& mABsq, const double& mACsq,
                        const int resnum) const {
     double pq  = 0;
     double hel = 0;
-    const double mBCsq = GetmBCsq(mABsq, mACsq);
+    const double mBCsq = m3sq(mABsq, mACsq);
     if (resnum < 2)
         hel = CosHelD0pi2(mABsq, mBCsq, &pq);  // D pi resonance
     else if (resnum < 5)
@@ -109,14 +114,14 @@ compld KAmp::GetResVal(const double& mABsq, const double& mACsq,
     case 5: return f0Amp(mBCsq);  // f0
     case 6: return f980Amp(mBCsq);  // f980
     case 7: return f1370Amp(mBCsq);  // f1370
-    default: cout << "KAmp: wrong resnum " << resnum << endl;
+    default: cerr << "KAmp: wrong resnum " << resnum << endl;
     }
     return 0;
 }
 
 void KAmp::GetResVals(vectcd* resv, const double& mABsq,
                       const double& mACsq) const {
-    const double mBCsq = GetmBCsq(mABsq, mACsq);
+    const double mBCsq = m3sq(mABsq, mACsq);
     double pq2, pq3;
     const double h2 = CosHelD0pi2(mABsq, mBCsq, &pq2);
     const double h3 = CosHelpipi2(mBCsq, mACsq, &pq3);
@@ -172,7 +177,7 @@ double KAmp::Norm(void) const {return NormWithCache();}
 void KAmp::SetParams(const vectd& pars) {
     // parameters -> amplitudes and phases
     if (pars.size() != 2*AmpNum()) {
-        cout << "Wrong pars size: " << pars.size() << " (" << 2*AmpNum()
+        cerr << "Wrong pars size: " << pars.size() << " (" << 2*AmpNum()
              << " expected)" << endl;
         return;
     }
@@ -208,9 +213,6 @@ void KAmp::PrintSummary(void) {
          << anf0(m_amf0, m_gmf0) << endl;
     cout << "f(1370) amp: " << m_d3   << ", anf0: "
          << anf0(m_am3, m_gm3)  << endl;
-}
-double KAmp::GetmBCsq(const double& mABsq, const double& mACsq) {
-    return m_fm2_2pm2_md2-mABsq-mACsq;
 }
 // M -> (R -> AB) C. Returns A energy in the R frame
 double KAmp::eA(const double& mAsq, const double& mBsq, const double& mABsq) {
@@ -309,7 +311,7 @@ compld KAmp::amrs0(const double& q2, const double& am, const double& gm) {
     // resonance energy
     const double eres0 = (m_fm2+am2-m_pm2)/(2*m_fm);
     if (pow(eres0, 2) < am2) {
-        cout << "amrs0: eres0<am2 " << eres0 << " " << am << endl;
+        cerr  << "amrs0: eres0<am2 " << eres0 << " " << am << endl;
         return 0;
     }
     const double gr = (ppi/ppi0)*(gm*am2/q);
@@ -395,7 +397,7 @@ compld KAmp::amrs0h(const double& q2, const double& am, const double& gm) {
     // resonance energy
     const double eres0 = (m_fm2+am2-m_dstm2)/(2.*m_fm);
     if (pow(eres0, 2) < am2) {
-        cout << "amrs0h: eres0<am2 " << eres0 << " " << am << endl;
+        cerr << "amrs0h: eres0<am2 " << eres0 << " " << am << endl;
         return 0;
     }
     const double ar = q2-am2;
@@ -415,7 +417,7 @@ compld KAmp::amrs1h(const double& q2, const double& am, const double& gm) {
     // resonance energy
     const double eres0 = (m_fm2+am2-m_dstm2)/(2*m_fm);
     if (pow(eres0, 2) < am2) {
-        cout << "amrs1h: eres0<am2 " << eres0 << " " << am << endl;
+        cerr << "amrs1h: eres0<am2 " << eres0 << " " << am << endl;
         return 0;
     }
     double hwd0, hwd;
@@ -447,7 +449,7 @@ compld KAmp::amrs2h(const double& q2, const double& am, const double& gm) {
     // resonance energy
     const double eres0 = 0.5*(m_fm2+am2-m_dstm2)/m_fm;
     if (pow(eres0, 2) < am2) {
-        cout << "amrs1h: eres0<am " << eres0 << " " << am << endl;
+        cerr << "amrs2h: eres0<am " << eres0 << " " << am << endl;
         return 0;
     }
     const double ar = q2-am2;
@@ -462,7 +464,7 @@ compld KAmp::amrs1hm(const double& q2) {
     // pion energy
     const double epi0 = 0.5*(m_fm2+am2-m_dstm2)/m_fm;
     if (pow(epi0, 2) < am2) {
-        cout << "amrs1hm: epi0<am2 " << epi0 << " " << am << endl;
+        cerr << "amrs1hm: epi0<am2 " << epi0 << " " << am << endl;
         return 0;
     }
     const double ar = q2-am2;
@@ -484,7 +486,7 @@ double KAmp::anf0(const double& am, const double& ag) {
             pars[6]*pow(am, 6);
     const double result = poly / (pow(am, 0.6) * pow(ag, 1.25));
     if (std::isnan(result)) {
-        cout << "anf0: bad result" << endl;
+        cerr << "anf0: bad result" << endl;
         return 1;
     }
     return result;
@@ -551,20 +553,22 @@ double KAmp::an0(const double& am, const double& ag) {
 }
 
 // Row amplitudes and phases
-const double KAmp::m_a0  = 0.035616;  // par 1      D0 'raw' amplitude
-const double KAmp::m_f0  =-3.86950;   // par 3      D0 phase
-const double KAmp::m_a1  = 0.077521;  // par 2      D* 'raw' amplitude
-const double KAmp::m_f1  = 2.75360;   // par 4      D* phase
+const double KAmp::m_a0  = 0.035616;  // par 1    D*0(2308) 'raw' amplitude
+const double KAmp::m_f0  = -2.88;  // -3.86950; // par 3      D*0(2308) phase
+const double KAmp::m_a1  = 0.077521;  // par 2      Dv* 'raw' amplitude
+const double KAmp::m_f1  = -2.53;  // 2.75360;   // par 4      Dv* phase
 const double KAmp::m_ab  = 0;         // par 10     f(980) 'raw' amplitude
-const double KAmp::m_fb  = 1.0030;    // par 11     f(980) phase
+const double KAmp::m_fb  = -3.07;  // 1.0030;    // par 11     f(980) phase
 const double KAmp::m_a3  = 1.961500;  // par 24     f(1370) 'raw' amplitude
-const double KAmp::m_f3  = 0.81462;   // par 25     f(1370) phase
-const double KAmp::m_ar  = 0.428140;  // par 14
-const double KAmp::m_fr  = 1.43780;   // par 15
-const double KAmp::m_af0 = 0.054742;  // par 18
-const double KAmp::m_ff0 =-1.72320;   // par 19
-const double KAmp::m_af2 = 0.081368;  // par 22
-const double KAmp::m_ff2 = 2.71440;   // par 23
+const double KAmp::m_f3  = -2.43;  // 0.81462;   // par 25     f(1370) phase
+const double KAmp::m_ar  = 0.428140;  // par 14   'raw' amplitude for rho(770)
+const double KAmp::m_fr  = 1.81;  // 1.43780;   // par 15   phase for rho(770)
+const double KAmp::m_af0 = 0.054742;  // par 18     'raw' amplitude for f0(550)
+// par 19     phase for f0(550) relative to the rho(770) phase
+const double KAmp::m_ff0 = -0.40;  // -1.72320;
+const double KAmp::m_af2 = 0.081368;  // par 22     'raw' amplitude for f2
+// par 23     phase for f2 relative to the rho(770) phase
+const double KAmp::m_ff2 = 2.77;  // 2.71440;
 
 // Masses and widths
 const double KAmp::m_fm     = 5.279;
@@ -586,7 +590,7 @@ const double KAmp::m_am3    = 1.434;
 const double KAmp::m_gm3    = 0.173;
 const double KAmp::m_amf2   = 1.2750;    // par 20
 const double KAmp::m_gmf2   = 0.18500;   // par 21
-const double KAmp::m_amom   = 0.0272;    // par 30
+const double KAmp::m_amom   = 0.0072;  // 0.0272;    // par 30
 
 const double KAmp::m_fm2_2pm2_md2 = m_fm2+2*m_pm2+m_dstm2;
 

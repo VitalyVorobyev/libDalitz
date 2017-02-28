@@ -33,8 +33,8 @@ RDAD::ResDecayAngularDistribution(const int spin, const double& mmo,
 double RDAD::operator()(const double& mACsq, const double& mBCsq) const {
     if (!m_spin) return 1.;
     double pdf = 1;
-    const double mABsq = DPhSp::GetmBCsq(m_mmo_sq, m_mca_sq, m_mcb_sq,
-                                         m_mcc_sq, mACsq, mBCsq);
+    const double mABsq = DPhSp::m3sq(m_mmo_sq, m_mca_sq, m_mcb_sq,
+                                     m_mcc_sq, mACsq, mBCsq);
     double cos_hel = m_spin > 2 ?
                 DPhSp::CosHelAB(m_mmo, m_mca, m_mcb, m_mcc, mABsq) : 1;
     double p       = m_spin > 2 ? DPhSp::p(m_mre_sq, m_mmo, m_mcc) : 0;

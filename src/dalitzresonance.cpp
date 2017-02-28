@@ -163,9 +163,9 @@ compld DalitzResonance::evaluate(const double& mACsq,
                                  const double& mBCsq) const {
     const ResDecayAngularDistribution& angamp = *m_ang_amp;
     const double mABsq =
-            DalitzPhaseSpace::GetmBCsq(angamp.mMotSq(), angamp.mChASq(),
-                                       angamp.mChBSq(), angamp.mChCSq(),
-                                       mACsq, mBCsq);
+            DalitzPhaseSpace::m3sq(angamp.mMotSq(), angamp.mChASq(),
+                                   angamp.mChBSq(), angamp.mChCSq(),
+                                   mACsq, mBCsq);
     const double p = DalitzPhaseSpace::pRes(angamp.mMotSq(),
                                             mABsq, angamp.mChCSq());
     const double q = DalitzPhaseSpace::pRes(mABsq, angamp.mChASq(),

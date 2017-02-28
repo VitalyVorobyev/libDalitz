@@ -14,7 +14,7 @@
 
 typedef DalitzPhaseSpace DPhSp;
 
-using std::cout;
+using std::cerr;
 using std::endl;
 using std::pow;
 using std::sqrt;
@@ -34,17 +34,8 @@ DPhSp::DalitzPhaseSpace(const double& mM, const double& mA,
     m_mass_sq_sum(m_mMsq+m_mAsq+m_mBsq+m_mCsq),
     m_area(0) {}
 
-// DalitzPhaseSpace::DalitzPhaseSpace(const DalitzPhaseSpace& phsp) :
-//     DalitzPhaseSpace(phsp.mM(), phsp.mA(), phsp.mB(), phsp.mC()) {}
-
-double DPhSp::GetmBCsq(const double& mABsq, const double& mACsq) const {
-    const double mBCsq = m_mass_sq_sum-mABsq-mACsq;
-    if (mBCsq < 0) {
-        cout << "DPhSp::GetmBCsq: " << m_mass_sq_sum << " " << mABsq << " "
-             << mACsq << " " << mBCsq << endl;
-        cout << "IsInPlot: " << IsInPlot(mABsq, mACsq) << endl;
-    }
-    return mBCsq;
+double DPhSp::m3sq(const double& m1sq, const double& m2sq) const {
+    return m_mass_sq_sum - m1sq - m2sq;
 }
 
 // Min value of AB squared invariant mass
@@ -236,10 +227,10 @@ bool DPhSp::IsInPlot(const double& mABsq, const double& mACsq) const {
 }
 
 // * Static methods * //
-double DPhSp::GetmBCsq(const double& mMsq, const double& mAsq,
+double DPhSp::m3sq(const double& mMsq, const double& mAsq,
                        const double& mBsq, const double& mCsq,
-                       const double& mABsq, const double& mACsq) {
-    return mMsq+mAsq+mBsq+mCsq-mABsq-mACsq;
+                       const double& m1sq, const double& m2sq) {
+    return mMsq+mAsq+mBsq+mCsq-m1sq-m2sq;
 }
 
 double DPhSp::pRes(const double& mMsq, const double& mAsq,
@@ -323,7 +314,7 @@ double DPhSp::GetEnergy(const double& X, const double& Y, const double& Z) {
 double DPhSp::ETemplateA(const double& X, const double& Y, const double& Z) {
     const double res = GetEnergy(X, Y, Z);
     if (res < 0) {
-        cout << "ETemplateA: negative value " << res << endl;
+        cerr << "ETemplateA: negative value " << res << endl;
         return -res;
     }
     return  res;
@@ -331,7 +322,7 @@ double DPhSp::ETemplateA(const double& X, const double& Y, const double& Z) {
 double DPhSp::ETemplateC(const double& X, const double& Y, const double& Z) {
     const double res = -GetEnergy(X, Y, Z);
     if (res < 0) {
-        cout << "ETemplateC: negative value " << res << endl;
+        cerr << "ETemplateC: negative value " << res << endl;
         return -res;
     }
     return res;

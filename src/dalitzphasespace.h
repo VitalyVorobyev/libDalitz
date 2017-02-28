@@ -39,12 +39,12 @@ class DalitzPhaseSpace {
      */
     bool IsInPlot(const double& mABsq, const double& mACsq) const;
     ///
-    /// \brief GetmBCsq
+    /// \brief m3sq
     /// \param mABsq
     /// \param mACsq
     /// \return
     ///
-    double GetmBCsq(const double& mABsq, const double& mACsq) const;
+    double m3sq(const double& m1sq, const double& m2sq) const;
     ///
     /// \brief mA
     /// \return
@@ -259,7 +259,7 @@ class DalitzPhaseSpace {
 
     // *** Static methods *** //
     ///
-    /// \brief GetmBCsq Calculates the third Dalitz variable using
+    /// \brief m3sq Calculates the third Dalitz variable using
     /// other two ones
     /// \param mMsq
     /// \param mAsq
@@ -269,9 +269,9 @@ class DalitzPhaseSpace {
     /// \param mACsq
     /// \return
     ///
-    static double GetmBCsq(const double& mMsq, const double& mAsq,
+    static double m3sq(const double& mMsq, const double& mAsq,
                            const double& mBsq, const double& mCsq,
-                           const double& mABsq, const double& mACsq);
+                           const double& m1sq, const double& m2sq);
     /// Calculates momentum of either daugter in the mother particle
     /// rest frame
     static double pRes(const double& mMsq, const double& mAsq,
@@ -382,7 +382,15 @@ class DalitzPhaseSpace {
     static double GetEnergy(const double& X, const double& Y,
                             const double& Z);
     static double Momentum(const double& E, const double& msq);
-    /// Range of the (m12)^2
+    /**
+     * @brief RangeCalc. Range of the (m12)^2
+     * @param e1
+     * @param e2
+     * @param m1sq
+     * @param m2sq
+     * @param msqmin
+     * @param msqmax
+     */
     static void RangeCalc(const double& e1, const double& e2,
                           const double& m1sq, const double& m2sq,
                           double* msqmin, double* msqmax);

@@ -28,7 +28,6 @@ using std::log;
 using std::sin;
 using std::cos;
 using std::fabs;
-//using std::M_PI_2;
 
 const double DrhoAmp::mB0 = 5.279;
 const double DrhoAmp::mD0 = 1.865;
@@ -40,7 +39,8 @@ const double DrhoAmp::Ddst_width = 0.056002;
 const double DrhoAmp::rho_mass = 0.7756;
 const double DrhoAmp::rho_width = 0.15;
 const compld DrhoAmp::Ddst_amp = compld(1., 0.);
-const compld DrhoAmp::rho_amp = compld(0.428140*cos(1.43780), 0.428140*sin(1.43780));
+const compld DrhoAmp::rho_amp = compld(0.428140*cos(1.43780),
+                                       0.428140*sin(1.43780));
 
 BtoDpipi_D2rhoAmp::BtoDpipi_D2rhoAmp() :
     AbsDalitzModel(mB0, mD0, mpi, mpi) {
@@ -74,7 +74,7 @@ compld DrhoAmp::GetResVal(const double& mABsq, const double& mACsq,
                           const int resnum) const {
     double pq  = 0;
     double hel = 0;
-    const double mBCsq = GetmBCsq(mABsq, mACsq);
+    const double mBCsq = m3sq(mABsq, mACsq);
     if (resnum == 0) hel = CosHelAB(mABsq, mACsq, &pq);  // D pi resonance
     else             hel = CosHelBC(mBCsq, mABsq, &pq);  // pi pi resonance
     switch (resnum) {
@@ -88,7 +88,7 @@ compld DrhoAmp::GetResVal(const double& mABsq, const double& mACsq,
 void DrhoAmp::GetResVals(vectcd* resv, const double& mABsq,
                          const double& mACsq) const {
     resv->clear();
-    const double mBCsq = GetmBCsq(mABsq, mACsq);
+    const double mBCsq = m3sq(mABsq, mACsq);
     double pqAB;
     double pqBC;
     const double hAB = CosHelAB(mABsq, mACsq, &pqAB);

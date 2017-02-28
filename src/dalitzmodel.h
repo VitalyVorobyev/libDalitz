@@ -21,17 +21,17 @@
 #include "./dalitzresonance.h"
 #include "./dalitzveto.h"
 
-///
-/// \brief Class for full description of a three-body decay model
-/// A DalitzModel class object contains std::vector of objects inheritanced
-/// from DalitzPlotObject class. Method Amp(const double& mAB, const
-/// double& mAC) returns coherent sum of complex amplitudes of
-/// DalitzPlotObject's.
-///
-class DalitzModel : public AbsDalitzModel {
+/**
+ * \brief Class for full description of a three-body decay model
+ * A DalitzModel class object contains std::vector of objects inheritanced
+ * from DalitzPlotObject class. Method Amp(const double& mAB, const
+ * double& mAC) returns coherent sum of complex amplitudes of
+ * DalitzPlotObject's.
+ */
+class DalitzModel : virtual public AbsDalitzModel {
  public:
-    DalitzModel(const double& mmo, const double& mcha,
-                const double& mchb, const double& mchc);
+    DalitzModel(const double& mm, const double& ma,
+                const double& mb, const double& mc);
     /// Get DalitzModel complex amplitude
     std::complex<double> Amp(const double& mAB, const double& mAC) const;
     /// Get resonance complex amplitude
@@ -57,8 +57,8 @@ class DalitzModel : public AbsDalitzModel {
     void SetParams(const std::vector<double>& pars) {}
     /// Get vector of complex amplitudes for precalculation of the
     /// normalization integrals
-    void GetResVals(std::vector<std::complex<double>>* resv, const double& mABsq,
-                    const double& mACsq) const;
+    void GetResVals(std::vector<std::complex<double>>* resv,
+                    const double& mABsq, const double& mACsq) const;
     /// Get
     std::complex<double> GetResVal(const double& mABsq, const double& mACsq,
                                    const int resnum) const {

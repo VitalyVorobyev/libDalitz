@@ -14,14 +14,14 @@
 #include <complex>
 #include <string>
 
-#include "./absdalitzmodel.h"
+#include "./abssymdalitzmodel.h"
 
-///
-/// \brief The KuzBtoDpipiAmp class. This class reproducese Alex Kuzmin's
-/// Fortran code describing the B0 -> D0 pi+ pi- decay amplitude model
-/// obtained with Belle data for Ref!!!
-///
-class KuzBtoDpipiAmp : public AbsDalitzModel {
+/**
+ * \brief The KuzBtoDpipiAmp class. This class reproducese Alex Kuzmin's
+ * Fortran code describing the B0 -> D0 pi+ pi- decay amplitude model
+ * obtained with Belle data for Ref!!!
+ **/
+class KuzBtoDpipiAmp : public AbsSymDalitzModel {
  public:
     KuzBtoDpipiAmp();
     /// Vector of Res_amp (rho, omega and rho' combined)
@@ -38,7 +38,6 @@ class KuzBtoDpipiAmp : public AbsDalitzModel {
  private:
     void PrintSummary(void);
     void init(void);
-    static double GetmBCsq(const double& mABsq, const double& mACsq);
     /// Cos of helisity angle for resonance R -> AB
     static double CosHelAB(const double& mMo, const double& mA,
                            const double& mB, const double& mC,

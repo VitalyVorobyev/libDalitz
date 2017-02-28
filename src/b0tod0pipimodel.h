@@ -11,15 +11,18 @@
 #ifndef SRC_B0TOD0PIPIMODEL_H_
 #define SRC_B0TOD0PIPIMODEL_H_
 
-#include "./symdalitzmodel.h"
+#include "./abssymdalitzmodel.h"
+#include "./dalitzmodel.h"
 
 /**
  * @brief The B0toD0pipiModel class. Implementation of B0 -> D0 pi+ pi- decay
  * amplitude. Belle and LHCb models are available.
-/// The Belle one is from A. Kuzmin et al. (Belle Collaboration) Phys. Rev. D 76, 012006 (2007)
-/// The LHCb  one is from R. Aaij   et al. (LHCb Collaboration)  Phys. Rev. D 92, 032002 (2015)
+ * The Belle one is from A. Kuzmin et al. (Belle Collaboration)
+ * Phys. Rev. D 76, 012006 (2007)
+ * The LHCb  one is from R. Aaij   et al. (LHCb Collaboration)
+ * Phys. Rev. D 92, 032002 (2015)
  */
-class B0toD0pipiModel : public SymDalitzModel {
+class B0toD0pipiModel : public DalitzModel, public AbsSymDalitzModel {
  public:
     explicit B0toD0pipiModel(const int type = LHCb);
     B0toD0pipiModel(const double& mB, const double& mD,

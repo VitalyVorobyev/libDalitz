@@ -193,7 +193,7 @@ int RDPoint::GetUnifPoint(double* mABsq, double* mACsq,
             if (++ntries > m_max_tries) return -1;
             *mABsq = (*dist)(*re);
             *mACsq = (*unifAC)(*re);
-            mBCsq = GetmBCsq(*mABsq, *mACsq);
+            mBCsq = m3sq(*mABsq, *mACsq);
         } while (!shape->IsWithin(*mABsq, *mACsq, mBCsq) ||
                  !IsInPlot(*mABsq, *mACsq));
         break;
@@ -202,7 +202,7 @@ int RDPoint::GetUnifPoint(double* mABsq, double* mACsq,
             if (++ntries > m_max_tries) return -2;
             *mABsq = (*unifAB)(*re);
             *mACsq = (*dist)(*re);
-            mBCsq = GetmBCsq(*mABsq, *mACsq);
+            mBCsq = m3sq(*mABsq, *mACsq);
         } while (!shape->IsWithin(*mABsq, *mACsq, mBCsq) ||
                  !IsInPlot(*mABsq, *mACsq));
         break;
@@ -211,7 +211,7 @@ int RDPoint::GetUnifPoint(double* mABsq, double* mACsq,
             if (++ntries > m_max_tries) return -3;
             *mABsq = (*unifAB)(*re);
             mBCsq = (*dist)(*re);
-            *mACsq = GetmBCsq(*mABsq, mBCsq);
+            *mACsq = m3sq(*mABsq, mBCsq);
         } while (!shape->IsWithin(*mABsq, *mACsq, mBCsq) ||
                  !IsInPlot(*mABsq, *mACsq));
         break;
@@ -230,7 +230,7 @@ int RDPoint::GetGausPoint1(double* mABsq, double* mACsq, double* mBCsq,
             if (++ntries > m_max_tries) return -1;
             *mABsq = (*dist)(*re);
             *mACsq = (*unifAC)(*re);
-            *mBCsq = GetmBCsq(*mABsq, *mACsq);
+            *mBCsq = m3sq(*mABsq, *mACsq);
         } while (!IsInPlot(*mABsq, *mACsq));
         break;
     case 2:  // AC
@@ -238,7 +238,7 @@ int RDPoint::GetGausPoint1(double* mABsq, double* mACsq, double* mBCsq,
             if (++ntries > m_max_tries) return -2;
             *mABsq = (*unifAB)(*re);
             *mACsq = (*dist)(*re);
-            *mBCsq = GetmBCsq(*mABsq, *mACsq);
+            *mBCsq = m3sq(*mABsq, *mACsq);
         } while (!IsInPlot(*mABsq, *mACsq));
         break;
     case 3:  // AC
@@ -246,7 +246,7 @@ int RDPoint::GetGausPoint1(double* mABsq, double* mACsq, double* mBCsq,
             if (++ntries > m_max_tries) return -3;
             *mABsq = (*unifAB)(*re);
             *mBCsq = (*dist)(*re);
-            *mACsq = GetmBCsq(*mABsq, *mBCsq);
+            *mACsq = m3sq(*mABsq, *mBCsq);
         } while (!IsInPlot(*mABsq, *mACsq));
         break;
     default:
@@ -268,7 +268,7 @@ int RDPoint::GetUnifPoint(double* mABsq, double* mACsq,
                 if (++ntries > m_max_tries) return -1;
                 *mABsq = (*dist1)(*re);
                 *mACsq = (*dist2)(*re);
-                mBCsq = GetmBCsq(*mABsq, *mACsq);
+                mBCsq = m3sq(*mABsq, *mACsq);
             } while (!shape1->IsWithin(*mABsq, *mACsq, mBCsq) ||
                      !shape2->IsWithin(*mABsq, *mACsq, mBCsq) ||
                      !IsInPlot(*mABsq, *mACsq));
@@ -277,7 +277,7 @@ int RDPoint::GetUnifPoint(double* mABsq, double* mACsq,
                 if (++ntries > m_max_tries) return -2;
                 *mABsq = (*dist1)(*re);
                 mBCsq = (*dist2)(*re);
-                *mACsq = GetmBCsq(*mABsq, mBCsq);
+                *mACsq = m3sq(*mABsq, mBCsq);
             } while (!shape1->IsWithin(*mABsq, *mACsq, mBCsq) ||
                      !shape2->IsWithin(*mABsq, *mACsq, mBCsq) ||
                      !IsInPlot(*mABsq, *mACsq));
@@ -288,7 +288,7 @@ int RDPoint::GetUnifPoint(double* mABsq, double* mACsq,
             if (++ntries > m_max_tries) return -3;
             *mACsq = (*dist1)(*re);
             mBCsq = (*dist2)(*re);
-            *mABsq = GetmBCsq(*mACsq, mBCsq);
+            *mABsq = m3sq(*mACsq, mBCsq);
         } while (!shape1->IsWithin(*mABsq, *mACsq, mBCsq) ||
                  !shape2->IsWithin(*mABsq, *mACsq, mBCsq) ||
                  !IsInPlot(*mABsq, *mACsq));
@@ -308,14 +308,14 @@ int RDPoint::GetGausPoint2(double* mABsq, double* mACsq, double* mBCsq,
                 if (++ntries > m_max_tries) return -1;
                 *mABsq = (*dist1)(*re);
                 *mACsq = (*dist2)(*re);
-                *mBCsq = GetmBCsq(*mABsq, *mACsq);
+                *mBCsq = m3sq(*mABsq, *mACsq);
             } while (!IsInPlot(*mABsq, *mACsq));
         } else {  // BC
             do {
                 if (++ntries > m_max_tries) return -2;
                 *mABsq = (*dist1)(*re);
                 *mBCsq = (*dist2)(*re);
-                *mACsq = GetmBCsq(*mABsq, *mBCsq);
+                *mACsq = m3sq(*mABsq, *mBCsq);
             } while (!IsInPlot(*mABsq, *mACsq));
         }
         break;
@@ -324,7 +324,7 @@ int RDPoint::GetGausPoint2(double* mABsq, double* mACsq, double* mBCsq,
             if (++ntries > m_max_tries) return -3;
             *mACsq = (*dist1)(*re);
             *mBCsq = (*dist2)(*re);
-            *mABsq = GetmBCsq(*mACsq, *mBCsq);
+            *mABsq = m3sq(*mACsq, *mBCsq);
         } while (!IsInPlot(*mABsq, *mACsq));
     }
     return 0;

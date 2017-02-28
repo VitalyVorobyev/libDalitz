@@ -10,7 +10,8 @@
 #ifndef SRC_KSPIPIMODEL_H_
 #define SRC_KSPIPIMODEL_H_
 
-#include "./symdalitzmodel.h"
+#include "./abssymdalitzmodel.h"
+#include "./dalitzmodel.h"
 
 ///
 /// \brief Implementation of D0 -> Ks0 pi+ pi- Belle 2010 decay model.
@@ -19,7 +20,7 @@
 /// See also S. Kopp et al. (CLEO Collaboration)
 /// Phys. Rev. D 63, 092001 – Published 9 April 2001
 ///
-class KspipiModel : public SymDalitzModel {
+class KspipiModel : public DalitzModel, AbsSymDalitzModel {
  public:
     KspipiModel(void);
     KspipiModel(const double& md, const double& mks, const double& mpi);
@@ -32,3 +33,4 @@ class KspipiModel : public SymDalitzModel {
 };
 
 #endif  // SRC_KSPIPIMODEL_H_
+

@@ -17,7 +17,6 @@ using std::ofstream;
 
 typedef DalitzGenerator DGen;
 typedef std::uniform_real_distribution<double> unifdist;
-//typedef std::default_random_engine rndmeng;
 typedef std::vector<double> vectd;
 
 using std::cout;

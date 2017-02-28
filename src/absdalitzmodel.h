@@ -90,16 +90,27 @@ class AbsDalitzModel : public DalitzPhaseSpace {
     double NormWithCache(void) const;
 
     /**
-     * @brief Tabulate. Calculate amplitude on a grid and save the
-     * result in text file
+     * @brief Tabulate. Calculate amplitude on a mAB x mAC grid
+     * and save the result in text file
      * @param fname. File name
      * @param grid_size. Grid size
      */
-    void Tabulate(const std::string& fname,
-                  const unsigned grid_size=1000) const;
+    void TabulateABAC(const std::string& fname,
+                      const unsigned grid_size = 1000) const;
 
-    ///
-    /// Vector of coef
+    /**
+     * @brief Tabulate. Calculate amplitude on a mAB x mBC grid
+     * and save the result in text file
+     * @param fname. File name
+     * @param grid_size. Grid size
+     */
+    void TabulateABBC(const std::string& fname,
+                      const unsigned grid_size = 1000) const;
+
+    /**
+     * @brief GetCoefficients. Get vector of coefs
+     * @param coefv. Vector to assign
+     */
     void GetCoefficients(std::vector<std::complex<double>>* coefv) const;
 
     ///
