@@ -45,3 +45,4 @@ std::complex<double> RelBreitWigner::operator()(const double& s,
 RelBreitWigner::~RelBreitWigner() {
     delete m_width;
 }
+

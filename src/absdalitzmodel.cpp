@@ -15,6 +15,7 @@
 #include <iomanip>
 #include <cmath>
 #include <sstream>
+#include <numeric>  // std::accumulate, std::inner_product
 
 typedef AbsDalitzModel AbsDM;
 typedef std::complex<double> compld;
@@ -33,16 +34,21 @@ using std::arg;
 using std::norm;
 using std::real;
 
-AbsDalitzModel::AbsDalitzModel(const double& mM, const double& mA,
-                               const double& mB, const double& mC) :
-    DalitzPhaseSpace(mM, mA, mB, mC) {}
+AbsDalitzModel::AbsDalitzModel(double mM, double mA,
+                               double mB, double mC) :
+    DalitzPhaseSpace(mM, mA, mB, mC), m_unit_amps(false) {}
 
-compld AbsDM::Amp(const double& mABsq, const double& mACsq) const {
+compld AbsDM::Amp(double mABsq, double mACsq) const {
     vectcd resvals;
-    compld amp = 0;
     GetAmpVals(&resvals, mABsq, mACsq);
-    for (unsigned i=0; i < m_ampl.size(); i++) amp += m_ampl[i]*resvals[i];
-    return amp;
+    if (m_unit_amps) {
+        return std::accumulate(resvals.begin(), resvals.end(), compld(0.));
+    } else {
+        return std::inner_product(m_ampl.begin(), m_ampl.end(), resvals.begin(), compld(0.));
+//        compld amp = 0;
+//        for (unsigned i=0; i < m_ampl.size(); i++) amp += m_ampl[i]*resvals[i];
+//        return amp;
+    }
 }
 
 std::vector<MnPar> AbsDM::MnPars(void) const {
@@ -66,21 +72,26 @@ std::vector<MnPar> AbsDM::MnPars(void) const {
     return parv;
 }
 
-double AbsDM::P(const double& mABsq, const double& mACsq) const {
+double AbsDM::P(double mABsq, double mACsq) const {
     return norm(Amp(mABsq, mACsq));
 }
-double AbsDM::Arg(const double& mABsq, const double& mACsq) const {
+
+double AbsDM::Arg(double mABsq, double mACsq) const {
     return arg(Amp(mABsq, mACsq));
 }
 
 compld AbsDM::GetAmplitudes(vectcd* resv,
-                            const double& mABsq, const double& mACsq) const {
+                            double mABsq, double mACsq) const {
     resv->clear();
     vectcd resvals;
     GetResVals(&resvals, mABsq, mACsq);
     if (m_ampl.size() == resvals.size()) {
-        for (unsigned i=0; i < m_amp_signature.size(); i++)
-            resv->push_back(m_ampl[i]*resvals[i]);
+        if (m_unit_amps) {
+            *resv = resvals;
+        } else {
+            for (unsigned i=0; i < m_ampl.size(); i++)
+                resv->push_back(m_ampl[i]*resvals[i]);
+        }
     } else {
         int res = 0;
         for (unsigned i=0; i < m_amp_signature.size(); i++) {
@@ -89,13 +100,11 @@ compld AbsDM::GetAmplitudes(vectcd* resv,
             }
         }
     }
-    compld sum(0);
-    for (compld amp : *resv) sum += amp;
-    return sum;
+    return std::accumulate(resv->begin(), resv->end(), compld(0.));
 }
 
 void AbsDM::GetAmpVals(vectcd* resv,
-                       const double& mABsq, const double& mACsq) const {
+                       double mABsq, double mACsq) const {
     resv->clear();
     vectcd resvals;
     GetResVals(&resvals, mABsq, mACsq);

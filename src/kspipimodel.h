@@ -10,6 +10,8 @@
 #ifndef SRC_KSPIPIMODEL_H_
 #define SRC_KSPIPIMODEL_H_
 
+#include <cmath>
+
 #include "./abssymdalitzmodel.h"
 #include "./dalitzmodel.h"
 
@@ -20,17 +22,18 @@
 /// See also S. Kopp et al. (CLEO Collaboration)
 /// Phys. Rev. D 63, 092001 – Published 9 April 2001
 ///
-class KspipiModel : public DalitzModel, AbsSymDalitzModel {
- public:
-    KspipiModel(void);
-    KspipiModel(const double& md, const double& mks, const double& mpi);
+class KspipiModel :
+        public DalitzModel,
+        public AbsSymDalitzModel {
 
- private:
-    static const double m_D0_Mass;
-    static const double m_Ks0_Mass;
-    static const double m_PI_Mass;
-    static const double dtr;
+    static constexpr double m_D0_Mass = 1.865;
+    static constexpr double m_Ks0_Mass = 0.497611;
+    static constexpr double m_PI_Mass = 0.13957018;
+    static constexpr double dtr = M_PI / 180.;
+
+ public:
+   KspipiModel(void);
+   KspipiModel(double md, double mks, double mpi);
 };
 
 #endif  // SRC_KSPIPIMODEL_H_
-

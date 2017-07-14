@@ -17,9 +17,9 @@
 #include "./dalitzphasespace.h"
 #include "./dstrip.h"
 
-///
-/// \brief The RandomDalitzPoint class
-///
+/**
+ * @brief Generates random points within the Dalitz plot phase space
+ */
 class RandomDalitzPoint : public DalitzPhaseSpace {
  public:
     explicit RandomDalitzPoint(const DalitzPhaseSpace* phsp);

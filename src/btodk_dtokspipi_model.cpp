@@ -29,7 +29,7 @@ const compld BDK::imone = compld(0, 1);
 
 BDK::BtoDK_DtoKspipi_Model(
         const double& gamma, const double& delb, const double& rb) :
-    AbsDalitzModel(0,0,0,0),
+    AbsDalitzModel(0, 0, 0, 0),
     KspipiModel(),
     m_flv(1) {
     SetGD(gamma, delb, rb);

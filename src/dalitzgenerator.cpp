@@ -44,7 +44,7 @@ double DGen::CalcMajorant(void) const {
         cur_val = m_model->P(mABsq, mACsq);
         if (cur_val > maj) maj = cur_val;
     }
-    maj *= 1.05;
+    maj *= 2.;
     return maj;
 }
 

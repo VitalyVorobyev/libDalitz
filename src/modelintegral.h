@@ -13,28 +13,24 @@
 #include <string>
 #include <vector>
 
-#include "./absdalitzmodel.h"
+#include "./abssymdalitzmodel.h"
 
-///
-/// \brief The ModelIntegral class. Class for calculation binned Dalitz plot
-/// parameters using a gived decay amplitude model.
-///
+/**
+ * @brief The ModelIntegral class. Class for calculation binned Dalitz plot
+ * parameters using a gived decay amplitude model.
+ */
 class ModelIntegral {
  public:
-    ModelIntegral(const AbsDalitzModel* model, const unsigned NBins = 8,
+    ModelIntegral(const AbsSymDalitzModel* model,
                   const unsigned gridsize = 1000);
 
     void SetGridSize(const unsigned gsize) {m_gsize = gsize;}
-    void SetNBins(const unsigned nbins) {m_nbins = nbins;}
     int Calculate(const std::string& label,
                   std::vector<double>* C, std::vector<double>* S,
                   std::vector<double>* K, std::vector<double>* Kb);
 
  private:
-    int PPbarDelta(const double& mABsq, const double& mACsq,
-                   double* P, double* Pbar, double* delta);
-    const AbsDalitzModel* m_model;
-    unsigned m_nbins;
+    const AbsSymDalitzModel* m_model;
     unsigned m_gsize;
 };
 

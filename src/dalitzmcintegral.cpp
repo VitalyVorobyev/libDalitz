@@ -21,6 +21,7 @@ typedef std::string str;
 typedef std::vector<double> vectd;
 typedef std::vector<compld> vectcd;
 
+using std::cerr;
 using std::cout;
 using std::endl;
 using std::sqrt;
@@ -159,6 +160,10 @@ double DalitzMCIntegral::CalcBranchings(vectd* brvec, vectd* brerr,
                                         const uint64_t& nc) const {
     const uint64_t Counts = nc ? nc : m_ncounts;
     const unsigned NRes = m_model->ResNum();
+    if (!NRes) {
+        cerr << "DalitzMCIntegral::CalcBranching: zero resonances" << endl;
+        return 0.;
+    }
     brvec->resize(NRes, 0); brerr->resize(NRes, 0);
     vectcd amps;
 
@@ -172,16 +177,18 @@ double DalitzMCIntegral::CalcBranchings(vectd* brvec, vectd* brerr,
     for (uint64_t i=0; i < Counts; i++) {
         if (!(i%100000)) cout << i << " counts" << endl;
         GetPoint(&mAB, &mAC);
-        const double res = scale*norm(m_model->GetAmplitudes(&amps, mAB, mAC));
-        totint += res/Counts;
-        toterr += res*res/Counts;
+        const double res = scale * norm(m_model->GetAmplitudes(&amps, mAB, mAC));
+        if (std::fabs(res) < 0.0001)
+            cerr << "Zero amp " << amps.size() << endl;
+        totint += res / Counts;
+        toterr += res * res / Counts;
         for (unsigned j=0; j < NRes; j++) {
             const double res2 = scale*norm(amps[j]);
             brvec->at(j) += res2/Counts;
             brerr->at(j) += res2*res2/Counts;
         }
     }
-    toterr = sqrt((toterr - totint*totint)/Counts);
+    toterr = sqrt((toterr - totint * totint) / Counts);
     cout << "Full integral = " << totint << " +- " << toterr
          << " (" << 100.*toterr/totint << "%)" << endl;
     cout << std::setprecision(2) << std::scientific;

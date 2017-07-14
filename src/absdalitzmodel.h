@@ -25,15 +25,13 @@
 class AbsDalitzModel : public DalitzPhaseSpace {
  public:
     explicit AbsDalitzModel(const DalitzPhaseSpace& phsp);
-    AbsDalitzModel(const double& mM, const double& mA, const double& mB,
-                   const double& mC);
-
+    AbsDalitzModel(double mM, double mA, double mB, double mC);
     /// Get DalitzModel complex amplitude
-    std::complex<double> Amp(const double& mABsq, const double& mACsq) const;
+    std::complex<double> Amp(double mABsq, double mACsq) const;
     /// Get modulo squared DalitzModel amplitude
-    double P(const double& mABsq, const double& mACsq) const;
+    double P(double mABsq, double mACsq) const;
     /// Get complex phase (radians) of DalitzModel amplitude
-    double Arg(const double& mABsq, const double& mACsq) const;
+    double Arg(double mABsq, double mACsq) const;
 
     /// Set caption for mAB^2 axis
     void SetABaxis(const std::string& s) {mABaxis = s;}
@@ -53,31 +51,28 @@ class AbsDalitzModel : public DalitzPhaseSpace {
     void SetParState(const std::vector<bool>& v) {m_parstate = v;}
 
     /// Get caption for mAB^2 axis
-    std::string ABaxis(void) const { return mABaxis;}
+    auto ABaxis(void) const { return mABaxis;}
     /// Get caption for mAC^2 axis
-    std::string ACaxis(void) const { return mACaxis;}
+    auto ACaxis(void) const { return mACaxis;}
     /// Get caption for mBC^2 axis
-    std::string BCaxis(void) const { return mBCaxis;}
+    auto BCaxis(void) const { return mBCaxis;}
 
     /// Get name of the i'th DalitzPlotObject
-    std::string ResName(const int resn) const {return m_res_names[resn];}
+    auto ResName(const int resn) const {return m_res_names[resn];}
     /// Get name of the i'th DalitzPlotObject
-    std::string AmpName(const int resn) const {return m_amp_names[resn];}
+    auto AmpName(const int resn) const {return m_amp_names[resn];}
 
     /// To fill std::vector<std::complex<double>> resv with amplitudes of
     /// each DalitzPlotObject of a DalitzModel. Returns size full amplitude
     std::complex<double> GetAmplitudes(std::vector<std::complex<double>>* resv,
-                                       const double& mABsq,
-                                       const double& mACsq) const;
+                                       double mABsq, double mACsq) const;
     /// Dimention of the normalization matrix
-    unsigned AmpNum(void) const { return m_ampl.size();}
+    unsigned AmpNum(void) const {return m_ampl.size();}
     ///
-    const std::vector<bool>& PState(void) const {return m_parstate;}
+    const auto& PState(void) const {return m_parstate;}
 
     ///
-    int OpenCachedIntegrals(const std::string& fname,
-                            const bool silent = true);
-
+    int OpenCachedIntegrals(const std::string& fname, bool silent = true);
     /**
      * @brief NormWithCache. Speed up the computation of normalization using
      * the relation
@@ -88,7 +83,6 @@ class AbsDalitzModel : public DalitzPhaseSpace {
      * @return Value of normalization integral
      */
     double NormWithCache(void) const;
-
     /**
      * @brief Tabulate. Calculate amplitude on a mAB x mAC grid
      * and save the result in text file
@@ -96,8 +90,7 @@ class AbsDalitzModel : public DalitzPhaseSpace {
      * @param grid_size. Grid size
      */
     void TabulateABAC(const std::string& fname,
-                      const unsigned grid_size = 1000) const;
-
+                      unsigned grid_size = 1000) const;
     /**
      * @brief Tabulate. Calculate amplitude on a mAB x mBC grid
      * and save the result in text file
@@ -105,8 +98,7 @@ class AbsDalitzModel : public DalitzPhaseSpace {
      * @param grid_size. Grid size
      */
     void TabulateABBC(const std::string& fname,
-                      const unsigned grid_size = 1000) const;
-
+                      unsigned grid_size = 1000) const;
     /**
      * @brief GetCoefficients. Get vector of coefs
      * @param coefv. Vector to assign
@@ -125,15 +117,12 @@ class AbsDalitzModel : public DalitzPhaseSpace {
     /// Get vector of complex amplitudes for precalculation of
     /// the normalization integrals
     void GetAmpVals(std::vector<std::complex<double>>* resv,
-                    const double& mABsq,
-                    const double& mACsq) const;
-
+                    double mABsq, double mACsq) const;
     /**
      * @brief GetAmpStr. Generates text with values of complex amplitudes
      * @return std::string
      */
     std::string GetAmpStr(void) const;
-
     /**
      * @brief AsText. String with amplitude info.
      * @return std::string
@@ -142,11 +131,9 @@ class AbsDalitzModel : public DalitzPhaseSpace {
 
     /// Get vector of complex amplitudes for all resonances
     virtual void GetResVals(std::vector<std::complex<double>>* resv,
-                            const double& mABsq,
-                            const double& mACsq) const = 0;
+                            double mABsq, double mACsq) const = 0;
     /// Get
-    virtual std::complex<double> GetResVal(const double& mABsq,
-                                           const double& mACsq,
+    virtual std::complex<double> GetResVal(double mABsq, double mACsq,
                                            const int resnum) const = 0;
     /// Set parameters
     virtual void SetParams(const std::vector<double>& pars) = 0;
@@ -176,11 +163,11 @@ class AbsDalitzModel : public DalitzPhaseSpace {
     void SetResAreas(const std::vector<double> &ledge,
                      const std::vector<double> &redge,
                      const std::vector<int>& types);
+    /** @brief Use unit amps for all resonances of true */
+    void UnitAmps(bool flag = true) {m_unit_amps = flag;}
 
  private:
-    /**
-     * @brief m_title. Decay model title
-     */
+    /** @brief m_title. Decay model title */
     std::string m_title;
     /// Matrix of cached normalization integrals
     std::vector<std::vector<std::complex<double>>> m_res_int;
@@ -196,6 +183,8 @@ class AbsDalitzModel : public DalitzPhaseSpace {
     std::vector<std::string> m_amp_names;
     /// List of Dalitz std::stringips for normalization units
     std::vector<DStrip*> m_res_areas;
+    /** @brief m_unit_amps. Use unit amps for all resonances */
+    bool m_unit_amps;
 };
 
 #endif  // SRC_ABSDALITZMODEL_H_

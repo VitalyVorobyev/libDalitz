@@ -32,13 +32,33 @@ class AbsSymDalitzModel : virtual public AbsDalitzModel {
                       const double& delmin = 0,
                       const double& delmax = 2.*M_PI);
 
-    double delta(const double& mp, const double& mm);
+    double delta(const double& mp, const double& mm) const;
     void ppdelt(const double& mp, const double& mm,
-                double* const pp, double* const pn, double* const del);
-    int bin(const double& mp, const double& mm);
+                double* const pp, double* const pn, double* const del) const;
+    /**
+     * @brief bin. Dalitz plot bin for a given Dalitz variables
+     * @param mp
+     * @param mm
+     * @return
+     */
+    int bin(const double& mp, const double& mm) const;
+    /**
+     * @brief bin. Signed Dalitz plot bin for a given phase difference
+     * @param mp
+     * @param mm
+     * @param dphi
+     * @return
+     */
+    int bin(const double& mp, const double& mm, const double& dphi) const;
+    /**
+     * @brief bin. Dalitz plot bin for a given phase difference
+     * @param dphi
+     * @return
+     */
+    int bin(const double& dphi, const bool sign) const;
 
-    void nbins(const int nb) {m_nbins = nb;}
-    int nbins(void) const {return m_nbins;}
+    void nbins(const unsigned nb) {m_nbins = nb;}
+    unsigned nbins(void) const {return m_nbins;}
 
     /**
      * @brief Tabulate. Calculate amplitude on a mAB x mAC half grid
@@ -59,10 +79,8 @@ class AbsSymDalitzModel : virtual public AbsDalitzModel {
                          const unsigned grid_size = 1000) const;
 
  private:
-    int bin(const double& dphi) const;
-
     double del_min, del_max;
-    int m_nbins;
+    unsigned m_nbins;
 
     static const double m_2pi;
     static int sign(const double& x);

@@ -38,17 +38,26 @@ int ASModel::sign(const double& x) {
     return x >= 0 ? 1 : -1;
 }
 
-int ASModel::bin(const double& mp, const double& mm) {
-    if (!IsInPlot(mp, mm)) return 0;
-    return (mp < mm) ? bin(delta(mp, mm)) : -bin(delta(mm, mp));
+int ASModel::bin(const double& mAB, const double& mAC) const {
+    if (!IsInPlot(mAB, mAC)) return 0;
+    return bin(mAB, mAC, delta(mAB, mAC));
 }
 
-int ASModel::bin(const double& dphi) const {
-    return (static_cast<int>(m_nbins * (dphi - del_min) / m_2pi + 0.5) % 8) + 1;
+int ASModel::bin(const double& mAB, const double& mAC,
+                 const double& dphi) const {
+    return (mAB < mAC) ? bin(dphi, false) : -bin(dphi, true);
+}
+
+int ASModel::bin(const double& dphi, const bool sign) const {
+    double del = sign ? - dphi : dphi;
+    if (del < del_min) del += m_2pi;
+    if (del > del_max) del -= m_2pi;
+    return (static_cast<int>(m_nbins * del / m_2pi + 0.5) % m_nbins) + 1;
 }
 
 void ASModel::ppdelt(const double& mp, const double& mm,
-                     double* const pp, double* const pn, double* const del) {
+                     double* const pp, double* const pn,
+                     double* const del) const {
     const compld ap = Amp(mp, mm);
     const compld an = Amp(mm, mp);
     *del = delta(ap, an);
@@ -56,7 +65,7 @@ void ASModel::ppdelt(const double& mp, const double& mm,
     *pn = norm(an);
 }
 
-double ASModel::delta(const double& mp, const double& mm) {
+double ASModel::delta(const double& mp, const double& mm) const {
     return delta(arg(Amp(mp, mm)), arg(Amp(mm, mp)));
 }
 
@@ -91,9 +100,8 @@ void ASModel::TabulateSymABAC(const str& fname,
                      << ap << " " << an << endl;
                 continue;
             }
-            const int binn = (mAB < mAC) ? bin(delta(ap, an)) : -bin(delta(an, ap));
             file << mAB << " " << mAC << " "
-                 << ap << " " << an << " " << binn << endl;
+                 << ap << " " << an << " " << bin(mAB, mAC, delta(ap, an)) << endl;
         }
     }
     file.close();
@@ -124,9 +132,8 @@ void ASModel::TabulateSymABBC(const str& fname,
                      << ap << " " << an << endl;
                 continue;
             }
-            const int binn = (mAB < mAC) ? bin(delta(ap, an)) : -bin(delta(an, ap));
             file << mAB << " " << mBC << " "
-                 << ap << " " << an << " " << binn << endl;
+                 << ap << " " << an << " " << bin(mAB, mAC, delta(ap, an)) << endl;
         }
     }
     file.close();

@@ -275,7 +275,7 @@ double DPhSp::CosHelAB(const double& mMsq, const double& mAsq,
     if (pCsq < 0) {*pq = 0; return 0;}
     const double pC = sqrt(pCsq);
     *pq = pA*pC;
-    return (mAsq + mCsq + 2.*eA*eC - mACsq)/(2.*pA*pC);
+    return (mAsq + mCsq + 2.*eA*eC - mACsq) / (2.*pA*pC);
 }
 
 double DPhSp::CosHelAC(const double& mMsq, const double& mAsq,
@@ -309,8 +309,9 @@ double DPhSp::CosHelBC(const double& mMsq, const double& mAsq,
 }
 
 double DPhSp::GetEnergy(const double& X, const double& Y, const double& Z) {
-    return (X-Y+Z)/(2.*sqrt(X));
+    return (X - Y + Z) / (2. * sqrt(X));
 }
+
 double DPhSp::ETemplateA(const double& X, const double& Y, const double& Z) {
     const double res = GetEnergy(X, Y, Z);
     if (res < 0) {
@@ -319,6 +320,7 @@ double DPhSp::ETemplateA(const double& X, const double& Y, const double& Z) {
     }
     return  res;
 }
+
 double DPhSp::ETemplateC(const double& X, const double& Y, const double& Z) {
     const double res = -GetEnergy(X, Y, Z);
     if (res < 0) {
@@ -327,9 +329,11 @@ double DPhSp::ETemplateC(const double& X, const double& Y, const double& Z) {
     }
     return res;
 }
+
 double DPhSp::ETemplateM(const double& X, const double& Y, const double& Z) {
-    return  GetEnergy(X, Z, Y);
+    return GetEnergy(X, Z, Y);
 }
+
 double DPhSp::Momentum(const double& E, const double& msq) {
     const double psq = E*E-msq;
     return (psq > 0 ? sqrt(psq) : 0);

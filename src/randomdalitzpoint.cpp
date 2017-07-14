@@ -12,11 +12,10 @@
 #include <iostream>
 #include <boost/chrono/chrono.hpp>
 
-typedef std::uniform_real_distribution<double> unif;
-typedef std::normal_distribution<double>       gaus;
-typedef std::vector<double> vectd;
-
-typedef RandomDalitzPoint RDPoint;
+using unif = std::uniform_real_distribution<double>;
+using gaus = std::normal_distribution<double>;
+using vectd = std::vector<double>;
+using RDPoint = RandomDalitzPoint;
 
 using std::cerr;
 using std::endl;
