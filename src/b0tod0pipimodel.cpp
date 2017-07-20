@@ -15,31 +15,22 @@
 #include "./blattweisskopf.h"
 #include "./dalitzvetodst2010.h"
 
-const double B0toD0pipiModel::m_B0_Mass = 5.279;
-const double B0toD0pipiModel::m_D0_Mass = 1.865;
-const double B0toD0pipiModel::m_PI_Mass = 0.139568;
-const double B0toD0pipiModel::dtr = M_PI / 180.;
-
-const int AB = DalitzResonance::AB;
-const int BC = DalitzResonance::BC;
-
-const int B0toD0pipiModel::Belle = 0;
-const int B0toD0pipiModel::LHCb = 1;
+constexpr int AB = DalitzResonance::AB;
+constexpr int BC = DalitzResonance::BC;
 
 B0toD0pipiModel::B0toD0pipiModel(const int type) :
     B0toD0pipiModel(m_B0_Mass, m_D0_Mass, m_PI_Mass, type) {}
 
-B0toD0pipiModel::B0toD0pipiModel(const double& mB, const double& mD,
-                                 const double& mpi, const int type) :
+B0toD0pipiModel::B0toD0pipiModel(double mB, double mD, double mpi, int type) :
+    AbsDalitzModel(mB, mD, mpi, mpi),
     DalitzModel(mB, mD, mpi, mpi),
     AbsSymDalitzModel(mB, mD, mpi),
-    AbsDalitzModel(mB, mD, mpi, mpi),
     m_type(type) {
     SetABaxis("m^{2}(D^{0}\\pi^{+}),\\ GeV^{2}/c^{4}");
     SetACaxis("m^{2}(D^{0}\\pi^{-}),\\ GeV^{2}/c^{4}");
     SetBCaxis("m^{2}(\\pi^{+}\\pi^{-}),\\ GeV^{2}/c^{4}");
     if (m_type == Belle) InitBelleModel();
-    if (m_type == LHCb) InitLHCbModel();
+    else InitLHCbModel();
 }
 
 void B0toD0pipiModel::InitLHCbModel(void) {
@@ -79,8 +70,8 @@ void B0toD0pipiModel::InitLHCbModel(void) {
 void B0toD0pipiModel::InitBelleModel(void) {
     BlattWeisskopf::m_r_meson     = 1.6;
     BlattWeisskopf::m_r_resonance = 1.6;
-    const double omegaAmp = 2.0*0.027/(0.7756*0.7756);
-    const double omegaPha = 1.99+2.25;
+    const double omegaAmp = 2.0 * 0.027 / (0.7756 * 0.7756);
+    const double omegaPha = 1.99 + 2.25;
   //                     mass  width      J amp   phase
     AddRes(new DalitzResonance("D2*", ResPropType::RBW, this,
                      AB, 2.46570, 0.04960, 2, 1.00,  0.00));

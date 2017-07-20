@@ -16,9 +16,9 @@
 
 #include "./abssymdalitzmodel.h"
 
-/** \brief The KuzBtoDpipiAmp class. This class reproducese Alex Kuzmin's
- * Fortran code describing the B0 -> D0 pi+ pi- decay amplitude model
- * obtained with Belle data for Ref!!! **/
+/** \brief The KuzBtoDpipiAmp class reproduceses Alex Kuzmin's
+ *  Fortran code for the B0 -> D0 pi+ pi- decay amplitude model
+ *  describing the Belle experiment data. Ref!!! **/
 class KuzBtoDpipiAmp : public AbsSymDalitzModel {
     void init(void);
 

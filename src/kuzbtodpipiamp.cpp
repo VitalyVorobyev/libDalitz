@@ -133,44 +133,45 @@ auto an0(double am, double ag) {
     return am*am*am * dot(pars, vars) / pow(ag, 1.15);
 }
 
-// Complex amplitudes
-/** D2 amplitude (=1) */
+// ////////////////////////// //
+// ### Complex amplitudes ### //
+// ////////////////////////// //
+// D2 amplitude (=1)
 constexpr auto m_dm2 = 0.6 * 0.06;  // sqrt(get_ddd()/an2(m_ams2, m_gms2));
-/** D0 amplitude */
+// D0 amplitude
 const auto m_dm0 = 0.6 * exp(m_f0 * ione) *
         sqrt(m_a0 / an0(m_ams0, m_gms0));
-/** D* amplitude */
+// D* amplitude
 const auto m_dm1 = 1.4 * exp(m_f1 * ione) * sqrt(m_a1);
-/** rho(770) amplitude */
+// rho(770) amplitude
 const auto m_dmrh = 1.1 * exp(m_fr*ione) *
         sqrt(m_ar / anrh(m_amrh, m_gmrh));
-/** f2 amplitude */
+// f2 amplitude
 const auto m_dmf2 = 1.1 * exp((m_fr+m_ff2)*ione) *
         sqrt(m_af2 / anf2(m_amf2, m_gmf2));
-/** f0(550) amplitude */
+// f0(550) amplitude
 const auto m_dmf0 = 1.4 * exp((m_fr+m_ff0)*ione) *
         sqrt(m_af0 / anf0(m_amf0, m_gmf0));
-/** f(980) amplitude */
+// f(980) amplitude
 const auto m_dmbs = exp(m_fb*ione) * sqrt(m_ab / anf0(m_amf098, m_gmf098));
-/** f(1370) amplitude */
+// f(1370) amplitude
 const auto m_d3 = 0.15 * exp(m_f3*ione) * sqrt(m_a3 / anf0(m_am3, m_gm3));
-/** Resonance radius in Blatt-Weiskopf formfactor */
+// Resonance radius in Blatt-Weiskopf formfactor
 constexpr double m_ffr  = 1.6;
 constexpr double m_ffdel = 1.0;
-/** M -> (R -> AB) C. Returns A energy in the R frame */
+// M -> (R -> AB) C. Returns A energy in the R frame
 auto eA(double mAsq, double mBsq, double mABsq) {
     return (mAsq + mABsq - mBsq)/(2.*sqrt(mABsq));
 }
-/** M -> (R -> AB) C. Returns A energy in the R frame */
+// M -> (R -> AB) C. Returns A energy in the R frame
 auto eB(double mAsq, double mBsq, double mABsq) {
     return (mBsq + mABsq - mAsq)/(2.*sqrt(mABsq));
 }
-/** M -> (R -> AB) C. Returns C energy in the R frame */
+// M -> (R -> AB) C. Returns C energy in the R frame
 auto eC(double mMsq, double mCsq, double mABsq) {
     return (mMsq - mABsq - mCsq)/(2.*sqrt(mABsq));
 }
-/** M -> (R -> AB) C. Returns cos of angle between p(A) and
- *  p(C) in the R frame */
+// M -> (R -> AB) C. Returns cos of angle between p(A) and p(C) in the R frame
 auto MyCosHelAB2(double mMsq, double mAsq, double mBsq, double mCsq,
                  double mABsq, double mBCsq) {
     auto enB = eB(mAsq, mBsq, mABsq);
@@ -183,9 +184,8 @@ auto MyCosHelAB2(double mMsq, double mAsq, double mBsq, double mCsq,
     auto moC = sqrt(moCsq);
 
     return make_pair(
-                (mBsq + mCsq + 2.*enB*enC - mBCsq) / (2. * moB * moC),
-                moB * moC
-                );
+        (mBsq + mCsq + 2.*enB*enC - mBCsq) / (2. * moB * moC), moB * moC
+    );
 }
 /** Helicity for a (D pi+) resonance, A = D0, B = pi, C = pi */
 auto CosHelD0pi2(double mDpipsq, double mpipimsq) {
@@ -339,8 +339,8 @@ std::complex<double> f1370Amp(double q3) {
 }
 
 KAmp::KuzBtoDpipiAmp() :
-    AbsSymDalitzModel(m_fm, m_dstm, m_pm),
-    AbsDalitzModel(m_fm, m_dstm, m_pm, m_pm) {
+    AbsDalitzModel(m_fm, m_dstm, m_pm, m_pm),
+    AbsSymDalitzModel(m_fm, m_dstm, m_pm) {
     SetModelTitle("Belle amplitude (Kuzmin)");
     SetResNames({"D*", "D2", "D0", "rho", "omega", "rho'", "f2", "f0(550)",
                  "f(980)", "f(1370)"});
@@ -416,10 +416,11 @@ void KAmp::SetParams(const vectd& pars) {
         return;
     }
     vectcd coeffs;
-    for (unsigned i=0; i < AmpNum(); i++) {
-        const double amp = pars[2*i];
-        const double pha = pars[2*i+1];
-        coeffs.push_back(amp * compld(cos(pha), sin(pha)));
+    compld j1(0, 1);
+    for (auto i = 0u; i < AmpNum(); i++) {
+        auto amp = pars[2*i];
+        auto pha = pars[2*i+1];
+        coeffs.emplace_back(amp * exp(j1 * pha));
     }
     SetCoefficients(coeffs);
 }
@@ -428,18 +429,19 @@ void KAmp::PrintSummary(void) {
     cout << "*** The Kuzmin amplitude ***" << endl;
     cout << "Masses: B0 " << mM() << ", D0 " << mA()
          << ", pi+ " << mB() << endl;
-    cout << "D*      amp: " << m_dm1  << endl;
-    cout << "D2      amp: " << m_dm2  << endl;
-    cout << "D0      amp: " << m_dm0  << endl;
-    cout << "rho     amp: " << m_dmrh << ", anrh: "
+    const auto& coefs = GetCoefficients();
+    cout << "D*      amp: " << coefs[0]  << endl;
+    cout << "D2      amp: " << coefs[1]  << endl;
+    cout << "D0      amp: " << coefs[2]  << endl;
+    cout << "rho     amp: " << coefs[3] << ", anrh: "
          << anrh(m_amrh, m_gmrh) << endl;
-    cout << "omega   amp: " << m_dmrh << endl;
-    cout << "rho'    amp: " << m_dmrh << endl;
-    cout << "f2      amp: " << m_dmf2 << ", anf2: "
+    cout << "omega   amp: " << coefs[3] << endl;
+    cout << "rho'    amp: " << coefs[3] << endl;
+    cout << "f2      amp: " << coefs[4] << ", anf2: "
          << anf2(m_amf2, m_gmf2) << endl;
-    cout << "f(980)  amp: " << m_dmbs << endl;
-    cout << "f0(550) amp: " << m_dmf0 << ", anf0: "
+    cout << "f(980)  amp: " << coefs[5] << endl;
+    cout << "f0(550) amp: " << coefs[6] << ", anf0: "
          << anf0(m_amf0, m_gmf0) << endl;
-    cout << "f(1370) amp: " << m_d3   << ", anf0: "
+    cout << "f(1370) amp: " << coefs[7]   << ", anf0: "
          << anf0(m_am3, m_gm3)  << endl;
 }

@@ -24,12 +24,11 @@
  */
 class B0toD0pipiModel : public DalitzModel, public AbsSymDalitzModel {
  public:
-    explicit B0toD0pipiModel(const int type = LHCb);
-    B0toD0pipiModel(const double& mB, const double& mD,
-                    const double& mpi, const int type);
+    explicit B0toD0pipiModel(int type = LHCb);
+    B0toD0pipiModel(double mB, double mD, double mpi, int type);
 
-    static const int Belle;
-    static const int LHCb;
+    static constexpr int Belle = 0;
+    static constexpr int LHCb = 1;
 
  private:
     /**
@@ -44,10 +43,10 @@ class B0toD0pipiModel : public DalitzModel, public AbsSymDalitzModel {
     void InitLHCbModel(void);
     int m_type;
 
-    static const double m_B0_Mass;
-    static const double m_D0_Mass;
-    static const double m_PI_Mass;
-    static const double dtr;
+    static constexpr double m_B0_Mass = 5.279;
+    static constexpr double m_D0_Mass = 1.865;
+    static constexpr double m_PI_Mass = 0.139568;
+    static constexpr double dtr = M_PI / 180.;
 };
 
 #endif  // SRC_B0TOD0PIPIMODEL_H_

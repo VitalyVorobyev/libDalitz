@@ -17,12 +17,12 @@
 #include <sstream>
 #include <numeric>  // std::accumulate, std::inner_product
 
-typedef AbsDalitzModel AbsDM;
-typedef std::complex<double> compld;
-typedef std::vector<double> vectd;
-typedef std::vector<int> vecti;
-typedef std::vector<compld> vectcd;
-typedef std::string str;
+using AbsDM = AbsDalitzModel;
+using compld = std::complex<double>;
+using vectd = std::vector<double>;
+using vecti = std::vector<int>;
+using vectcd = std::vector<compld>;
+using str = std::string;
 
 using std::cout;
 using std::cerr;
@@ -45,9 +45,6 @@ compld AbsDM::Amp(double mABsq, double mACsq) const {
         return std::accumulate(resvals.begin(), resvals.end(), compld(0.));
     } else {
         return std::inner_product(m_ampl.begin(), m_ampl.end(), resvals.begin(), compld(0.));
-//        compld amp = 0;
-//        for (unsigned i=0; i < m_ampl.size(); i++) amp += m_ampl[i]*resvals[i];
-//        return amp;
     }
 }
 
@@ -182,10 +179,10 @@ double AbsDM::NormWithCache(void) const {
         return 1;
     }
     double res = 0;
-    for (unsigned i=0; i < m_ampl.size(); i++) {
+    for (auto i = 0u; i < m_ampl.size(); i++) {
         // I += |a_i|^2 * I_i
         res += norm(m_ampl[i])*real(m_res_int[i][i]);
-        for (unsigned j=i+1; j < m_ampl.size(); j++) {
+        for (auto j = i + 1u; j < m_ampl.size(); j++) {
             // I += 2*Re( a_i * a_j^* * I_{ij} )
             res += 2.*real(m_ampl[i]*conj(m_ampl[j])*m_res_int[i][j]);
         }
@@ -193,13 +190,13 @@ double AbsDM::NormWithCache(void) const {
     return res;
 }
 
-void AbsDM::GetCoefficients(vectcd* coefv) const {*coefv = m_ampl;}
+const vectcd& AbsDM::GetCoefficients() const {return m_ampl;}
 
 void AbsDM::SetResAreas(const vectd& ledge, const vectd& redge,
                         const vecti& types) {
     m_res_areas.clear();
     for (unsigned i=0; i < types.size(); i++)
-        m_res_areas.push_back(new DStrip(ledge[i], redge[i], types[i]));
+        m_res_areas.emplace_back(new DStrip(ledge[i], redge[i], types[i]));
 }
 
 void AbsDM::TabulateABAC(const str& fname, const unsigned grid_size) const {

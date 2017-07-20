@@ -23,11 +23,6 @@ constexpr auto AC = DRes::AC;
 
 constexpr auto BW = ResPropType::RBW;
 
-//const double KspipiModel::dtr = M_PI / 180.;
-//const double KspipiModel::m_D0_Mass = 1.865;
-//const double KspipiModel::m_Ks0_Mass = 0.497611;
-//const double KspipiModel::m_PI_Mass = 0.13957018;
-
 KspipiModel::KspipiModel(void) :
     KspipiModel(m_D0_Mass, m_Ks0_Mass, m_PI_Mass) {}
 
