@@ -35,7 +35,7 @@ class KuzBtoDpipiAmp : public AbsSymDalitzModel {
     /** Get normalization */
     double Norm(void) const override;
     /** Print info in standard output */
-    void PrintSummary(void);
+    void PrintSummary(void) const;
 };
 
 #endif  // SRC_KUZBTODPIPIAMP_H_

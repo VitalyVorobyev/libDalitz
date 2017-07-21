@@ -31,6 +31,7 @@ using std::cerr;
 using std::endl;
 
 using std::make_pair;
+using std::to_string;
 
 /** Energy of particle A in the M -> AB decay in the M rest frame */
 inline auto enrg(double M, double A2, double B2) {
@@ -94,8 +95,8 @@ constexpr double m_pm2   = m_pm * m_pm;  // pi+ mass sq
 constexpr double m_dstm2 = m_dstm * m_dstm;  // D0 mass sq
 constexpr double m_ddd = 1. - m_a0 + m_a1 + m_ab + m_a3 + m_ar + m_af0 + m_af2;
 
-inline auto dot(const vectd& u, const vectd& v) {
-    return std::inner_product(u.begin(), u.end(), v.begin(), 0);
+inline double dot(const vectd& u, const vectd& v) {
+    return std::inner_product(u.begin(), u.end(), v.begin(), 0.);
 }
 
 // Amplitude wrappers
@@ -122,15 +123,17 @@ auto an2(double am, double ag) {
     static vectd pars = {0.18907E-02, -0.50839E-05, 0.16955E-02, -0.19040E-05,
                          0.69806E-03, -0.59716E-01};
     vectd vars = {1., am, ag, am*am, am*ag, ag*ag};
+    cout << "an2: " << dot(pars, vars) << endl;
     return dot(pars, vars) * pow(am, 0.5) / pow(ag, 1.02);
 }
 
 auto an0(double am, double ag) {
     static vectd pars = {-9.5637, 8.7421, -0.28803, -1.8988, 0.40894, -1.5582,
                         -0.84441E-03, 0.29120E-01, -0.32185, 1.9611};
+    for (auto v : pars) cout << v << " ";
     vectd vars = {1., am, ag, am*am, am*ag, ag*ag,
-                  am*am*am, am*ag*ag, ag*ag*ag};
-    return am*am*am * dot(pars, vars) / pow(ag, 1.15);
+                  am*am*am, am*am*ag, am*ag*ag, ag*ag*ag};
+    return dot(pars, vars) * am*am*am / pow(ag, 1.15);
 }
 
 // ////////////////////////// //
@@ -161,15 +164,15 @@ constexpr double m_ffr  = 1.6;
 constexpr double m_ffdel = 1.0;
 // M -> (R -> AB) C. Returns A energy in the R frame
 auto eA(double mAsq, double mBsq, double mABsq) {
-    return (mAsq + mABsq - mBsq)/(2.*sqrt(mABsq));
+    return (mAsq + mABsq - mBsq) / (2. * sqrt(mABsq));
 }
 // M -> (R -> AB) C. Returns A energy in the R frame
 auto eB(double mAsq, double mBsq, double mABsq) {
-    return (mBsq + mABsq - mAsq)/(2.*sqrt(mABsq));
+    return (mBsq + mABsq - mAsq) / (2. * sqrt(mABsq));
 }
 // M -> (R -> AB) C. Returns C energy in the R frame
 auto eC(double mMsq, double mCsq, double mABsq) {
-    return (mMsq - mABsq - mCsq)/(2.*sqrt(mABsq));
+    return (mMsq - mABsq - mCsq) / (2. * sqrt(mABsq));
 }
 // M -> (R -> AB) C. Returns cos of angle between p(A) and p(C) in the R frame
 auto MyCosHelAB2(double mMsq, double mAsq, double mBsq, double mCsq,
@@ -187,15 +190,15 @@ auto MyCosHelAB2(double mMsq, double mAsq, double mBsq, double mCsq,
         (mBsq + mCsq + 2.*enB*enC - mBCsq) / (2. * moB * moC), moB * moC
     );
 }
-/** Helicity for a (D pi+) resonance, A = D0, B = pi, C = pi */
+// Helicity for a (D pi+) resonance, A = D0, B = pi, C = pi
 auto CosHelD0pi2(double mDpipsq, double mpipimsq) {
     return MyCosHelAB2(m_fm2, m_dstm2, m_pm2, m_pm2, mDpipsq, mpipimsq);
 }
-/** A = pi, B = pi, C = D0 */
+// A = pi, B = pi, C = D0
 auto CosHelpipi2(double mpipisq, double mDpimsq) {
     return MyCosHelAB2(m_fm2, m_pm2, m_pm2, m_dstm2, mpipisq, mDpimsq);
 }
-/** Amplitude for a scalar D0 pi resonance */
+// Amplitude for a scalar D0 pi resonance
 auto amrs0(double q2) {
     static auto am2 = m_ams0 * m_ams0;
     static auto mom0 = momt(m_ams0, m_pm2, m_dstm2);
@@ -203,28 +206,59 @@ auto amrs0(double q2) {
     auto ppi_frac = momt(q, m_pm2, m_dstm2) / mom0;
     return 1. / compld(q2 - am2, ppi_frac * (m_gms0 * am2 / q));
 }
-/** D*v amplitude */
+// D*v amplitude
 auto amrs1(double q2) {
     // D* veto
-    if (std::fabs(q2 - 4.04) < 0.01) return compld(0, 0);
-    static auto am  = 2.01;
-    static auto gm  = 0.0001;
-    static auto am2 = am * am;
-    static auto ffexpr = [=](double r) {return 1. + r*r;};
-    auto q  = sqrt(q2);
+//    if (std::fabs(q2 - 4.04) < 0.01) return compld(0, 0);
+//    static auto am  = 2.01;
+//    static auto gm  = 0.0001;
+//    static auto am2 = am * am;
+//    static auto ffexpr = [=](double r) {return 1. + r*r;};
+//    auto q  = sqrt(q2);
+//    // B0 formfactor
+//    auto rr_b  = momt(m_fm, q2,  m_pm2) * m_ffr;
+//    static auto r0_b  = momt(m_fm, am2, m_pm2) * m_ffr;
+//    auto fg = sqrt(ffexpr(r0_b) / ffexpr(rr_b));
+//    // resonance formfactor
+//    static auto ppi0 = momt(am, m_pm2, m_dstm2);
+//    auto ppi  = momt(q,  m_pm2, m_dstm2);
+//    auto f = exp((-ppi + ppi0) * m_ffdel);
+//    // full Breit-Wigner
+//    return f * fg / compld(q2 - am2, (gm * am2 / q) *
+//                           pow(ppi / ppi0, 3) * pow(f, 2)) * 3.53438;
+    if (std::fabs(q2-4.04) < 0.01) return compld(0, 0);
+    const double am    = 2.01;
+    const double gm    = 0.0001;
+    const double am2   = pow(am, 2);
+    const double q     = sqrt(q2);
+    // pion energy in the resonance frame calculated with nominal
+    // resonance mass
+    const double epi0  = (am2+m_pm2-m_dstm2)/(2.*am);
+    const double epi   = (q2 +m_pm2-m_dstm2)/(2.*q);
+    // pion momentum in the resonance frame calculated with nominal
+    // resonance mass
+    const double ppi0  = sqrt(pow(epi0, 2)-m_pm2);
+    const double ppi   = sqrt(pow(epi , 2)-m_pm2);
+    // resonance energy in the B frame calculated with nominal resonance mass
+    const double eres0 = (m_fm2+am2-m_pm2)/(2.*m_fm);
+    const double eres  = (m_fm2+q2 -m_pm2)/(2.*m_fm);
+    // resonance momentum
+    const double pres0 = sqrt(pow(eres0, 2)-am2);
+    const double pres  = sqrt(pow(eres, 2)-am2);
     // B0 formfactor
-    auto rr_b  = momt(m_fm, q2,  m_pm2) * m_ffr;
-    static auto r0_b  = momt(m_fm, am2, m_pm2) * m_ffr;
-    auto fg = sqrt(ffexpr(r0_b) / ffexpr(rr_b));
+    const double rr_b  = pres *m_ffr;
+    const double r0_b  = pres0*m_ffr;
+    const double fg    = sqrt((1+pow(r0_b, 2))/(1+pow(rr_b, 2)));
     // resonance formfactor
-    static auto ppi0 = momt(am, m_pm2, m_dstm2);
-    auto ppi  = momt(q,  m_pm2, m_dstm2);
-    auto f = exp((-ppi + ppi0) * m_ffdel);
+    const double rr_r  = ppi *m_ffdel;
+    const double r0_r  = ppi0*m_ffdel;
+    const double f     = exp(-rr_r+r0_r);
     // full Breit-Wigner
-    return f * fg / compld(q2 - am2, (gm * am2 / q) *
-                           pow(ppi / ppi0, 3) * pow(f, 2)) * 3.53438;
+    const double ar = q2-am2;
+    const double gr = (gm*am2/q)*pow(ppi/ppi0, 3)*pow(f, 2);
+    return f*fg/(compld(ar, gr)*3.53438);
 }
-/** D*2(2460) amplitude */
+// D*2(2460) amplitude
 auto amrs2(double q2, double am, double gm) {
     auto am2 = am * am;
     auto q = sqrt(q2);
@@ -244,13 +278,13 @@ auto amrs2(double q2, double am, double gm) {
     return ff * fg /
             compld(q2 - am2, (gm * am2 / q) * pow(ppi / ppi0, 5) * pow(ff, 2));
 }
-/** A scalar pi pi resonance amplitude */
+// A scalar pi pi resonance amplitude
 auto amrs0h(double q2, double am, double gm) {
     auto am2 = pow(am, 2);
     auto ppi_frac = momt(0.25 * q2, m_pm2) / momt(0.25 * am2, m_pm2);
     return 1./compld(q2 - am2, (gm * am2 / sqrt(q2)) * ppi_frac);
 }
-/** WTF??? */
+// WTF???
 auto hwrho(double s) {
     double y = sqrt(1. - 0.07795/s);
     double w = log((1. + y) / (1. - y));
@@ -259,7 +293,7 @@ auto hwrho(double s) {
                 (0.5 * w * (1. - y*y) / y + 1.) / s * M_PI_2
                 );
 }
-/** rho(770) and rho() amplitude */
+// rho(770) and rho() amplitude
 auto amrs1h(double q2, double am, double gm) {
     auto am2  = pow(am, 2);
     // pion momentum
@@ -276,64 +310,63 @@ auto amrs1h(double q2, double am, double gm) {
                * am2 * gm / pow(ppi0, 3);
     return 1. / compld(ar - dm, gr);
 }
-/** f2 tensor pi pi resonance amplitude */
+// f2 tensor pi pi resonance amplitude
 auto amrs2h(double q2) {
     static auto am2 = pow(m_amf2, 2);
     // pion momentum
     auto ppi_frac = momt(0.25 * q2,  m_pm2) / momt(0.25 * am2, m_pm2);
     return 1. / compld(q2 - am2, (m_gmf2 * am2 / sqrt(q2)) * pow(ppi_frac, 5));
 }
-/**  Rho-omega interference amplitude */
+// Rho-omega interference amplitude
 auto amrs1hm(double q2) {
     static double am2 = pow(0.78257, 2);
     return 1. / compld(q2 - am2, sqrt(q2) * 0.00849);
 }
-/** Angular factor for vectors */
+// Angular factor for vectors
 inline auto ang1(double h, double pq) {return pq * h;}
-/** Angular factor for tensors */
+// Angular factor for tensors
 inline auto ang2(double h, double pq) {return pq*pq * (h*h - 1./3.);}
-/** D* amplitude */
+// D* amplitude
 auto DstarAmp(double qp, double h2, double pq2) {
     return ang1(h2, pq2) * amrs1(qp);
 }
-/** D** amplitude */
+// D** amplitude
 auto DdstarAmp(double qp, double h2, double pq2) {
     return ang2(h2, pq2)*amrs2(qp, m_ams2, m_gms2);
 }
-/** D0* amplitude */
+// D0* amplitude
 auto DzeroAmp(double qp) {return amrs0(qp);}
-/** rho(770) amplitude */
+// rho(770) amplitude
 auto rhoAmp(double q3, double h3, double pq3) {
     return ang1(h3, pq3) * amrs1h(q3, m_amrh, m_gmrh);
 }
-
-/** omega amplitude */
+// omega amplitude
 auto omegaAmp(double q3, double h3, double pq3) {
     return ang1(h3, pq3) * amrs1hm(q3) * m_amom * exp(2.93 * ione);
 }
-/** rho' amplitude */
+// rho' amplitude
 auto rhopAmp(double q3, double h3, double pq3) {
     return ang1(h3, pq3) * amrs1h(q3, m_amrh1, m_gmrh1) * m_rhop_amp;
 }
-/** rho(770) + omega + rho' amplitude */
+// rho(770) + omega + rho' amplitude
 auto FullRhoAmp(double q3, double h3, double pq3) {
     return ang1(h3, pq3) * (amrs1h(q3, m_amrh, m_gmrh)
                          + amrs1hm(q3) * m_amom * exp(1.99 * ione)
                          + amrs1h(q3, m_amrh1, m_gmrh1) * m_rhop_amp);
 }
-/** f2 amplitude */
+// f2 amplitude
 auto f2Amp(double q3, double h3, double pq3) {
     return ang2(h3, pq3) * amrs2h(q3);
 }
-/** f0 amplitude */
+// f0 amplitude
 auto f0Amp(double q3) {
     return amrs0h(q3, m_amf0, m_gmf0);
 }
-/** f(980) amplitude */
+// f(980) amplitude
 auto f980Amp(double q3) {
     return amrs0h(q3, m_amf098, m_gmf098);
 }
-/** f(1370) amplitude */
+// f(1370) amplitude
 std::complex<double> f1370Amp(double q3) {
     return amrs0h(q3, m_am3, m_gm3);
 }
@@ -416,32 +449,35 @@ void KAmp::SetParams(const vectd& pars) {
         return;
     }
     vectcd coeffs;
-    compld j1(0, 1);
     for (auto i = 0u; i < AmpNum(); i++) {
         auto amp = pars[2*i];
         auto pha = pars[2*i+1];
-        coeffs.emplace_back(amp * exp(j1 * pha));
+        coeffs.emplace_back(amp * exp(ione * pha));
     }
     SetCoefficients(coeffs);
 }
 
-void KAmp::PrintSummary(void) {
+auto cmplStr(const compld& x) {
+    return to_string(abs(x)) + " * e^(" + to_string(arg(x)) + ")";
+}
+
+void KAmp::PrintSummary(void) const {
     cout << "*** The Kuzmin amplitude ***" << endl;
     cout << "Masses: B0 " << mM() << ", D0 " << mA()
          << ", pi+ " << mB() << endl;
     const auto& coefs = GetCoefficients();
-    cout << "D*      amp: " << coefs[0]  << endl;
-    cout << "D2      amp: " << coefs[1]  << endl;
-    cout << "D0      amp: " << coefs[2]  << endl;
-    cout << "rho     amp: " << coefs[3] << ", anrh: "
+    cout << "D*      amp: " << cmplStr(coefs[0])  << endl;
+    cout << "D2      amp: " << cmplStr(coefs[1])  << endl;
+    cout << "D0      amp: " << cmplStr(coefs[2])  << endl;
+    cout << "rho     amp: " << cmplStr(coefs[3]) << ", anrh: "
          << anrh(m_amrh, m_gmrh) << endl;
-    cout << "omega   amp: " << coefs[3] << endl;
-    cout << "rho'    amp: " << coefs[3] << endl;
-    cout << "f2      amp: " << coefs[4] << ", anf2: "
+    cout << "omega   amp: " << cmplStr(coefs[3]) << endl;
+    cout << "rho'    amp: " << cmplStr(coefs[3]) << endl;
+    cout << "f2      amp: " << cmplStr(coefs[4]) << ", anf2: "
          << anf2(m_amf2, m_gmf2) << endl;
-    cout << "f(980)  amp: " << coefs[5] << endl;
-    cout << "f0(550) amp: " << coefs[6] << ", anf0: "
+    cout << "f0(550) amp: " << cmplStr(coefs[6]) << ", anf0: "
          << anf0(m_amf0, m_gmf0) << endl;
-    cout << "f(1370) amp: " << coefs[7]   << ", anf0: "
+    cout << "f(980)  amp: " << cmplStr(coefs[5]) << endl;
+    cout << "f(1370) amp: " << cmplStr(coefs[7])   << ", anf0: "
          << anf0(m_am3, m_gm3)  << endl;
 }

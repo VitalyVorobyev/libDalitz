@@ -27,6 +27,8 @@ class BtoDpipiWFAmp : public KuzBtoDpipiAmp {
     /** Complex amplitude of a specific resonance */
     std::complex<double> GetResVal(double mABsq, double mACsq,
                                    int resnum) const override;
+    /** Print model parameters in std output */
+    void PrintSummary(void) const;
 };
 
 #endif  // BTODPIPIWFAMP_H

@@ -2,10 +2,13 @@
 
 #include <utility>
 #include <cmath>
+#include <iostream>
 
 using compld = std::complex<double>;
 using vectcd = std::vector<compld>;
 
+using std::cout;
+using std::endl;
 using std::arg;  // complex phase
 using std::move;
 
@@ -14,6 +17,7 @@ using std::exp;
 constexpr double mB0 = 5.279;    // B0 mass
 constexpr double mpi = 0.139568; // pi+ mass
 constexpr double mD0 = 1.865;  // D0 mass
+constexpr double D2stSup = 0.1;  // suppression coef for D2*
 
 constexpr double fpi = 133.;  // pion decay constant
 constexpr double fD = 207.;  // D0 decay constant
@@ -45,9 +49,17 @@ void BtoDpipiWFAmp::init(double phiD0, double phiDst, double phiDstst) {
     auto rhoArg = arg(coefs[3]);
     const auto coef = (fD * FBpi) / (fpi * FBD);
     coefs[0] *= coef * exp(j2 * (phiDst - rhoArg));  // D*v
-    coefs[1] *= 0.1 * coef * exp(j2 * (phiDstst - rhoArg));  // D2*
+    coefs[1] *= D2stSup * coef * exp(j2 * (phiDstst - rhoArg));  // D2*
     coefs[2] *= coef * exp(j2 * (phiD0 - rhoArg));  // D0*
-    for (auto idx = 3; idx < 8; idx++)  // all R -> pi+ pi-
+    for (auto idx = 3u; idx < coefs.size(); idx++)  // all R -> pi+ pi-
         coefs[idx] *= exp(-j2 * rhoArg);
     SetCoefficients(coefs);
+}
+
+void BtoDpipiWFAmp::PrintSummary(void) const {
+    cout << " ### Suppressed B0 -> D0 pi+ pi- amplitude ###" << endl;
+    cout << "  Transition formfactors:  fD: " << fD  << ",  fpi: " << fpi << endl;
+    cout << "         Decay constants: fBD: " << FBD << ", FBpi: " << FBpi << endl;
+    cout << "       D2* suppression factor: " << D2stSup << endl;
+    KuzBtoDpipiAmp::PrintSummary();
 }
